@@ -28,7 +28,7 @@ const router = express.Router();
  *   put:
  *     security:
  *      - Authorization: []
- *     description: Create and launch new product
+ *     description: Generate new App
  *     tags:
  *       - Generate App
  *     produces:

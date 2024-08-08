@@ -77,15 +77,19 @@ const options = {
       variables: {
         port: {
           enum: [
-            "3000",
+            process.env.PORT || '3000',
             "8443",
             "443"
           ],
-          default: "3000"
+          default: process.env.PORT || '3000'
         },
         basePath: { 
           enum: [
-          "v1"
+          "v1",
+          "v2",
+          "v3",
+          "v4",
+          "v5"
         ],
         default: 'v1' },
       }

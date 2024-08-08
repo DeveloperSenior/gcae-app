@@ -62,8 +62,8 @@ const IOFileService = generatorRepository => {
     const getContentFileFromTemplate = async (fileTemplateName) => {
 
         const s3ServiceInject = pipe(() => { }, S3Service)();
-        const { fileName, data } = await s3ServiceInject.getObjectAsString(bucketTemplates, `${nodeTemplates}/Template${fileTemplateName}.spec`);
-        return { fileName, data };
+        const { data } = await s3ServiceInject.getObjectAsString(bucketTemplates, `${nodeTemplates}/Template${fileTemplateName}.spec`);
+        return { fileName: fileTemplateName, data };
     }
 
     /**

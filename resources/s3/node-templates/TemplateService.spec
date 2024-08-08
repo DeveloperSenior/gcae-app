@@ -30,6 +30,7 @@ const @EntityName@Service = @entityName@Repository => {
         const { @attrsModel@ } = @entityName@;
         const currentDate = moment().format(DATE_FORMAT.DEFAULT);
         const @entityName@Builder = new @EntityName@.Builder()
+            .withUser(userId)
             @attrModelBuild@
             .build();
 
@@ -49,7 +50,7 @@ const @EntityName@Service = @entityName@Repository => {
         /** add params filters to builder here*/
             .withUser(userId).build();
 
-        return await productRepository.get@EntityName@(@entityName@ToGetBuilder);
+        return await @entityName@Repository.get@EntityName@(@entityName@ToGetBuilder);
     }
 
     /**
@@ -66,7 +67,7 @@ const @EntityName@Service = @entityName@Repository => {
         /** add params filters to builder here*/
             .withUser(userId).build();
 
-        return await productRepository.getAll@EntityName@();
+        return await @entityName@Repository.getAll@EntityName@();
     }
 
     /**
@@ -102,7 +103,7 @@ const @EntityName@Service = @entityName@Repository => {
 
         @entityName@.UpdateAt = moment().format(DATE_FORMAT.DEFAULT);
 
-        return await @EntityName@Repository.update@EntityName@(_id, userId, @entityName@);
+        return await @entityName@Repository.update@EntityName@(_id, userId, @entityName@);
 
     }
 

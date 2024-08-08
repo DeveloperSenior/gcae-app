@@ -19,6 +19,7 @@ const RouteGeneratorService = () => {
 
     const TEMPLATE = 'Route';
     const FOLDER_TEMPLATE = 'src/routes';
+    const ROUTE_SUSCRIPTION_CONF = 'SuscriptionRoutesAppConf.js';
 
     /**
      * generate module impl
@@ -40,6 +41,8 @@ const RouteGeneratorService = () => {
         const {data: propertiesListSwagger} = await ioFileServicesInject.getContentFileFromTemplate('SwaggerPropertiesList');
         const {data: propertiesNormalSwagger} = await ioFileServicesInject.getContentFileFromTemplate('SwaggerPropertiesNormal');
         const {data: requiredSwagger} = await ioFileServicesInject.getContentFileFromTemplate('SwaggerRequired');
+        const {data: suscriptionRouterConfig} = await ioFileServicesInject.getContentFileFromTemplate('RouteSuscription');
+
         
         let swaggerRequireds = '';
         let swaggerProperties = '';
@@ -72,6 +75,13 @@ const RouteGeneratorService = () => {
             swaggerRequireds = swaggerRequireds;
 
         });
+
+        await ioFileServicesInject.sanitizeFileContent(`${appfolder}/${FOLDER_TEMPLATE}/config/${ROUTE_SUSCRIPTION_CONF}`, `${appfolder}/${FOLDER_TEMPLATE}/config/${ROUTE_SUSCRIPTION_CONF}`,
+            (target, data, createFile) => {
+                const suscriptionRoute = suscriptionRouterConfig.replaceAll('@EntityName@',toPascalCase(name));
+                const buffer = data.replaceAll('/** Import routes here */', suscriptionRoute);
+                createFile(target, buffer);
+            });
 
         await ioFileServicesInject.generateFileFromTemplate(TEMPLATE, `${appfolder}/${FOLDER_TEMPLATE}/${toPascalCase(name + TEMPLATE)}.js`,
             (target, data, createFile) => {

@@ -53,8 +53,8 @@ const ModelGeneratorService = () => {
                         const { name, pk, required, index } = attr;
                         attrsModel = attrsModel + modelAttrDataBase.replaceAll('@attrName@', `${toCamelCase(name)}`)
                             .replaceAll('@attrType@', getType(attr))
-                            .replaceAll('@attrRequire@', (required || pk) | false)
-                            .replaceAll('@attrIndex@', (index || pk) | false);
+                            .replaceAll('@attrRequire@', (required || pk) || false)
+                            .replaceAll('@attrIndex@', (index || pk) || false);
 
                     }
                     );
@@ -79,7 +79,7 @@ const ModelGeneratorService = () => {
                         attrsModel = attrsModel + `${toCamelCase(attr.name)},`;
                         attrModelSet = attrModelSet + `this.${toCamelCase(attr.name)} = ${toCamelCase(attr.name)};\n`;
                         attrModelBuild = attrModelBuild + modelBuilder.replaceAll('@AttrName@', toPascalCase(attr.name))
-                            .replaceAll('@attrName@', toCamelCase(attr.name)) + "\n";
+                            .replaceAll('@attrName@', toCamelCase(attr.name)).replaceAll('@entityName@', toCamelCase(name)) + "\n";
                     }
                     );
 

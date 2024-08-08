@@ -1,5 +1,5 @@
 
     with@AttrName@(@attrName@) {
-        this.@attrName@ = @attrName@;
+        this.@entityName@.@attrName@ = @attrName@;
         return this;
     }

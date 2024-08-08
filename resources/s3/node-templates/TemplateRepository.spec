@@ -44,9 +44,12 @@ const @EntityName@Repository = DbModel => {
     const get@EntityName@ = async (@entityName@) => {
 
         const { _id } = @entityName@;
-        const options = { _id: _id };
+        let options = {};
+        if(_id){
+            options = {_id: _id }
+        }
         try {
-            return await DbModel.findOne({ _id: _id }).select("-__v") // Retrieve without __v
+            return await DbModel.findOne(options).select("-__v") // Retrieve without __v
             .populate('user', '-password -__v'); // Retrieve without password and __v
         } catch (e) {
             const excepcion = new DefaultException(e.message);
@@ -85,7 +88,7 @@ const @EntityName@Repository = DbModel => {
     }
 
     /**
-     * find Launched Products Pager
+     * get @EntityName@ Pager
      * @param {*} pageSize 
      * @param {*} pageNumber 
      * @returns 
@@ -133,7 +136,7 @@ const @EntityName@Repository = DbModel => {
      * @param {@EntityName@} @entityName@ 
      * @returns 
      */
-    const edit@EntityName@ = async (_id, userId, @entityName@) => {
+    const update@EntityName@ = async (_id, userId, @entityName@) => {
         const options = { _id: _id, user: userId };
         const set = {
             $set: @entityName@
@@ -151,7 +154,7 @@ const @EntityName@Repository = DbModel => {
 
     /**
      * delete @EntityName@ by Id
-     * @param {*} product 
+     * @param {*} @entityName@ 
      * @returns 
      */
     const delete@EntityName@ = async (_id, userId) => {

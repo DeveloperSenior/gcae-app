@@ -31,7 +31,7 @@ const ERROR_MESSAGE = {
     DEFAULT: 'An unexpected exception was found in the application. Review details in the log',
     ACCESS: 'An unexpected exception was found in the Access, put valid Bearer token Authorization Header',
     ENTITY_ISNT_SESSION: 'An unexpected exception was found in the validate ENTITY, the ENTITY does not belong to the user in session',
-    PRODUCT_NOT_FOUND: 'An unexpected exception was found in the validate ENTITY, the ENTITY does not found'
+    ENTITY_NOT_FOUND: 'An unexpected exception was found in the validate ENTITY, the ENTITY does not found'
 
 }
 

@@ -11,7 +11,7 @@
  */
 class @EntityName@ {
 
-    constructor(@attrsModel@) {
+    constructor(_id, user, @attrsModel@) {
 
         this._id = _id;
         /** audit object */

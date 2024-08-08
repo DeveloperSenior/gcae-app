@@ -12,6 +12,29 @@ const router = express.Router();
  * @swagger
  * components:
  *  schemas:
+ *   UserModel:
+ *     type: object
+ *     required:
+ *       - userName
+ *       - bio
+ *       - avatar
+ *       - email
+ *       - password
+ *     properties:
+ *       userName:
+ *         type: string
+ *       bio:
+ *         type: string
+ *       avatar:
+ *         type: string
+ *       email:
+ *         type: string
+ *       password:
+ *         type: string
+ *       createdAt:
+ *         type: string
+ *       updatedAt:
+ *         type: string
  *   AuthModel:
  *     type: object
  *     required:

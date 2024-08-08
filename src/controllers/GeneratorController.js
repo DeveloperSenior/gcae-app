@@ -11,6 +11,7 @@ const { toPascalCase,toCamelCase } = require('js-convert-case');
 
 const IOFileService = require('../services/IOFileService');
 const RouteGeneratorService = require('../services/RouteGeneratorService');
+const ValidatorGeneratorService = require('../services/ValidatorGeneratorService');
 const ControllerGeneratorService = require('../services/ControllerGeneratorService');
 const ServiceGeneratorService = require('../services/ServiceGeneratorService');
 const ModelGeneratorService = require('../services/ModelGeneratorService');
@@ -22,6 +23,7 @@ const processEntity = async (appConfig, entity, appfolder) => {
     /** Dependency Inject */
     const modelGeneratorServiceInject = pipe(() => { }, ModelGeneratorService)();
     const routeGeneratorServiceInject = pipe(() => { }, RouteGeneratorService)();
+    const validatorGeneratorServiceInject = pipe(() => { }, ValidatorGeneratorService)();
     const controllerGeneratorServiceInject = pipe(() => { }, ControllerGeneratorService)();
     const serviceGeneratorServiceInject = pipe(() => { }, ServiceGeneratorService)();
     const repositoryGeneratorServiceInject = pipe(() => { }, RepositoryGeneratorService)();
@@ -33,6 +35,8 @@ const processEntity = async (appConfig, entity, appfolder) => {
         await modelGeneratorServiceInject.generate(appfolder, entity, appConfig);
         /** Router Generate */
         await routeGeneratorServiceInject.generate(appfolder, entity);
+        /** Validators Generate */
+        await validatorGeneratorServiceInject.generate(appfolder, entity, appConfig);
         /** Controllers Generate */
         await controllerGeneratorServiceInject.generate(appfolder, entity, appConfig);
         /** Services Generate */
@@ -63,7 +67,7 @@ const generateBaseProject = async (request, response) => {
         const { body } = request;
         /*const userSession = getSession(request);
 
-        // Validate product Model
+        // Validate generator Model
         const validate = validateApp(body);
 
         if (!validate.isValid) {
@@ -76,6 +80,8 @@ const generateBaseProject = async (request, response) => {
         const {
             version,
             appName,
+            appPort,
+            appApiPath,
             author,
             email,
             appDescription,
@@ -88,6 +94,8 @@ const generateBaseProject = async (request, response) => {
 
         const appConfig = {
             appName,
+            appPort,
+            appApiPath,
             version,
             author,
             email,
@@ -103,9 +111,9 @@ const generateBaseProject = async (request, response) => {
 
             /** sanitize base file content */
             baseFiles?.filter(item => item.type === 'file').forEach(
-                file => {
+                async file => {
                     const { path } = file;
-                    ioFileServicesInject.sanitizeFileContent(`${appfolder}/${path}`, `${appfolder}/${path}`,
+                    await ioFileServicesInject.sanitizeFileContent(`${appfolder}/${path}`, `${appfolder}/${path}`,
                         (target, data, createFile) => {
 
                             const buffer = data.replaceAll('@appName@', toCamelCase(appName))
@@ -114,6 +122,8 @@ const generateBaseProject = async (request, response) => {
                                 .replaceAll('@appDescription@', appDescription)
                                 .replaceAll('@typeRepository@', repository?.type || 'git')
                                 .replaceAll('@urlRepository@', repository?.url || 'git.com')
+                                .replaceAll('@appPort@', appPort || '3000')
+                                .replaceAll('@appApiPath@', appApiPath || '/api/v1')
                                 .replaceAll('@author@', author || 'TdeA')
                                 .replaceAll('@dbHost@', dataBase?.host || 'change_it_example.com')
                                 .replaceAll('@dbName@', dataBase?.serviceName || 'dbName_change_it')
@@ -123,7 +133,7 @@ const generateBaseProject = async (request, response) => {
                                 .replaceAll('@jwtSecretKey@', auth?.jwtSecretKey || 'jwtSecretkey_change_it_base64' )
                                 .replaceAll('@cacheTTL@', cache?.ttl || '3600');
                             createFile(target, buffer);
-                        })
+                        });
                 }
             );
 

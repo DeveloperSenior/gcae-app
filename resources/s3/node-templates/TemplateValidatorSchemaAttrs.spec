@@ -1,0 +1,2 @@
+      "type": "@attrType@",
+      "nullable": @attrNullable@

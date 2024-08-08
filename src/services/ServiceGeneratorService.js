@@ -46,7 +46,7 @@ const ServiceGeneratorService = () => {
                     .replaceAll('@attrsModel@',attrsModel)
                     .replaceAll('@attrModelBuild@',attrModelBuild);
                 createFile(target, buffer);
-            })
+            });
 
 
 
