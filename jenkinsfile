@@ -1,0 +1,31 @@
+pipeline{
+
+    agent any
+
+    enviroment{
+        AWS_CREDENTIAL = credentials('aws-credential')
+    }
+
+    stages{
+        stage('Checkuot'){
+            steps{
+                checkout scm
+            }
+
+        }
+
+        stage('Install Dependencies'){
+            steps{
+                sh 'npm install'
+            }
+
+        }
+
+        stage('Run Test'){
+            steps{
+                sh 'npm test'
+            }
+        }
+    }
+
+}
