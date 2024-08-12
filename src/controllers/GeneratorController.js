@@ -131,7 +131,9 @@ const generateBaseProject = async (request, response) => {
                                 .replaceAll('@dbToken@', dataBase?.pass || 'pass_change_it_base64')
                                 .replaceAll('@dbProtocol@', dataBase?.protocol || 'http_change_it')
                                 .replaceAll('@jwtSecretKey@', auth?.jwtSecretKey || 'jwtSecretkey_change_it_base64' )
-                                .replaceAll('@cacheTTL@', cache?.ttl || '3600');
+                                .replaceAll('@cacheTTL@', cache?.ttl || '3600')
+                                 /** always count 2 routes default */
+                                .replaceAll('@countEntity@', (2 + entities?.length) || 2);
                             createFile(target, buffer);
                         });
                 }
