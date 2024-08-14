@@ -6,7 +6,7 @@
 
 const Ajv = require("ajv");
 const { DATE_FORMAT } = require('../utilities/Constants');
-const @entityName@Schema = require("../models/schema/@EntityName@Schema.json");
+const @entityName@Schema = require("../models/schemas/@EntityName@Schema.json");
 const moment = require('moment');
 
 const ajv = new Ajv({ allErrors: true });

@@ -9,6 +9,7 @@ module.exports = {
     collectCoverage: true,
     coverageReporters: ['text', 'html', 'lcov'],
     roots: ['<rootDir>/test/'],
+    setupFiles: ["<rootDir>/test/setup-tests.js"],
     coverageDirectory: '<rootDir>/coverage',
     coverageThreshold: {
         "global": {

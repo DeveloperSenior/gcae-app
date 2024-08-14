@@ -6,7 +6,7 @@
 
 const express = require('express');
 const controller = require('../controllers/GeneratorController');
-//const verifyTokenSession = require('../middleware/AuthMiddleware');
+const verifyTokenSession = require('../middleware/AuthMiddleware');
 
 const router = express.Router();
 
@@ -71,7 +71,7 @@ const router = express.Router();
  *              $ref: '#/components/schemas/DefaultException'
  *             type: object
  */
-router.put('/generateApp', controller.generateBaseProject);
+router.put('/generateApp',verifyTokenSession, controller.generateBaseProject);
 
 
 module.exports = router;

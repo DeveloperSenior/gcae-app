@@ -44,7 +44,7 @@ const RepositoryGeneratorService = () => {
             let attrModelBuildValue = "";
             fields?.forEach(attr => {
     
-               attrModelBuildValue = attrModelBuildValue + `.with${toPascalCase(attr.name)}(${getValueTest(attr)})`;
+               attrModelBuildValue = attrModelBuildValue + `.with${toPascalCase(attr.name)}(${getValueTest(attr)})\n`;
     
             }
             );

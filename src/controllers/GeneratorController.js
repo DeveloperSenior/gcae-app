@@ -4,7 +4,7 @@
  * @copyright Tecnologico de Antioquia 2024
  */
 
-const { pipe } = require('../utilities/Utilities');
+const { pipe, getSession} = require('../utilities/Utilities');
 const { HTTP_CODE } = require('../utilities/Constants');
 const { defer } = require('rxjs');
 const { toPascalCase,toCamelCase } = require('js-convert-case');
@@ -17,8 +17,12 @@ const ServiceGeneratorService = require('../services/ServiceGeneratorService');
 const ModelGeneratorService = require('../services/ModelGeneratorService');
 const RepositoryGeneratorService = require('../services/RepositoryGeneratorService');
 
+const GeneratorService = require('../services/GeneratorService');
+const GeneratorRepository = require('../db/GeneratorRepository');
+const { AppModel } = require('../models/AppModel');
 
-const processEntity = async (appConfig, entity, appfolder) => {
+
+const processEntity = async (appConfig, entity, appfolder, userSession) => {
 
     /** Dependency Inject */
     const modelGeneratorServiceInject = pipe(() => { }, ModelGeneratorService)();
@@ -45,7 +49,6 @@ const processEntity = async (appConfig, entity, appfolder) => {
         await repositoryGeneratorServiceInject.generate(appfolder, entity, appConfig);
 
 
-
     }).subscribe();
 
 
@@ -64,11 +67,13 @@ const generateBaseProject = async (request, response) => {
 
     try {
         const ioFileServicesInject = pipe(() => { }, IOFileService)();
+        const generatorServiceInject = pipe(GeneratorRepository, GeneratorService)(AppModel);
+
         const { body } = request;
-        /*const userSession = getSession(request);
+        const userSession = getSession(request);
 
         // Validate generator Model
-        const validate = validateApp(body);
+       /* const validate = validateApp(body);
 
         if (!validate.isValid) {
 
@@ -91,19 +96,6 @@ const generateBaseProject = async (request, response) => {
             cache,
             entities
         } = body;
-
-        const appConfig = {
-            appName,
-            appPort,
-            appApiPath,
-            version,
-            author,
-            email,
-            appDescription,
-            repository,
-            dataBase,
-            cache
-        }
 
         const appfolder = `${basePath}/${appName.toLowerCase()}-api`;
 
@@ -140,15 +132,17 @@ const generateBaseProject = async (request, response) => {
             );
 
             entities?.filter(entity => ('User' !== toPascalCase(entity.name) && 'Users' !== toPascalCase(entity.name)))
-                .forEach(async (entity) => await processEntity(appConfig, entity, appfolder));
+                .forEach(async (entity) => await processEntity(body, entity, appfolder, userSession));
         }
 
         await ioFileServicesInject.generateBaseProject(appfolder, generateProject);
+         /** Create App DB */
+        await generatorServiceInject.createApp(body, userSession);
 
         return response.status(HTTP_CODE.CREATED).json(body);
 
     } catch (error) {
-
+        console.log(error);
         return response.status(HTTP_CODE.ERROR).json(error);
 
     }

@@ -47,7 +47,7 @@ const ControllerGeneratorService = () => {
             if(attr.required){
               attrsModelRequired = attrsModelRequired + `"must have required property '${toCamelCase(attr.name)}'",\n`;
             }
-            attrModelBuild = attrModelBuild + `.with${toPascalCase(attr.name)}(${getValueTest(attr)})`;
+            attrModelBuild = attrModelBuild + `.with${toPascalCase(attr.name)}(${getValueTest(attr)})\n`;
         }
         );
 

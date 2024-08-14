@@ -10,6 +10,7 @@
 const routersApp = [
     require('./SwaggerRouteConf'),
     require('../GeneratorRoute'),
+    require('../UserRoute'),
     /** Import routes here */
 ];
 

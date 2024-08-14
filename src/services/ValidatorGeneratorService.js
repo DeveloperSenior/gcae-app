@@ -19,7 +19,7 @@ const ValidatorGeneratorService = () => {
     const TEMPLATE = 'Validator';
     const TEMPLATE_SCHEMA = 'ValidatorSchema';
     const FOLDER_TEMPLATE = 'src/validators';
-    const FOLDER_TEMPLATE_SCHEMA = 'src/models/schema';
+    const FOLDER_TEMPLATE_SCHEMA = 'src/models/schemas';
     const TEMPLATE_TEST = 'ValidatorTest';
     const FOLDER_TEMPLATE_TEST = 'test/validators';
 

@@ -36,9 +36,9 @@ const ServiceGeneratorService = () => {
         let attrsModel = "";
         fields?.forEach(attr => {
 
-            attrsModel = attrsModel + `${toCamelCase(attr.name)},`;
-            attrModelBuild = attrModelBuild + `.with${toPascalCase(attr.name)}(${toCamelCase(attr.name)})`;
-            attrModelBuildValue = attrModelBuildValue + `.with${toPascalCase(attr.name)}(${getValueTest(attr)})`;
+            attrsModel = attrsModel + `${toCamelCase(attr.name)},\n`;
+            attrModelBuild = attrModelBuild + `.with${toPascalCase(attr.name)}(${toCamelCase(attr.name)})\n`;
+            attrModelBuildValue = attrModelBuildValue + `.with${toPascalCase(attr.name)}(${getValueTest(attr)})\n`;
 
         }
         );
