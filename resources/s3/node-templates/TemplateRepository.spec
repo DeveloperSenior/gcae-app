@@ -78,7 +78,7 @@ const @EntityName@Repository = DbModel => {
      * @param {@EntityName@} @entityName@ 
      * @returns 
      */
-    const get@EntityName@ById = async (_id) => {
+    const get@EntityName@ById = async (_id,userId) => {
         try {
             return await DbModel.findOne({ _id: _id }).select("-__v"); // Retrieve without __v
         } catch (e) {

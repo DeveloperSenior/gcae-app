@@ -11,13 +11,16 @@
  */
 class @EntityName@ {
 
-    constructor(_id, user, @attrsModel@) {
+    constructor(_id, user, createdAt, updatedAt, @attrsModel@) {
 
         this._id = _id;
         /** audit object */
         this.user = user;
 
         @attrModelSet@
+
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
         
     }
 
@@ -40,6 +43,22 @@ class @EntityName@ {
         }
 
         @attrModelBuild@
+
+        withCreatedAt(createdAt) {
+
+            this.@entityName@.createdAt = createdAt;
+
+            return this;
+
+        }
+
+        withUpdatedAt(updatedAt) {
+
+            this.@entityName@.updatedAt = updatedAt;
+
+            return this;
+
+        }
 
         build() {
 

@@ -39,7 +39,7 @@ const @EntityName@Service = @entityName@Repository => {
     }
 
     /**
-     * find @EntityName@ By id
+     * get @EntityName@
      * @param {*} userSession 
      * @returns 
      */
@@ -71,7 +71,7 @@ const @EntityName@Service = @entityName@Repository => {
     }
 
     /**
-     * find all @EntityName@ Pager
+     * get all @EntityName@ Pager
      * @param {*} pageSize 
      * @param {*} pageNumber 
      * @param {*} body 

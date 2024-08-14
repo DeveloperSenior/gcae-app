@@ -27,7 +27,7 @@ const validateUpdate@EntityName@ = (_id, body) => {
     const errors = [];
     let isValid = true;
     if (!body) { errors.push("must have required body request"); isValid = false; }
-    if (!_id) { errors.push("must have required property path '_id'"); isValid = false; }
+    if (!_id) { errors.push("must have required property '_id'"); isValid = false; }
 
     return { isValid: isValid, errors: errors }
 

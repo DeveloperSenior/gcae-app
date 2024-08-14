@@ -7,6 +7,7 @@
 const IOFileService = require('./IOFileService');
 const { pipe } = require('../utilities/Utilities');
 const { toCamelCase, toPascalCase } = require('js-convert-case');
+const { getValueTest } = require('../utilities/ValuesTest');
 
 
 /**
@@ -19,6 +20,8 @@ const ValidatorGeneratorService = () => {
     const TEMPLATE_SCHEMA = 'ValidatorSchema';
     const FOLDER_TEMPLATE = 'src/validators';
     const FOLDER_TEMPLATE_SCHEMA = 'src/models/schema';
+    const TEMPLATE_TEST = 'ValidatorTest';
+    const FOLDER_TEMPLATE_TEST = 'test/validators';
 
     const generate = async (appfolder, entityModel, appConfig) => {
 
@@ -56,14 +59,14 @@ const ValidatorGeneratorService = () => {
                 attrsModelProperties = attrsModelProperties + schemaAttrsListTemplate.replaceAll('@attrName@', toCamelCase(name))
                     .replaceAll('@attrAdd@', attrsItemsAdd)
                     .replaceAll('@attrNullable@', (nullable || required) || true)
-                    .replaceAll('@quoted@',quoted);
+                    .replaceAll('@quoted@', quoted);
 
             } else {
 
                 attrsModelProperties = attrsModelProperties + schemaAttrsNormalTemplate.replaceAll('@attrName@', toCamelCase(name))
                     .replaceAll('@attrType@', toCamelCase(type))
                     .replaceAll('@attrNullable@', (nullable || required) || true)
-                    .replaceAll('@quoted@',quoted);
+                    .replaceAll('@quoted@', quoted);
             }
 
             if (pk | required) {
@@ -96,6 +99,16 @@ const ValidatorGeneratorService = () => {
                 createFile(target, buffer);
             });
 
+        /** Generate Test Service */
+        ioFileServicesInject.generateFileFromTemplate(TEMPLATE_TEST, `${appfolder}/${FOLDER_TEMPLATE_TEST}/${toPascalCase(name + TEMPLATE)}.test.js`,
+            (target, data, createFile) => {
+
+                const buffer = data.replaceAll('@EntityName@', toPascalCase(name))
+                    .replaceAll('@entityName@', toCamelCase(name))
+                    .replaceAll('@Description@', description);
+
+                createFile(target, buffer);
+            });
 
 
     }

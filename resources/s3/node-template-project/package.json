@@ -4,7 +4,7 @@
   "description": "@appDescription@",
   "main": "server.js",
   "scripts": {
-    "test": "jest --coverage --verbose --setupFiles dotenv/config --detectOpenHandles test/",
+    "test": "jest --coverage --verbose --detectOpenHandles test/",
     "runDev-watch": "nodemon -r dotenv/config server.js",
     "runDev": "node --env-file=.env server.js"
   },

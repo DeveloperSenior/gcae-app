@@ -7,6 +7,7 @@
 const IOFileService = require('./IOFileService');
 const { pipe } = require('../utilities/Utilities');
 const { toCamelCase, toPascalCase } = require('js-convert-case');
+const { getValueTest } =  require('../utilities/ValuesTest');
 
 
 /**
@@ -17,6 +18,8 @@ const ServiceGeneratorService = () => {
 
     const TEMPLATE = 'Service';
     const FOLDER_TEMPLATE = 'src/services';
+    const TEMPLATE_TEST = 'ServiceTest';
+    const FOLDER_TEMPLATE_TEST = 'test/services';    
 
     const generate = async (appfolder, entityModel, appConfig) => {
 
@@ -29,11 +32,14 @@ const ServiceGeneratorService = () => {
         const ioFileServicesInject = pipe(() => { }, IOFileService)();
 
         let attrModelBuild = "";
+        let attrModelBuildValue = "";
         let attrsModel = "";
         fields?.forEach(attr => {
 
             attrsModel = attrsModel + `${toCamelCase(attr.name)},`;
             attrModelBuild = attrModelBuild + `.with${toPascalCase(attr.name)}(${toCamelCase(attr.name)})`;
+            attrModelBuildValue = attrModelBuildValue + `.with${toPascalCase(attr.name)}(${getValueTest(attr)})`;
+
         }
         );
 
@@ -47,8 +53,18 @@ const ServiceGeneratorService = () => {
                     .replaceAll('@attrModelBuild@',attrModelBuild);
                 createFile(target, buffer);
             });
-
-
+    
+            /** Generate Test Service */
+            ioFileServicesInject.generateFileFromTemplate(TEMPLATE_TEST, `${appfolder}/${FOLDER_TEMPLATE_TEST}/${toPascalCase(name + TEMPLATE)}.test.js`,
+                (target, data, createFile) => {
+    
+                    const buffer = data.replaceAll('@EntityName@', toPascalCase(name))
+                        .replaceAll('@entityName@', toCamelCase(name))
+                        .replaceAll('@Description@', description)
+                        .replaceAll('@attrModelBuild@',attrModelBuildValue);
+    
+                    createFile(target, buffer);
+                });
 
     }
 

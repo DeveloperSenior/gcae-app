@@ -60,10 +60,9 @@ const create@EntityName@ = async (request, response) => {
 
 const get@EntityName@ = async (request, response) => {
 
-    const { params } = request;
-    const userSession = getSession(request);
-
     try {
+        const { params } = request;
+        const userSession = getSession(request);
         const @entityName@ServicesInject = pipe(@entityName@Repository, @entityName@Service)(@EntityName@Model);
         const @entityName@s = await @entityName@ServicesInject.get@EntityName@(params,userSession);
 
@@ -84,9 +83,9 @@ const get@EntityName@ = async (request, response) => {
  */
 const getAll@EntityName@ = async (request, response) => {
 
-    const userSession = getSession(request);
-
     try {
+
+        const userSession = getSession(request);        
         const @entityName@ServicesInject = pipe(@entityName@Repository, @entityName@Service)(@EntityName@Model);
         const @entityName@s = await @entityName@ServicesInject.getAll@EntityName@(userSession);
 
