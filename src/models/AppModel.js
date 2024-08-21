@@ -46,7 +46,5 @@ const appSchema = new Schema(
 appSchema.loadClass(App);
 appSchema.plugin(mongoosePaginate);
 
-const AppModel = model('App', appSchema);
-
-module.exports = { AppModel }
+module.exports = {AppModel: model('App', appSchema)};
 

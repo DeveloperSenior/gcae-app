@@ -4,10 +4,10 @@
  * @copyright Tecnologico de Antioquia 2024
  */
 
-const { pipe, getSession} = require('../utilities/Utilities');
+const { pipe, getSession } = require('../utilities/Utilities');
 const { HTTP_CODE } = require('../utilities/Constants');
-const { defer } = require('rxjs');
-const { toPascalCase,toCamelCase } = require('js-convert-case');
+const { of, defer, Observable } = require('rxjs');
+const { toPascalCase, toCamelCase } = require('js-convert-case');
 
 const IOFileService = require('../services/IOFileService');
 const RouteGeneratorService = require('../services/RouteGeneratorService');
@@ -21,123 +21,167 @@ const GeneratorService = require('../services/GeneratorService');
 const GeneratorRepository = require('../db/GeneratorRepository');
 const { AppModel } = require('../models/AppModel');
 
+const { readDir } = require('../utilities/IOUtil');
 
+/** Dependency Inject */
+const modelGeneratorServiceInject = pipe(() => { }, ModelGeneratorService)();
+const routeGeneratorServiceInject = pipe(() => { }, RouteGeneratorService)();
+const validatorGeneratorServiceInject = pipe(() => { }, ValidatorGeneratorService)();
+const controllerGeneratorServiceInject = pipe(() => { }, ControllerGeneratorService)();
+const serviceGeneratorServiceInject = pipe(() => { }, ServiceGeneratorService)();
+const repositoryGeneratorServiceInject = pipe(() => { }, RepositoryGeneratorService)();
+const ioFileServicesInject = pipe(() => { }, IOFileService)();
+
+const basePath = process.env.BASE_PATH || 'tmp';
+
+/**
+ * process Entity
+ * @param {*} appConfig 
+ * @param {*} entity 
+ * @param {*} appfolder 
+ * @param {*} userSession 
+ */
 const processEntity = async (appConfig, entity, appfolder, userSession) => {
 
-    /** Dependency Inject */
-    const modelGeneratorServiceInject = pipe(() => { }, ModelGeneratorService)();
-    const routeGeneratorServiceInject = pipe(() => { }, RouteGeneratorService)();
-    const validatorGeneratorServiceInject = pipe(() => { }, ValidatorGeneratorService)();
-    const controllerGeneratorServiceInject = pipe(() => { }, ControllerGeneratorService)();
-    const serviceGeneratorServiceInject = pipe(() => { }, ServiceGeneratorService)();
-    const repositoryGeneratorServiceInject = pipe(() => { }, RepositoryGeneratorService)();
-
-    /** Generator async subscribe */
-    defer(async () => {
-
+    try {
         /** Model Generate */
-        await modelGeneratorServiceInject.generate(appfolder, entity, appConfig);
+        await modelGeneratorServiceInject.generate(`${basePath}/${appfolder}`, entity, appConfig);
         /** Router Generate */
-        await routeGeneratorServiceInject.generate(appfolder, entity);
+        await routeGeneratorServiceInject.generate(`${basePath}/${appfolder}`, entity);
         /** Validators Generate */
-        await validatorGeneratorServiceInject.generate(appfolder, entity, appConfig);
+        await validatorGeneratorServiceInject.generate(`${basePath}/${appfolder}`, entity, appConfig);
         /** Controllers Generate */
-        await controllerGeneratorServiceInject.generate(appfolder, entity, appConfig);
+        await controllerGeneratorServiceInject.generate(`${basePath}/${appfolder}`, entity, appConfig);
         /** Services Generate */
-        await serviceGeneratorServiceInject.generate(appfolder, entity);
+        await serviceGeneratorServiceInject.generate(`${basePath}/${appfolder}`, entity);
         /** Repository Generate */
-        await repositoryGeneratorServiceInject.generate(appfolder, entity, appConfig);
+        await repositoryGeneratorServiceInject.generate(`${basePath}/${appfolder}`, entity, appConfig);
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
 
+/**
+ * sanitize Base Project
+ * @param {*} target 
+ * @param {*} data 
+ * @param {*} createFile 
+ */
+const sanitizeBaseProject = (body, target, data, createFile) => {
 
-    }).subscribe();
+    const {
+        version,
+        appName,
+        appPort,
+        appApiPath,
+        author,
+        email,
+        appDescription,
+        repository,
+        dataBase,
+        auth,
+        cache,
+        entities
+    } = body;
 
+    const buffer = data.replaceAll('@appName@', toCamelCase(appName))
+        .replaceAll('@version@', version || '1.0')
+        .replaceAll('@email@', email || '')
+        .replaceAll('@appDescription@', appDescription)
+        .replaceAll('@typeRepository@', repository?.type || 'git')
+        .replaceAll('@urlRepository@', repository?.url || 'git.com')
+        .replaceAll('@appPort@', appPort || '3000')
+        .replaceAll('@appApiPath@', appApiPath || '/api/v1')
+        .replaceAll('@author@', author || 'TdeA')
+        .replaceAll('@dbHost@', dataBase?.host || 'change_it_example.com')
+        .replaceAll('@dbName@', dataBase?.serviceName || 'dbName_change_it')
+        .replaceAll('@dbUser@', dataBase?.user || 'dbUser_change_it')
+        .replaceAll('@dbToken@', dataBase?.pass || 'pass_change_it_base64')
+        .replaceAll('@dbProtocol@', dataBase?.protocol || 'http_change_it')
+        .replaceAll('@jwtSecretKey@', auth?.jwtSecretKey || 'jwtSecretkey_change_it_base64')
+        .replaceAll('@cacheTTL@', cache?.ttl || '3600')
+        /** always count 2 routes default */
+        .replaceAll('@countEntity@', (2 + entities?.length) || 2);
+    createFile(target, buffer);
+}
 
+/**
+ * generate Project
+ * @param {*} entities 
+ * @param {*} appfolder 
+ * @param {*} userSession 
+ */
+const generateProject = async (body, entities, appfolder, userSession) => {
+
+    console.log('INIT processEntity');
+    const dataToprocess = entities?.filter(entity => 'User' !== toPascalCase(entity.name) && 'Users' !== toPascalCase(entity.name));
+    for await (entity of dataToprocess) {
+        try {
+            console.log(`processing entity ${entity.name}`);
+            await processEntity(body, entity, appfolder, userSession);
+            console.log(`entity ${entity.name} processed`);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    console.log('END processEntity');
 
 }
 
 /**
- * generate Base Project
+ * main program
  * @param {*} request 
  * @param {*} response 
  * @returns 
  */
-const generateBaseProject = async (request, response) => {
-
-    const basePath = process.env.BASE_PATH || 'tmp';
+const main = async (request, response) => {
 
     try {
-        const ioFileServicesInject = pipe(() => { }, IOFileService)();
+
         const generatorServiceInject = pipe(GeneratorRepository, GeneratorService)(AppModel);
 
         const { body } = request;
         const userSession = getSession(request);
 
         // Validate generator Model
-       /* const validate = validateApp(body);
-
-        if (!validate.isValid) {
-
-            // if validation failure, send error response
-            return response.status(HTTP_CODE.BAD_REQUEST).json({ message: validate.errors });
-
-        }*/
+        /* const validate = validateApp(body);
+ 
+         if (!validate.isValid) {
+ 
+             // if validation failure, send error response
+             return response.status(HTTP_CODE.BAD_REQUEST).json({ message: validate.errors });
+ 
+         }*/
 
         const {
-            version,
             appName,
-            appPort,
-            appApiPath,
-            author,
-            email,
-            appDescription,
-            repository,
-            dataBase,
-            auth,
-            cache,
             entities
         } = body;
 
-        const appfolder = `${basePath}/${appName.toLowerCase()}-api`;
+        const appfolder = `${appName.toLowerCase()}-api`;
+        console.log('INIT PROCESS');
+        await ioFileServicesInject.generateBaseProject(`${basePath}/${appfolder}`);
+        await generateProject(body, entities, appfolder, userSession);
 
-        const generateProject = (baseFiles) => {
+        baseFiles = readDir(`${basePath}/${appfolder}`, true, true);
 
-            /** sanitize base file content */
-            baseFiles?.filter(item => item.type === 'file').forEach(
-                async file => {
-                    const { path } = file;
-                    await ioFileServicesInject.sanitizeFileContent(`${appfolder}/${path}`, `${appfolder}/${path}`,
-                        (target, data, createFile) => {
-
-                            const buffer = data.replaceAll('@appName@', toCamelCase(appName))
-                                .replaceAll('@version@', version || '1.0')
-                                .replaceAll('@email@', email || '')
-                                .replaceAll('@appDescription@', appDescription)
-                                .replaceAll('@typeRepository@', repository?.type || 'git')
-                                .replaceAll('@urlRepository@', repository?.url || 'git.com')
-                                .replaceAll('@appPort@', appPort || '3000')
-                                .replaceAll('@appApiPath@', appApiPath || '/api/v1')
-                                .replaceAll('@author@', author || 'TdeA')
-                                .replaceAll('@dbHost@', dataBase?.host || 'change_it_example.com')
-                                .replaceAll('@dbName@', dataBase?.serviceName || 'dbName_change_it')
-                                .replaceAll('@dbUser@', dataBase?.user || 'dbUser_change_it')
-                                .replaceAll('@dbToken@', dataBase?.pass || 'pass_change_it_base64')
-                                .replaceAll('@dbProtocol@', dataBase?.protocol || 'http_change_it')
-                                .replaceAll('@jwtSecretKey@', auth?.jwtSecretKey || 'jwtSecretkey_change_it_base64' )
-                                .replaceAll('@cacheTTL@', cache?.ttl || '3600')
-                                 /** always count 2 routes default */
-                                .replaceAll('@countEntity@', (2 + entities?.length) || 2);
-                            createFile(target, buffer);
-                        });
-                }
-            );
-
-            entities?.filter(entity => ('User' !== toPascalCase(entity.name) && 'Users' !== toPascalCase(entity.name)))
-                .forEach(async (entity) => await processEntity(body, entity, appfolder, userSession));
+        /** sanitize base file content */
+        console.log('INIT sanitize');
+        const dataToSanitize = baseFiles?.filter(item => item.isFile());
+        for await (file of dataToSanitize) {
+            const { path, name } = file;
+            const { target, content, createFile } = await ioFileServicesInject.sanitizeFileContent(`${path}/${name}`, `${path}/${name}`);
+            sanitizeBaseProject(body, target, content, createFile);
         }
+        console.log('END sanitize');
 
-        await ioFileServicesInject.generateBaseProject(appfolder, generateProject);
-         /** Create App DB */
+        console.log('END PROCESS');
+        /** Create App DB */
         await generatorServiceInject.createApp(body, userSession);
+        /** put Zip S3*/
+        await ioFileServicesInject.saveFile(basePath, `${appfolder}`);
+
 
         return response.status(HTTP_CODE.CREATED).json(body);
 
@@ -151,5 +195,5 @@ const generateBaseProject = async (request, response) => {
 }
 
 module.exports = {
-    generateBaseProject
+    main
 }

@@ -15,12 +15,13 @@ const {
     CreateMultipartUploadRequestFilterSensitiveLog,
 } = require("@aws-sdk/client-s3");
 
+const DefaultException = require('../../models/exception/DefaultException');
 const cache = require('../../utilities/CacheUtil');
+const { isDebug } = require('../../utilities/Utilities');
 
 const S3Service = () => {
 
     const region = (process.env.AWS_REGION || 'us-east-1');
-
     /**
      * Read the object as String.
      * @param {string} bucket 
@@ -33,7 +34,8 @@ const S3Service = () => {
             let content = cache.get(key);
 
             if (!content) {
-                console.log(`cache '${key}' not found, go to AWS S3`);
+                if (isDebug())
+                    console.log(`cache '${key}' not found, go to AWS S3`);
                 const s3Client = new S3Client({ region: region });
                 const { Body } = await s3Client.send(
                     new GetObjectCommand({
@@ -42,16 +44,18 @@ const S3Service = () => {
                     })
                 );
                 content = await Body.transformToString();
-                cache.set(`s3-${bucket}-${name}`, content)
+                cache.set(`s3-${bucket}-${name}`, content);
+
             }
             return {
                 fileName: name,
                 data: content
             };
         } catch (e) {
-            console.log('Error:', e);
+            console.error('Error: ', e);
+            const excepcion = new DefaultException(e.message);
+            throw excepcion;
         }
-        return null;
     }
 
     /**
@@ -66,7 +70,8 @@ const S3Service = () => {
             let content = cache.get(key);
 
             if (!content) {
-                console.log(`cache '${key}' not found, go to AWS S3`);
+                if (isDebug())
+                    console.log(`cache '${key}' not found, go to AWS S3`);
                 const s3Client = new S3Client({ region: region });
                 const { Body } = await s3Client.send(
                     new GetObjectCommand({
@@ -82,14 +87,42 @@ const S3Service = () => {
                 data: content
             };
         } catch (e) {
-            console.log('Error:', e);
+            console.error('Error: ', e);
+            const excepcion = new DefaultException(e.message);
+            throw excepcion;
         }
-        return null;
+    }
+
+    /**
+     * put Object in S3
+     * @param {*} bucket 
+     * @param {*} name 
+     * @param {*} content 
+     */
+    const putObject = async (bucket, name, content) => {
+        try {
+            const s3Client = new S3Client({ region: region });
+            // Put an object into an Amazon S3 bucket.
+            if (isDebug())
+                console.log(`put '${name}' to AWS S3`);
+            return await s3Client.send(
+                new PutObjectCommand({
+                    Bucket: bucket,
+                    Key: name,
+                    Body: content,
+                })
+            );
+        } catch (e) {
+            console.error('Error: ', e);
+            const excepcion = new DefaultException(e.message);
+            throw excepcion;
+        }
     }
 
     return {
         getObjectAsString,
-        getObjectAsByteArray
+        getObjectAsByteArray,
+        putObject
     }
 }
 

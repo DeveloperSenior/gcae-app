@@ -4,9 +4,10 @@
  * @copyright Tecnologico de Antioquia 2024
  */
 
-const fs = require('node:fs');
+const fs = require('fs');
 const DefaultException = require('../models/exception/DefaultException');
 const decompress = require('decompress');
+const { isDebug } = require('../utilities/Utilities');
 
 /**
  * create recursive Folders 
@@ -18,6 +19,7 @@ const createFolders = (folderName) => {
             fs.mkdirSync(folderName, { recursive: true });
         }
     } catch (e) {
+        console.error('Error: ',e);
         const excepcion = new DefaultException(e.message);
         throw excepcion;
     }
@@ -31,9 +33,10 @@ const createFolders = (folderName) => {
 const createFile = (path, content) => {
     try {
         fs.writeFileSync(path, content);
-        console.info(`File '${path}' created successfully`);
+        if (isDebug())
+            console.info(`File '${path}' created successfully`);
     } catch (e) {
-        console.error(`creation of file '${path}' failed`);
+        console.error(`creation of file '${path}' failed: `, e);
         const excepcion = new DefaultException(e.message);
         throw excepcion;
     }
@@ -43,23 +46,19 @@ const createFile = (path, content) => {
  * create File compress And Unzip
  * @param {String} path 
  * @param {String} target 
- * @param {Object} content 
- * @param {*} callBack CallBack function to start when the function over
+ * @param {Object} content
  */
-const createFileAndUnzip = async (path, target, content, callBack) => {
+const createFileAndUnzip = async (path, target, content) => {
     try {
 
         fs.writeFileSync(path, content);
-        decompress(path, target).then(files => {
+        await decompress(path, target);
+        if (isDebug())
             console.log('Unzip file done!');
-            fs.rmSync(path);
-            callBack(files);
-        }).catch(error=> {
-            console.log('Unzip file Error:',error);
-            throw error;
-        });
+        fs.rmSync(path);
 
     } catch (e) {
+        console.error('Error: ', e);
         const excepcion = new DefaultException(e.message);
         throw excepcion;
     }
@@ -75,6 +74,23 @@ const readFile = (path) => {
         const data = fs.readFileSync(path, 'utf8');
         return data;
     } catch (e) {
+        console.error('Error: ', e);
+        const excepcion = new DefaultException(e.message);
+        throw excepcion;
+    }
+}
+
+/**
+ * read Dir
+ * @param {*} path 
+ * @returns 
+ */
+const readDir = (path, _recursive = false, _withFileTypes = false) => {
+    try {
+        const data = fs.readdirSync(path, { withFileTypes: _withFileTypes, recursive: _recursive });
+        return data;
+    } catch (e) {
+        console.error('Error: ',e);
         const excepcion = new DefaultException(e.message);
         throw excepcion;
     }
@@ -84,9 +100,16 @@ const readFile = (path) => {
  * delete File
  * @param {*} path 
  */
-const deleteFile = (path) =>{
+const deleteFile = (path) => {
     fs.rmSync(path);
 }
 
 
-module.exports = { createFolders, createFile, createFileAndUnzip, readFile, deleteFile }
+module.exports = {
+    createFolders,
+    createFile,
+    createFileAndUnzip,
+    readFile,
+    readDir,
+    deleteFile
+}

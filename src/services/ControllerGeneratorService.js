@@ -7,7 +7,7 @@
 const IOFileService = require('../services/IOFileService');
 const { pipe } = require('../utilities/Utilities');
 const { toCamelCase, toPascalCase } = require('js-convert-case');
-const { getValueTest } =  require('../utilities/ValuesTest');
+const { getValueTest } = require('../utilities/ValuesTest');
 
 
 /**
@@ -21,53 +21,75 @@ const ControllerGeneratorService = () => {
     const TEMPLATE_TEST = 'ControllerTest';
     const FOLDER_TEMPLATE_TEST = 'test/controllers';
 
+    /**
+     * generate Controller
+     * @param {*} target 
+     * @param {*} data 
+     * @param {*} createFile 
+     */
+    const generateController = async (entityModel, target, data, createFile) => {
+        const {
+            name,
+            description,
+        } = entityModel;
+        const buffer = data.replaceAll('@EntityName@', toPascalCase(name))
+            .replaceAll('@entityName@', toCamelCase(name))
+            .replaceAll('@Description@', description);
+        createFile(target, buffer);
+    }
+
+    /**
+     * generate Test
+     * @param {*} target 
+     * @param {*} data 
+     * @param {*} createFile 
+     */
+    const generateTest = async (entityModel, target, data, createFile, attrModelBuild, attrsModelRequired) => {
+        const {
+            name,
+            description,
+        } = entityModel;
+        const buffer = data.replaceAll('@EntityName@', toPascalCase(name))
+            .replaceAll('@entityName@', toCamelCase(name))
+            .replaceAll('@Description@', description)
+            .replaceAll('@attrModelBuild@', attrModelBuild)
+            .replaceAll('@attrModelBuildRequired@', attrsModelRequired);
+
+        createFile(target, buffer);
+    }
+
+    /**
+     * generate module
+     * @param {*} appfolder 
+     * @param {*} entityModel 
+     * @param {*} appConfig 
+     */
     const generate = async (appfolder, entityModel, appConfig) => {
 
         const {
             name,
-            description,
             fields
         } = entityModel;
 
         const ioFileServicesInject = pipe(() => { }, IOFileService)();
         /** Generate Controller */
-        ioFileServicesInject.generateFileFromTemplate(TEMPLATE, `${appfolder}/${FOLDER_TEMPLATE}/${toPascalCase(name + TEMPLATE)}.js`,
-            (target, data, createFile) => {
-
-                const buffer = data.replaceAll('@EntityName@', toPascalCase(name))
-                    .replaceAll('@entityName@', toCamelCase(name))
-                    .replaceAll('@Description@', description);
-                createFile(target, buffer);
-            });
+        const { target, data, createFile } = await ioFileServicesInject.generateFileFromTemplate(TEMPLATE, `${appfolder}/${FOLDER_TEMPLATE}/${toPascalCase(name + TEMPLATE)}.js`);
+        generateController(entityModel, target,data, createFile);
 
         let attrModelBuild = "";
         let attrsModelRequired = "";
         fields?.forEach(attr => {
 
-            if(attr.required){
-              attrsModelRequired = attrsModelRequired + `"must have required property '${toCamelCase(attr.name)}'",\n`;
+            if (attr.required) {
+                attrsModelRequired = attrsModelRequired + `"must have required property '${toCamelCase(attr.name)}'",\n`;
             }
             attrModelBuild = attrModelBuild + `.with${toPascalCase(attr.name)}(${getValueTest(attr)})\n`;
         }
         );
 
         /** Generate Test Controller */
-        ioFileServicesInject.generateFileFromTemplate(TEMPLATE_TEST, `${appfolder}/${FOLDER_TEMPLATE_TEST}/${toPascalCase(name + TEMPLATE)}.test.js`,
-            (target, data, createFile) => {
-
-                const buffer = data.replaceAll('@EntityName@', toPascalCase(name))
-                    .replaceAll('@entityName@', toCamelCase(name))
-                    .replaceAll('@Description@', description)
-                    .replaceAll('@attrModelBuild@',attrModelBuild)
-                    .replaceAll('@attrModelBuildRequired@',attrsModelRequired);
-
-                createFile(target, buffer);
-            });
-
-
-
-
-
+        const { target: targetTest, data: dataTest } = await ioFileServicesInject.generateFileFromTemplate(TEMPLATE_TEST, `${appfolder}/${FOLDER_TEMPLATE_TEST}/${toPascalCase(name + TEMPLATE)}.test.js`);
+        generateTest(entityModel, targetTest,dataTest,createFile, attrModelBuild, attrsModelRequired);
     }
 
     return {

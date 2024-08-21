@@ -1,3 +1,9 @@
+/** 
+ * @author Andres Felipe Escobar López
+ * @date 2024
+ * @copyright Tecnologico de Antioquia 2024
+ */
+
 const { User } = require('../../src/models/dto/User');
 const bcrypt = require('bcrypt');
 const DefaultException = require('../../src/models/exception/DefaultException');

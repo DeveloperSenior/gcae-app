@@ -16,7 +16,6 @@ const DefaultException = require('../../src/models/exception/DefaultException');
  * @returns 
  */
 const pipe = (...fns) => x => fns.reduce((y, f) => f(y), x);
-
 /**
  * Get User session
  * @param {*} request HTTP param
@@ -36,4 +35,8 @@ const getSession = (request) => {
     return null;
 }
 
-module.exports = { pipe, getSession }
+const isDebug = () =>{
+    return (process.env.APP_DEBUG === 'S');
+}
+
+module.exports = { pipe, getSession, isDebug }

@@ -26,7 +26,5 @@ const @entityName@Schema = new Schema(
 @entityName@Schema.loadClass(@EntityName@);
 @entityName@Schema.plugin(mongoosePaginate);
 
-const @EntityName@Model = model('@EntityName@', @entityName@Schema);
-
-module.exports = { @EntityName@Model }
+module.exports = { @EntityName@Model: model('@EntityName@', @entityName@Schema) }
 

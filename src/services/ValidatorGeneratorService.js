@@ -23,11 +23,73 @@ const ValidatorGeneratorService = () => {
     const TEMPLATE_TEST = 'ValidatorTest';
     const FOLDER_TEMPLATE_TEST = 'test/validators';
 
+    /**
+     * generate Schema
+     * @param {*} entityModel 
+     * @param {*} target 
+     * @param {*} data 
+     * @param {*} createFile 
+     */
+    const generateSchema = async (entityModel, target, data, createFile, attrsModelProperties, attrsModelRequired) => {
+        const {
+            name
+        } = entityModel;
+        const buffer = data.replaceAll('@EntityName@', toPascalCase(name))
+            .replaceAll('@entityName@', toCamelCase(name))
+            .replaceAll('@attrsProperties@', attrsModelProperties)
+            .replaceAll('@attrsRequired@', attrsModelRequired);
+        createFile(target, buffer);
+    }
+
+    /**
+     * generate Validator
+     * @param {*} entityModel 
+     * @param {*} target 
+     * @param {*} data 
+     * @param {*} createFile 
+     */
+    const generateValidator = async (entityModel, target, data, createFile) => {
+
+        const {
+            name,
+            description
+        } = entityModel;
+
+        const buffer = data.replaceAll('@EntityName@', toPascalCase(name))
+            .replaceAll('@entityName@', toCamelCase(name))
+            .replaceAll('@Description@', description);
+        createFile(target, buffer);
+    }
+
+    /**
+     * generate Test
+     * @param {*} entityModel 
+     * @param {*} target 
+     * @param {*} data 
+     * @param {*} createFile 
+     */
+    const generateTest = async (entityModel, target, data, createFile) => {
+        const {
+            name,
+            description
+        } = entityModel;
+        const buffer = data.replaceAll('@EntityName@', toPascalCase(name))
+            .replaceAll('@entityName@', toCamelCase(name))
+            .replaceAll('@Description@', description);
+
+        createFile(target, buffer);
+    }
+
+    /**
+     * generate module
+     * @param {*} appfolder 
+     * @param {*} entityModel 
+     * @param {*} appConfig 
+     */
     const generate = async (appfolder, entityModel, appConfig) => {
 
         const {
             name,
-            description,
             fields
         } = entityModel;
 
@@ -79,37 +141,16 @@ const ValidatorGeneratorService = () => {
         );
 
         /** Generate Schema */
-        ioFileServicesInject.generateFileFromTemplate(TEMPLATE_SCHEMA, `${appfolder}/${FOLDER_TEMPLATE_SCHEMA}/${toPascalCase(name)}Schema.json`,
-            (target, data, createFile) => {
-
-                const buffer = data.replaceAll('@EntityName@', toPascalCase(name))
-                    .replaceAll('@entityName@', toCamelCase(name))
-                    .replaceAll('@attrsProperties@', attrsModelProperties)
-                    .replaceAll('@attrsRequired@', attrsModelRequired);
-                createFile(target, buffer);
-            });
+        const { target: targetSchema, data: dataSchema, createFile } = await ioFileServicesInject.generateFileFromTemplate(TEMPLATE_SCHEMA, `${appfolder}/${FOLDER_TEMPLATE_SCHEMA}/${toPascalCase(name)}Schema.json`);
+        generateSchema(entityModel, targetSchema, dataSchema, createFile, attrsModelProperties, attrsModelRequired);
 
         /** Generate Validator */
-        ioFileServicesInject.generateFileFromTemplate(TEMPLATE, `${appfolder}/${FOLDER_TEMPLATE}/${toPascalCase(name + TEMPLATE)}.js`,
-            (target, data, createFile) => {
-
-                const buffer = data.replaceAll('@EntityName@', toPascalCase(name))
-                    .replaceAll('@entityName@', toCamelCase(name))
-                    .replaceAll('@Description@', description);
-                createFile(target, buffer);
-            });
+        const { target, data } = await ioFileServicesInject.generateFileFromTemplate(TEMPLATE, `${appfolder}/${FOLDER_TEMPLATE}/${toPascalCase(name + TEMPLATE)}.js`);
+        generateValidator(entityModel, target, data, createFile);
 
         /** Generate Test Service */
-        ioFileServicesInject.generateFileFromTemplate(TEMPLATE_TEST, `${appfolder}/${FOLDER_TEMPLATE_TEST}/${toPascalCase(name + TEMPLATE)}.test.js`,
-            (target, data, createFile) => {
-
-                const buffer = data.replaceAll('@EntityName@', toPascalCase(name))
-                    .replaceAll('@entityName@', toCamelCase(name))
-                    .replaceAll('@Description@', description);
-
-                createFile(target, buffer);
-            });
-
+        const { target: targetTest, data: dataTest } = await ioFileServicesInject.generateFileFromTemplate(TEMPLATE_TEST, `${appfolder}/${FOLDER_TEMPLATE_TEST}/${toPascalCase(name + TEMPLATE)}.test.js`);
+        generateTest(entityModel, targetTest, dataTest, createFile);
 
     }
 

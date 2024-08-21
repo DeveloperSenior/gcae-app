@@ -11,7 +11,7 @@
  */
 class App {
 
-    constructor(_id, user, createdAt, updatedAt, appName, appPort, appDescription, author, version, repository, cache, dataBase, entities,) {
+    constructor(_id, user, createdAt, updatedAt, appName, appPort, appDescription, author, version, repository, cache, dataBase, entities, auth) {
 
         this._id = _id;
         /** audit object */
@@ -21,6 +21,7 @@ class App {
         this.appPort = appPort;
         this.appDescription = appDescription;
         this.author = author;
+        this.auth = auth;
         this.version = version;
         this.repository = repository;
         this.cache = cache;
@@ -79,6 +80,11 @@ class App {
 
         withRepository(repository) {
             this.app.repository = repository;
+            return this;
+        }
+
+        withAuth(auth) {
+            this.app.auth = auth;
             return this;
         }
 

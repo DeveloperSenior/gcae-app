@@ -4,9 +4,14 @@
  * @copyright Tecnologico de Antioquia 2024
  */
 
-const { pipe } = require('../utilities/Utilities');
-const { createFolders, createFile, createFileAndUnzip, readFile } = require('../utilities/IOUtil');
+const { pipe, isDebug } = require('../utilities/Utilities');
+const { createFolders,
+    createFile,
+    createFileAndUnzip,
+    readFile,
+    readDir } = require('../utilities/IOUtil');
 const S3Service = require('./aws/S3Service');
+const admz = require('adm-zip');
 
 
 /**
@@ -19,39 +24,46 @@ const IOFileService = generatorRepository => {
     const bucketTemplates = process.env.BUCKET_TEMPLATE || `${process.env.ENV || 'dllo'}-gcae-templates`
     const nodeTemplateProject = process.env.NODE_TEMPLATE_PROJECT || 'node-template-project.zip';
     const nodeTemplates = process.env.NODE_TEMPLATES || 'node-templates';
+    const bucketFolderApps = process.env.BUCKET_FOLDER_APPS || 'apps';
 
 
     /**
-     * 
+     * generate File FromTemplate
      * @param {*} fileTemplateName file S3 fileName 
      * @param {*} target target to create file
-     * @param {*} callback callback abstract function implement
      */
-    const generateFileFromTemplate = async (fileTemplateName, target, callback) => {
+    const generateFileFromTemplate = async (fileTemplateName, target) => {
 
+        try{
         const s3ServiceInject = pipe(() => { }, S3Service)();
         const { fileName, data } = await s3ServiceInject.getObjectAsString(bucketTemplates, `${nodeTemplates}/Template${fileTemplateName}.spec`);
-        /** callback abstract function */
-        callback(target, data, createFile, fileName);
+        return {
+            target: target, data: data, createFile: createFile, fileName: fileName
+        }
+       }catch(error){
+         console.error(error);
+         throw error;
+       }
     }
 
 
     /**
      * Generate Base Project to app model data
      * @param {String} appfolder Configuration model of the app to be created
-     * @param {*} callBack CallBack function to start when the function over
      */
-    const generateBaseProject = async (appfolder, callBack) => {
+    const generateBaseProject = async (appfolder) => {
 
 
         /** project root is created */
+        if(isDebug)
+         console.log('Crear folders');
         createFolders(appfolder);
 
         const s3ServiceInject = pipe(() => { }, S3Service)();
 
         const { fileName, data } = await s3ServiceInject.getObjectAsByteArray(bucketTemplates, nodeTemplateProject);
-        createFileAndUnzip(`${appfolder}/${fileName}`, appfolder, data, callBack);
-
+        await createFileAndUnzip(`${appfolder}/${fileName}`, appfolder, data);
+        return {target:appfolder, data:data }
     }
 
     /**
@@ -59,29 +71,58 @@ const IOFileService = generatorRepository => {
      * @param {*} fileTemplateName 
      * @returns Json with content from file
      */
-    const getContentFileFromTemplate = async (fileTemplateName) => {
+    const getContentFileFromTemplate = async(fileTemplateName) => {
 
         const s3ServiceInject = pipe(() => { }, S3Service)();
         const { data } = await s3ServiceInject.getObjectAsString(bucketTemplates, `${nodeTemplates}/Template${fileTemplateName}.spec`);
-        return { fileName: fileTemplateName, data };
+        return { fileName: fileTemplateName, data:data };
     }
 
     /**
- * get all Content from File Template
- * @param {*} fileTemplateName 
- * @returns Json with content from file
- */
-    const sanitizeFileContent = async (file,target, callback, isLocal = true) => {
+     * sanitize File Content
+     * @param {*} file 
+     * @param {*} target 
+     * @param {*} callback 
+     * @param {*} isLocal 
+     */
+    const sanitizeFileContent = (file, target, isLocal = true) => {
 
         let content = ''
         if (isLocal) {
             content = readFile(file);
         } else {
             const s3ServiceInject = pipe(() => { }, S3Service)();
-            const { data } = await s3ServiceInject.getObjectAsString(bucketTemplates, `${nodeTemplates}/Template${file}.spec`);
+            const { data } = s3ServiceInject.getObjectAsString(bucketTemplates, `${nodeTemplates}/Template${file}.spec`);
             content = data;
         }
-        callback(target, content, createFile)
+        return {
+            target: target, content: content, createFile: createFile
+        }
+    }
+
+    /**
+     * save File
+     * @param {*} folder 
+     */
+    const saveFile = async (basePath, folder) => {
+
+        const s3ServiceInject = pipe(() => { }, S3Service)();
+        const toZip = readDir(`${basePath}/${folder}`,true,true);
+        const zp = new admz();
+        const zipName = `${folder}.zip`
+        /*for (let k = 0; k < toZip?.length; k++) {
+            const file = toZip[k];
+            zp.addLocalFile(`${file.path}/${file.name}`, file.path);
+        }*/
+        zp.addLocalFolder(`${basePath}/${folder}`);
+        zp.writeZip(`${basePath}/${zipName}`);
+
+        const data = zp.toBuffer();
+
+        const s3Response = await s3ServiceInject.putObject(`${bucketTemplates}`, `${bucketFolderApps}/${zipName}`, data);
+        
+        return { fileName: zipName, buffer: data };
+
     }
 
 
@@ -89,7 +130,8 @@ const IOFileService = generatorRepository => {
         generateBaseProject,
         generateFileFromTemplate,
         getContentFileFromTemplate,
-        sanitizeFileContent
+        sanitizeFileContent,
+        saveFile
     }
 
 }
