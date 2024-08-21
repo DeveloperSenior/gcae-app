@@ -15,7 +15,7 @@ const DefaultException = require('../../src/models/exception/DefaultException');
  * @param  {...any} fns 
  * @returns 
  */
-const pipe = (...fns) => x => fns.reduce((y, f) => f(y), x);
+const inject = (...fns) => x => fns.reduce((y, f) => f(y), x);
 
 /**
  * Get User session
@@ -36,4 +36,4 @@ const getSession = (request) => {
     return null;
 }
 
-module.exports = { pipe, getSession }
+module.exports = { inject, getSession }

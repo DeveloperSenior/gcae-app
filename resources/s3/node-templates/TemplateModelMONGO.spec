@@ -18,6 +18,8 @@ const @entityName@Schema = new Schema(
         _id: Schema.Types.ObjectId,
         user: { type: Schema.Types.ObjectId, required: true, index: true, ref: 'User' },
         @attrsModel@
+        createdAt: { type: Date, required: true, index: true},
+        updatedAt: { type: Date, index: true},
         
     }
 );

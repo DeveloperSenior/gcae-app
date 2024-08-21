@@ -84,6 +84,20 @@ const GeneratorRepository = DbModel => {
         }
     }
 
+        /**
+     * get App By Id
+     * @param {App} app 
+     * @returns 
+     */
+        const getAppByName = async (name,userId) => {
+            try {
+                return await DbModel.findOne({ appName: name }).select("-__v"); // Retrieve without __v
+            } catch (e) {
+                const excepcion = new DefaultException(e.message);
+                throw excepcion;
+            }
+        }
+
     /**
      * get App Pager
      * @param {*} pageSize 
@@ -172,6 +186,7 @@ const GeneratorRepository = DbModel => {
         getAllApp,
         getApp,
         getAppById,
+        getAppByName,
         getAppPager,
     }
 

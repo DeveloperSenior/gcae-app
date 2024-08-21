@@ -38,6 +38,8 @@ const appSchema = new Schema(
 
         entities: { type: [Object], required: true, index: false },
 
+        createdAt: { type: Date, required: true, index: true},
+        updatedAt: { type: Date, index: true},
         
     }
 );

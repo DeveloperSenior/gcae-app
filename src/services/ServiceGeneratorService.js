@@ -5,7 +5,7 @@
  */
 
 const IOFileService = require('./IOFileService');
-const { pipe } = require('../utilities/Utilities');
+const { inject } = require('../utilities/Utilities');
 const { toCamelCase, toPascalCase } = require('js-convert-case');
 const { getValueTest } = require('../utilities/ValuesTest');
 
@@ -74,7 +74,7 @@ const ServiceGeneratorService = () => {
             fields
         } = entityModel;
 
-        const ioFileServicesInject = pipe(() => { }, IOFileService)();
+        const ioFileServicesInject = inject(() => { }, IOFileService)();
 
         let attrModelBuild = "";
         let attrModelBuildValue = "";

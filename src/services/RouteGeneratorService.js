@@ -5,7 +5,7 @@
  */
 
 const IOFileService = require('./IOFileService');
-const { pipe } = require('../utilities/Utilities');
+const { inject } = require('../utilities/Utilities');
 const { toCamelCase, toPascalCase } = require('js-convert-case');
 const DefaultException = require('../models/exception/DefaultException');
 
@@ -93,7 +93,7 @@ const RouteGeneratorService = () => {
 
         try {
             const {name} = entityModel;
-            const ioFileServicesInject = pipe(() => { }, IOFileService)();
+            const ioFileServicesInject = inject(() => { }, IOFileService)();
             const { data: suscriptionRouterConfig } = await ioFileServicesInject.getContentFileFromTemplate('RouteSuscription');
 
             const responseSanitize = await ioFileServicesInject.sanitizeFileContent(`${appfolder}/${FOLDER_TEMPLATE}/config/${ROUTE_SUSCRIPTION_CONF}`, `${appfolder}/${FOLDER_TEMPLATE}/config/${ROUTE_SUSCRIPTION_CONF}`);

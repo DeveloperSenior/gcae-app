@@ -5,7 +5,7 @@
  */
 
 const IOFileService = require('../services/IOFileService');
-const { pipe } = require('../utilities/Utilities');
+const { inject } = require('../utilities/Utilities');
 const { toCamelCase, toPascalCase } = require('js-convert-case');
 const { getValueTest } = require('../utilities/ValuesTest');
 
@@ -71,7 +71,7 @@ const ControllerGeneratorService = () => {
             fields
         } = entityModel;
 
-        const ioFileServicesInject = pipe(() => { }, IOFileService)();
+        const ioFileServicesInject = inject(() => { }, IOFileService)();
         /** Generate Controller */
         const { target, data, createFile } = await ioFileServicesInject.generateFileFromTemplate(TEMPLATE, `${appfolder}/${FOLDER_TEMPLATE}/${toPascalCase(name + TEMPLATE)}.js`);
         generateController(entityModel, target,data, createFile);

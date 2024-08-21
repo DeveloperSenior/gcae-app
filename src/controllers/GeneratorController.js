@@ -4,7 +4,7 @@
  * @copyright Tecnologico de Antioquia 2024
  */
 
-const { pipe, getSession } = require('../utilities/Utilities');
+const { inject, getSession } = require('../utilities/Utilities');
 const { HTTP_CODE } = require('../utilities/Constants');
 const { of, defer, Observable } = require('rxjs');
 const { toPascalCase, toCamelCase } = require('js-convert-case');
@@ -24,13 +24,13 @@ const { AppModel } = require('../models/AppModel');
 const { readDir } = require('../utilities/IOUtil');
 
 /** Dependency Inject */
-const modelGeneratorServiceInject = pipe(() => { }, ModelGeneratorService)();
-const routeGeneratorServiceInject = pipe(() => { }, RouteGeneratorService)();
-const validatorGeneratorServiceInject = pipe(() => { }, ValidatorGeneratorService)();
-const controllerGeneratorServiceInject = pipe(() => { }, ControllerGeneratorService)();
-const serviceGeneratorServiceInject = pipe(() => { }, ServiceGeneratorService)();
-const repositoryGeneratorServiceInject = pipe(() => { }, RepositoryGeneratorService)();
-const ioFileServicesInject = pipe(() => { }, IOFileService)();
+const modelGeneratorServiceInject = inject(() => { }, ModelGeneratorService)();
+const routeGeneratorServiceInject = inject(() => { }, RouteGeneratorService)();
+const validatorGeneratorServiceInject = inject(() => { }, ValidatorGeneratorService)();
+const controllerGeneratorServiceInject = inject(() => { }, ControllerGeneratorService)();
+const serviceGeneratorServiceInject = inject(() => { }, ServiceGeneratorService)();
+const repositoryGeneratorServiceInject = inject(() => { }, RepositoryGeneratorService)();
+const ioFileServicesInject = inject(() => { }, IOFileService)();
 
 const basePath = process.env.BASE_PATH || 'tmp';
 
@@ -139,7 +139,7 @@ const main = async (request, response) => {
 
     try {
 
-        const generatorServiceInject = pipe(GeneratorRepository, GeneratorService)(AppModel);
+        const generatorServiceInject = inject(GeneratorRepository, GeneratorService)(AppModel);
 
         const { body } = request;
         const userSession = getSession(request);

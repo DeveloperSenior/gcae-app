@@ -40,8 +40,16 @@ const GeneratorService = generatorRepository => {
             .withDataBase(dataBase)
             .withEntities(entities)
             .build();
+        
+        const appFind = await generatorRepository.getAppByName(appBuilder.appName, userId);
 
-        return await generatorRepository.createApp(appBuilder);
+        if (appFind) {
+            appBuilder.updatedAt = currentDate;
+            return generatorRepository.updateApp(appFind._id,userId,appBuilder);
+        }else{
+            appBuilder.createdAt = currentDate;
+           return await generatorRepository.createApp(appBuilder);
+        }
 
     }
 

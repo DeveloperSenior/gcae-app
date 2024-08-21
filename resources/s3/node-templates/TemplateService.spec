@@ -32,6 +32,7 @@ const @EntityName@Service = @entityName@Repository => {
         const @entityName@Builder = new @EntityName@.Builder()
             .withUser(userId)
             @attrModelBuild@
+            .withCreatedAt(currentDate)
             .build();
 
         return await @entityName@Repository.create@EntityName@(@entityName@Builder);

@@ -5,7 +5,7 @@
  */
 
 const { HTTP_CODE } = require('../utilities/Constants');
-const { pipe } = require('../utilities/Utilities');
+const { inject } = require('../utilities/Utilities');
 const userRepository = require('../db/UserRepository');
 const userService = require('../services/UserService');
 const { UserModel } = require('../models/UserModel');
@@ -20,7 +20,7 @@ const { validateUser, } = require('../validators/UserValidator');
 const signin = async (request, response) => {
 
     try {
-        const authServicesInject = pipe(userRepository, userService)(UserModel);
+        const authServicesInject = inject(userRepository, userService)(UserModel);
         const { body } = request;
 
         // Validate user Model
@@ -53,7 +53,7 @@ const signin = async (request, response) => {
 const login = async (request, response) => {
 
     try {
-        const userServicesInject = pipe(userRepository, userService)(UserModel);
+        const userServicesInject = inject(userRepository, userService)(UserModel);
         const { body } = request;
         // Validate user Model
         const validate = validateUser(body);

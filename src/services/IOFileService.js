@@ -4,12 +4,11 @@
  * @copyright Tecnologico de Antioquia 2024
  */
 
-const { pipe, isDebug } = require('../utilities/Utilities');
+const { inject, isDebug } = require('../utilities/Utilities');
 const { createFolders,
     createFile,
     createFileAndUnzip,
-    readFile,
-    readDir } = require('../utilities/IOUtil');
+    readFile } = require('../utilities/IOUtil');
 const S3Service = require('./aws/S3Service');
 const admz = require('adm-zip');
 
@@ -34,16 +33,16 @@ const IOFileService = generatorRepository => {
      */
     const generateFileFromTemplate = async (fileTemplateName, target) => {
 
-        try{
-        const s3ServiceInject = pipe(() => { }, S3Service)();
-        const { fileName, data } = await s3ServiceInject.getObjectAsString(bucketTemplates, `${nodeTemplates}/Template${fileTemplateName}.spec`);
-        return {
-            target: target, data: data, createFile: createFile, fileName: fileName
+        try {
+            const s3ServiceInject = inject(() => { }, S3Service)();
+            const { fileName, data } = await s3ServiceInject.getObjectAsString(bucketTemplates, `${nodeTemplates}/Template${fileTemplateName}.spec`);
+            return {
+                target: target, data: data, createFile: createFile, fileName: fileName
+            }
+        } catch (error) {
+            console.error(error);
+            throw error;
         }
-       }catch(error){
-         console.error(error);
-         throw error;
-       }
     }
 
 
@@ -55,15 +54,15 @@ const IOFileService = generatorRepository => {
 
 
         /** project root is created */
-        if(isDebug)
-         console.log('Crear folders');
+        if (isDebug)
+            console.log('Crear folders');
         createFolders(appfolder);
 
-        const s3ServiceInject = pipe(() => { }, S3Service)();
+        const s3ServiceInject = inject(() => { }, S3Service)();
 
         const { fileName, data } = await s3ServiceInject.getObjectAsByteArray(bucketTemplates, nodeTemplateProject);
         await createFileAndUnzip(`${appfolder}/${fileName}`, appfolder, data);
-        return {target:appfolder, data:data }
+        return { target: appfolder, data: data }
     }
 
     /**
@@ -71,11 +70,11 @@ const IOFileService = generatorRepository => {
      * @param {*} fileTemplateName 
      * @returns Json with content from file
      */
-    const getContentFileFromTemplate = async(fileTemplateName) => {
+    const getContentFileFromTemplate = async (fileTemplateName) => {
 
-        const s3ServiceInject = pipe(() => { }, S3Service)();
+        const s3ServiceInject = inject(() => { }, S3Service)();
         const { data } = await s3ServiceInject.getObjectAsString(bucketTemplates, `${nodeTemplates}/Template${fileTemplateName}.spec`);
-        return { fileName: fileTemplateName, data:data };
+        return { fileName: fileTemplateName, data: data };
     }
 
     /**
@@ -91,7 +90,7 @@ const IOFileService = generatorRepository => {
         if (isLocal) {
             content = readFile(file);
         } else {
-            const s3ServiceInject = pipe(() => { }, S3Service)();
+            const s3ServiceInject = inject(() => { }, S3Service)();
             const { data } = s3ServiceInject.getObjectAsString(bucketTemplates, `${nodeTemplates}/Template${file}.spec`);
             content = data;
         }
@@ -106,21 +105,15 @@ const IOFileService = generatorRepository => {
      */
     const saveFile = async (basePath, folder) => {
 
-        const s3ServiceInject = pipe(() => { }, S3Service)();
-        const toZip = readDir(`${basePath}/${folder}`,true,true);
+        const s3ServiceInject = inject(() => { }, S3Service)();
         const zp = new admz();
-        const zipName = `${folder}.zip`
-        /*for (let k = 0; k < toZip?.length; k++) {
-            const file = toZip[k];
-            zp.addLocalFile(`${file.path}/${file.name}`, file.path);
-        }*/
+        const zipName = `${folder}.zip`;
         zp.addLocalFolder(`${basePath}/${folder}`);
-        zp.writeZip(`${basePath}/${zipName}`);
 
         const data = zp.toBuffer();
 
-        const s3Response = await s3ServiceInject.putObject(`${bucketTemplates}`, `${bucketFolderApps}/${zipName}`, data);
-        
+        await s3ServiceInject.putObject(`${bucketTemplates}`, `${bucketFolderApps}/${zipName}`, data);
+
         return { fileName: zipName, buffer: data };
 
     }

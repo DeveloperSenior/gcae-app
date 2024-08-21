@@ -5,7 +5,7 @@
  */
 
 const IOFileService = require('./IOFileService');
-const { pipe } = require('../utilities/Utilities');
+const { inject } = require('../utilities/Utilities');
 const { toCamelCase, toPascalCase } = require('js-convert-case');
 const { getValueTest } = require('../utilities/ValuesTest');
 
@@ -93,7 +93,7 @@ const ValidatorGeneratorService = () => {
             fields
         } = entityModel;
 
-        const ioFileServicesInject = pipe(() => { }, IOFileService)();
+        const ioFileServicesInject = inject(() => { }, IOFileService)();
 
         const { data: schemaAttrsTemplate } = await ioFileServicesInject.getContentFileFromTemplate('ValidatorSchemaAttrs');
         const { data: schemaAttrsListTemplate } = await ioFileServicesInject.getContentFileFromTemplate('ValidatorSchemaAttrsList');

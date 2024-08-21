@@ -4,7 +4,7 @@
  * @copyright Tecnologico de Antioquia 2024
  */
 
-const { pipe } = require('../utilities/Utilities');
+const { inject } = require('../utilities/Utilities');
 const { HTTP_CODE } = require('../utilities/Constants');
 const { getSession } = require('../utilities/Utilities');
 const @entityName@Repository = require('../db/@EntityName@Repository');
@@ -25,7 +25,7 @@ const { @EntityName@Model } = require('../models/@EntityName@Model');
 const create@EntityName@ = async (request, response) => {
 
     try {
-        const @entityName@ServicesInject = pipe(@entityName@Repository, @entityName@Service)(@EntityName@Model);
+        const @entityName@ServicesInject = inject(@entityName@Repository, @entityName@Service)(@EntityName@Model);
         const { body } = request;
         const userSession = getSession(request);
 
@@ -63,7 +63,7 @@ const get@EntityName@ = async (request, response) => {
     try {
         const { params } = request;
         const userSession = getSession(request);
-        const @entityName@ServicesInject = pipe(@entityName@Repository, @entityName@Service)(@EntityName@Model);
+        const @entityName@ServicesInject = inject(@entityName@Repository, @entityName@Service)(@EntityName@Model);
         const @entityName@s = await @entityName@ServicesInject.get@EntityName@(params,userSession);
 
         return response.status(HTTP_CODE.OK).json(@entityName@s);
@@ -86,7 +86,7 @@ const getAll@EntityName@ = async (request, response) => {
     try {
 
         const userSession = getSession(request);        
-        const @entityName@ServicesInject = pipe(@entityName@Repository, @entityName@Service)(@EntityName@Model);
+        const @entityName@ServicesInject = inject(@entityName@Repository, @entityName@Service)(@EntityName@Model);
         const @entityName@s = await @entityName@ServicesInject.getAll@EntityName@(userSession);
 
         return response.status(HTTP_CODE.OK).json(@entityName@s);
@@ -121,7 +121,7 @@ const get@EntityName@Pager = async (request, response) => {
 
         const { pageSize, pageNumber } = params;
 
-        const @entityName@ServicesInject = pipe(@entityName@Repository, @entityName@Service)(@EntityName@Model);
+        const @entityName@ServicesInject = inject(@entityName@Repository, @entityName@Service)(@EntityName@Model);
         body.isFull = true; // enable full query
         const all@EntityName@s = await @entityName@ServicesInject.get@EntityName@Pager(pageSize, pageNumber, body);
 
@@ -158,7 +158,7 @@ const update@EntityName@ = async (request, response) => {
 
         }
 
-        const @entityName@ServicesInject = pipe(@entityName@Repository, @entityName@Service)(@EntityName@Model);
+        const @entityName@ServicesInject = inject(@entityName@Repository, @entityName@Service)(@EntityName@Model);
 
         const edited@entityName@ = await @entityName@ServicesInject.update@EntityName@(_id, body, userSession);
 
@@ -193,7 +193,7 @@ const delete@EntityName@ = async (request, response) => {
 
         }
 
-        const @entityName@ServicesInject = pipe(@entityName@Repository, @entityName@Service)(@EntityName@Model);
+        const @entityName@ServicesInject = inject(@entityName@Repository, @entityName@Service)(@EntityName@Model);
 
         await @entityName@ServicesInject.delete@EntityName@(_id, userSession);
 

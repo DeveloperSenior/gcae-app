@@ -5,7 +5,7 @@
  */
 
 const IOFileService = require('./IOFileService');
-const { pipe } = require('../utilities/Utilities');
+const { inject } = require('../utilities/Utilities');
 const { toCamelCase, toPascalCase } = require('js-convert-case');
 const { Observable } = require('rxjs');
 const DefaultException = require('../models/exception/DefaultException');
@@ -111,7 +111,7 @@ const ModelGeneratorService = () => {
 
             const { type: dataBaseType } = appConfig.dataBase;
             const { name } = entityModel;
-            const ioFileServicesInject = pipe(() => { }, IOFileService)();
+            const ioFileServicesInject = inject(() => { }, IOFileService)();
             const { data: modelBuilder } = await ioFileServicesInject.getContentFileFromTemplate('ModelDTOBuilder');
             const { data: modelAttrDataBase } = await ioFileServicesInject.getContentFileFromTemplate(`Model${dataBaseType.toUpperCase()}Attr`);
             /** Model Generate */

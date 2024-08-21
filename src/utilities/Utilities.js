@@ -15,7 +15,7 @@ const DefaultException = require('../../src/models/exception/DefaultException');
  * @param  {...any} fns 
  * @returns 
  */
-const pipe = (...fns) => x => fns.reduce((y, f) => f(y), x);
+const inject = (...fns) => x => fns.reduce((y, f) => f(y), x);
 /**
  * Get User session
  * @param {*} request HTTP param
@@ -39,4 +39,4 @@ const isDebug = () =>{
     return (process.env.APP_DEBUG === 'S');
 }
 
-module.exports = { pipe, getSession, isDebug }
+module.exports = { inject, getSession, isDebug }
