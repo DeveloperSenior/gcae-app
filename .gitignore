@@ -131,3 +131,7 @@ dist
 
 tmp/
 .reports
+
+.terraform
+tfplan
+tfplan.txt
