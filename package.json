@@ -4,7 +4,7 @@
     "description": "software that automates the process of generating base code with standard architectures within the framework of SOLID principles focused on the Back-end.",
     "main": "server.js",
     "scripts": {
-        "test": "jest --coverage --verbose --setupFiles dotenv/config --detectOpenHandles test/",
+        "test": "jest --coverage --verbose --env-file=.env.test --detectOpenHandles test/",
         "runDev-demon": "nodemon -r dotenv/config server.js",
         "runDev": "node --env-file=.env server.js"
     },

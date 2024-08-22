@@ -1,0 +1,62 @@
+pipeline {
+    
+    agent any
+    
+    environment {
+        AWS_CREDENTIAL = credentials('aws-credential-dllo')
+        AWS_REGION = "us-east-1"
+    }
+    
+    tools {
+       terraform 'Terraform'
+    }
+    
+
+    stages {
+      stage('fetch_latest_code') {
+        steps {
+          git credentialsId: 'CredencialesGitHub',
+          url: 'https://github.com/DeveloperSenior/gcae-app.git',
+          branch: 'develop'
+        }
+      }
+      stage('TF Init&Plan') {
+        steps {
+            dir('iac/api/env/dev') {
+                sh 'terraform init'
+                sh 'terraform plan -out tfplan'
+                sh 'terraform show -no-color tfplan > tfplan.txt'
+            }
+        }      
+      }
+      stage('Approval') {
+        steps {
+            dir('iac/api/env/dev') {
+                script {
+                    def plan = readFile 'tfplan.txt'
+                    input message: "Do you want to apply the plan?",
+                        parameters: [text(name: 'Plan', description: 'Please review the plan', defaultValue: plan)]
+                }
+                 
+            }
+          
+        }
+      }
+      stage('TF Apply') {
+         
+        steps {
+             dir('iac/api/env/dev') {
+             
+                sh 'terraform apply -input=false tfplan'     
+             }
+        }
+      }
+    
+    }
+    
+    post { 
+        always { 
+            cleanWs()
+        }
+    }
+  }

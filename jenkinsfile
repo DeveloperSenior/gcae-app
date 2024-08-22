@@ -1,15 +1,23 @@
 pipeline{
 
     agent any
+    
+    tools {
+       nodejs 'node_20'
+    }
 
-    enviroment{
-        AWS_CREDENTIAL = credentials('aws-credential')
+    environment{
+        AWS_CREDENTIAL = credentials('aws-credential-dllo')
+        AWS_REGION = 'us-east-1'
     }
 
     stages{
-        stage('Checkuot'){
+        stage('Checkout'){
             steps{
-                checkout scm
+                //checkout scm
+               git credentialsId: 'CredencialesGitHub',
+               url: 'https://github.com/DeveloperSenior/gcae-app.git',
+               branch: 'develop'
             }
 
         }
@@ -24,7 +32,15 @@ pipeline{
         stage('Run Test'){
             steps{
                 sh 'npm test'
+                junit './reports/testreport.xml'
             }
+        }
+            
+    }
+    
+    post{
+        always{
+            cleanWs()
         }
     }
 

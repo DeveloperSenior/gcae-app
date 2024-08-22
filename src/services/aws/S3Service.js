@@ -37,7 +37,7 @@ const S3Service = () => {
                 if (isDebug())
                     console.log(`cache '${key}' not found, go to AWS S3`);
                 const s3Client = new S3Client({ region: region });
-                const { Body } = await s3Client.send(
+                const {Body} = await s3Client.send(
                     new GetObjectCommand({
                         Bucket: bucket,
                         Key: name,
