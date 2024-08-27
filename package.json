@@ -6,7 +6,10 @@
     "scripts": {
         "test": "jest --coverage --verbose --env-file=.env.test --detectOpenHandles test/",
         "runDev-demon": "nodemon -r dotenv/config server.js",
-        "runDev": "node --env-file=.env server.js"
+        "runDev": "node --env-file=.env server.js",
+        "star-pdn": "node --env-file=.env.pdn server.js",
+        "star-qa": "node --env-file=.env.qa server.js",
+        "star": "node server.js"
     },
     "repository": {
         "type": "git",

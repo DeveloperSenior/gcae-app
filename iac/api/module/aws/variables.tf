@@ -144,3 +144,21 @@ variable "ecs_network_configuration" {
     subnets = list(string)
   }))
 }
+
+variable "ecs_ec2_instance_type" {
+    default = "t2.micro" // AWS Free level (i386, x86_64, vCPU 1, 1GB Memory)
+    description = "ECS type Instance EC2"
+    type = string
+}
+
+variable "ecs_ec2_name_prefix" {
+    default = "demo-ecs-ec2-"
+    description = "ECS name prefix EC2"
+    type = string
+}
+
+variable "ecs_cp_name" {
+    default = "demo-ecs-ec2"
+    description = "ECS name capacity provider EC2"
+    type = string
+}

@@ -1,5 +1,10 @@
 const { toCamelCase, toPascalCase } = require('js-convert-case');
 
+/**
+ * Generate data unit test Model used to generator
+ * @param {*} attrField 
+ * @returns 
+ */
 const getValueTest = (attrField) => {
 
     const {

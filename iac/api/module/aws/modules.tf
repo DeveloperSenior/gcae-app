@@ -40,6 +40,9 @@ module "ECS-Gcae-API" {
   #ecs_service_discovery_name     = var.ecs_service_discovery_name
   #ecs_dns_record_type                    = "SRV"
   ecs_service_registries                 = var.ecs_service_registries
+  ecs_ec2_instance_type = var.ecs_ec2_instance_type
+  ecs_ec2_name_prefix = var.ecs_ec2_name_prefix
+  ecs_cp_name = var.ecs_cp_name
 }
 
 

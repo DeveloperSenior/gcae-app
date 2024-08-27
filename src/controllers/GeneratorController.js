@@ -24,12 +24,6 @@ const { AppModel } = require('../models/AppModel');
 const { readDir } = require('../utilities/IOUtil');
 
 /** Dependency Inject */
-const modelGeneratorServiceInject = inject(() => { }, ModelGeneratorService)();
-const routeGeneratorServiceInject = inject(() => { }, RouteGeneratorService)();
-const validatorGeneratorServiceInject = inject(() => { }, ValidatorGeneratorService)();
-const controllerGeneratorServiceInject = inject(() => { }, ControllerGeneratorService)();
-const serviceGeneratorServiceInject = inject(() => { }, ServiceGeneratorService)();
-const repositoryGeneratorServiceInject = inject(() => { }, RepositoryGeneratorService)();
 const ioFileServicesInject = inject(() => { }, IOFileService)();
 
 const basePath = process.env.BASE_PATH || 'tmp';
@@ -44,6 +38,15 @@ const basePath = process.env.BASE_PATH || 'tmp';
 const processEntity = async (appConfig, entity, appfolder, userSession) => {
 
     try {
+
+        /** Dependency Inject */
+        const modelGeneratorServiceInject = inject(() => { }, ModelGeneratorService)();
+        const routeGeneratorServiceInject = inject(() => { }, RouteGeneratorService)();
+        const validatorGeneratorServiceInject = inject(() => { }, ValidatorGeneratorService)();
+        const controllerGeneratorServiceInject = inject(() => { }, ControllerGeneratorService)();
+        const serviceGeneratorServiceInject = inject(() => { }, ServiceGeneratorService)();
+        const repositoryGeneratorServiceInject = inject(() => { }, RepositoryGeneratorService)();
+
         /** Model Generate */
         await modelGeneratorServiceInject.generate(`${basePath}/${appfolder}`, entity, appConfig);
         /** Router Generate */
@@ -57,7 +60,7 @@ const processEntity = async (appConfig, entity, appfolder, userSession) => {
         /** Repository Generate */
         await repositoryGeneratorServiceInject.generate(`${basePath}/${appfolder}`, entity, appConfig);
     } catch (error) {
-        console.log(error);
+        console.error(error);
         throw error;
     }
 }
@@ -102,7 +105,7 @@ const sanitizeBaseProject = (body, target, data, createFile) => {
         .replaceAll('@jwtSecretKey@', auth?.jwtSecretKey || 'jwtSecretkey_change_it_base64')
         .replaceAll('@cacheTTL@', cache?.ttl || '3600')
         /** always count 2 routes default */
-        .replaceAll('@countEntity@', (2 + entities?.length) || 2);
+        .replaceAll('@countEntity@', 2 + entities?.length );
     createFile(target, buffer);
 }
 
@@ -122,7 +125,8 @@ const generateProject = async (body, entities, appfolder, userSession) => {
             await processEntity(body, entity, appfolder, userSession);
             console.log(`entity ${entity.name} processed`);
         } catch (error) {
-            console.log(error);
+            console.error(error);
+            throw error;
         }
     }
     console.log('END processEntity');

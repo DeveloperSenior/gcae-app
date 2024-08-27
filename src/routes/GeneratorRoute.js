@@ -70,14 +70,7 @@ const router = express.Router();
  *              $ref: '#/components/schemas/DefaultException'
  *             type: object
  */
-router.put('/generateApp', verifyTokenSession, async (req, res, next) => {
-  try {
-    await controller.main(req, res);
-  } catch (err) {
-    console.log(err)
-    next(err);
-  }
-});
+router.put('/generateApp', verifyTokenSession,controller.main);
 
 
 module.exports = router;

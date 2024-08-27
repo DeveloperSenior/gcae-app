@@ -33,4 +33,6 @@ module "ECS-Gcae-API" {
           ecs_container_port="7380"
      }
   } 
+  ecs_ec2_name_prefix = "gcae-apidllo-"
+  ecs_cp_name = "gcae-apidllo"
 }

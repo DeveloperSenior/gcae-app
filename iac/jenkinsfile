@@ -13,21 +13,19 @@ pipeline {
     
 
     stages {
-      stage('fetch_latest_code') {
-        steps {
+      stage('Continuous Integration') {
+        steps('Build') {
+          
           git credentialsId: 'CredencialesGitHub',
           url: 'https://github.com/DeveloperSenior/gcae-app.git',
           branch: 'develop'
-        }
-      }
-      stage('TF Init&Plan') {
-        steps {
-            dir('iac/api/env/dev') {
+
+          dir('iac/api/env/dev') {
                 sh 'terraform init'
                 sh 'terraform plan -out tfplan'
                 sh 'terraform show -no-color tfplan > tfplan.txt'
-            }
-        }      
+          }
+        }
       }
       stage('Approval') {
         steps {
@@ -42,9 +40,9 @@ pipeline {
           
         }
       }
-      stage('TF Apply') {
+      stage('Continuous Delivery') {
          
-        steps {
+        steps('Deploy') {
              dir('iac/api/env/dev') {
              
                 sh 'terraform apply -input=false tfplan'     
