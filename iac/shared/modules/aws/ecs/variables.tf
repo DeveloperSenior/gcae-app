@@ -199,3 +199,9 @@ variable "ecs_cp_name" {
     description = "ECS name capacity provider EC2"
     type = string
 }
+
+variable "ecs_asg_vpc_zone_identifier" {
+    default = ""
+    description = "ASG vpc_zone_identifier"
+    type = any
+}

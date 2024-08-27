@@ -70,6 +70,7 @@ resource "aws_launch_template" "ecs_ec2" {
 
 resource "aws_autoscaling_group" "ecs" {
   name_prefix               = var.ecs_asg_name_prefix
+  vpc_zone_identifier       = var.ecs_asg_vpc_zone_identifier
   min_size                  = 1
   max_size                  = 2
   health_check_grace_period = 0

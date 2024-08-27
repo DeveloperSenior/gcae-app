@@ -43,6 +43,7 @@ module "ECS-Gcae-API" {
   ecs_ec2_instance_type = var.ecs_ec2_instance_type
   ecs_ec2_name_prefix = var.ecs_ec2_name_prefix
   ecs_cp_name = var.ecs_cp_name
+  ecs_asg_vpc_zone_identifier = var.ecs_asg_vpc_zone_identifier
 }
 
 
