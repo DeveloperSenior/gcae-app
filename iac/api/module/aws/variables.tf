@@ -164,7 +164,7 @@ variable "ecs_cp_name" {
 }
 
 variable "ecs_asg_vpc_zone_identifier" {
-    default = ""
+    default = []
     description = "ASG vpc_zone_identifier"
-    type = any
+    type = list(string)
 }
