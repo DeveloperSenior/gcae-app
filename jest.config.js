@@ -22,8 +22,17 @@ module.exports = {
     collectCoverageFrom: [
         "./src/**/*.js"
     ],
-    reporters: ['default', ['jest-sonar', {
+    reporters: ['default',
+    ['jest-sonar', {
         outputDirectory: './.reports',
         outputName: 'testreport.xml'
-    }]]
+    }],
+    ['./node_modules/jest-junit', {
+        outputDirectory: 'build/report/tests'
+      }],
+      ['./node_modules/jest-html-reporters', {
+        publicPath: 'build/report/jest-report',
+        pageTitle: 'Jest Test Report'
+      }]
+]
 };
