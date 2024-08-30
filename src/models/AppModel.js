@@ -30,8 +30,6 @@ const appSchema = new Schema(
 
         repository: { type: Object, required: true, index: false },
 
-        repository: { type: Object, required: true, index: false },
-
         cache: { type: Object, required: true, index: false },
 
         dataBase: { type: Object, required: true, index: false },

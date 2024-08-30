@@ -16,7 +16,6 @@ module "ECS-Gcae-API" {
   ecs_task_awslogs_stream_prefix = var.ecs_task_awslogs_stream_prefix
   ecs_service_name               = var.ecs_service_name
   ecs_number_of_tasks            = var.ecs_number_of_tasks
-  ecs_task_role_arn              = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/AWSRoleForECS"
   ecs_env_variables              = var.ecs_env_variables
   ecr_name                       = var.ecr_name
   ecs_require_compatibilities    = "EC2"
@@ -33,6 +32,7 @@ module "ECS-Gcae-API" {
     }
   }
   ecs_network_configuration              = var.ecs_network_configuration
+  ecs_network_mode = "awsvpc"
   ecs_deployment_maximum_percent         = 100
   ecs_deployment_minimum_healthy_percent = 0
   #ecs_load_balancer              = var.ecs_load_balancer
@@ -43,7 +43,20 @@ module "ECS-Gcae-API" {
   ecs_ec2_instance_type = var.ecs_ec2_instance_type
   ecs_ec2_name_prefix = var.ecs_ec2_name_prefix
   ecs_cp_name = var.ecs_cp_name
-  ecs_asg_vpc_zone_identifier = var.ecs_asg_vpc_zone_identifier
+  ecs_vpc_cidr_block = var.ecs_vpc_cidr_block
+  ecs_securiry_group_prefix = var.ecs_securiry_group_prefix
+  ecs_securiry_group_egress_from_port = 0
+  ecs_securiry_group_egress_to_port = 65535
+  ecs_securiry_group_egress_protocol = "tcp"
+  ecs_securiry_group_egress_cidr_block = ["0.0.0.0/0"]
+  ecs_route_table_cidr_block = "0.0.0.0/0"
+  ecs_ami = var.ecs_ami
+  ecs_autoscaling_group_min_size = 1
+  ecs_autoscaling_group_max_size = 2
+  ecs_iam_task_role_name_prefix = var.ecs_iam_task_role_name_prefix
+  ecs_iam_exec_role_name_prefix = var.ecs_iam_exec_role_name_prefix
+  ecs_iam_role_name_prefix = var.ecs_iam_role_name_prefix
+  ecs_iam_instance_profile_name_prefix = var.ecs_iam_instance_profile_name_prefix
 }
 
 

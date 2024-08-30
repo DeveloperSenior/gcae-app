@@ -11,7 +11,7 @@
  */
 class App {
 
-    constructor(_id, user, createdAt, updatedAt, appName, appPort, appDescription, author, version, repository, cache, dataBase, entities, auth) {
+    constructor(_id, user,state, createdAt, updatedAt, appName, appPort, appDescription, author, version, repository, cache, dataBase, entities, auth) {
 
         this._id = _id;
         /** audit object */
@@ -28,7 +28,7 @@ class App {
         this.dataBase = dataBase;
         this.entities = entities;
 
-
+        this.state = state;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
 
@@ -103,6 +103,14 @@ class App {
             return this;
         }
 
+        
+        withState(state) {
+
+            this.app.state = state;
+
+            return this;
+
+        }
 
         withCreatedAt(createdAt) {
 

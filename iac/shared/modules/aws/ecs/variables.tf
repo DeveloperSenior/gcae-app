@@ -87,17 +87,6 @@ variable "ecr_name" {
     type = string
 }
 
-variable "ecs_task_role_arn" {
-    description = "ARN Rol ECS"
-    type = string
-}
-
-variable "ecs_execution_role_arn" {
-    default = ""
-    description = "ARN execution Rol ECS"
-    type = string
-}
-
 variable "ecs_env_variables" {
     default = []
     description = "Variable ECS"
@@ -200,8 +189,73 @@ variable "ecs_cp_name" {
     type = string
 }
 
-variable "ecs_asg_vpc_zone_identifier" {
-    default = []
-    description = "ASG vpc_zone_identifier"
-    type = list(string)
+variable "ecs_vpc_cidr_block" {
+    description = "ECS cidr block VPC config"
+    type = string
+}
+
+variable "ecs_securiry_group_prefix" {
+  description = "ECS security group prefix name"
+  type = string
+}
+
+variable "ecs_securiry_group_egress_cidr_block" {
+  description = "ECS security group egress config cidr block"
+  type = list(string)
+}
+
+variable "ecs_securiry_group_egress_protocol" {
+  description = "ECS security group egress config protocol"
+  type = string
+}
+
+variable "ecs_securiry_group_egress_from_port" {
+  description = "ECS security group egress config from port"
+  type = number
+}
+
+variable "ecs_securiry_group_egress_to_port" {
+  description = "ECS security group egress config to port"
+  type = number
+}
+
+variable "ecs_route_table_cidr_block" {
+  description = "ECS cidr block route table config"
+  type = string
+}
+
+variable "ecs_ami" {
+  default = "/aws/service/ecs/optimized-ami/amazon-linux-2/recommended/image_id"
+  description = "ECS config Amazon Machine Image (AMI) template"
+  type = string
+}
+
+variable "ecs_autoscaling_group_min_size" {
+  description = "ECS autoscaling group config min size"
+  type = number
+}
+
+variable "ecs_autoscaling_group_max_size" {
+  description = "ECS autoscaling group config max size"
+  type = number
+}
+
+variable "ecs_iam_task_role_name_prefix" {
+  description = "ECS config Identity and Access Management (IAM) task role name"
+  type = string
+}
+
+variable "ecs_iam_exec_role_name_prefix" {
+  description = "ECS config Identity and Access Management (IAM) execute role name"
+  type = string
+}
+
+variable "ecs_iam_role_name_prefix" {
+  description = "ECS config Identity and Access Management (IAM) role name prefix"
+  type = string
+}
+
+variable "ecs_iam_instance_profile_name_prefix" {
+  description = "ECS config Identity and Access Management (IAM) instance profile name prefix"
+  type = string
 }

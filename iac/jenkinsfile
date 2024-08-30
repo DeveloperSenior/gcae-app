@@ -10,20 +10,25 @@ pipeline {
     tools {
        terraform 'Terraform'
     }
-    
 
     stages {
       stage('Continuous Integration') {
-        steps('Build') {
-          
-          git credentialsId: 'CredencialesGitHub',
-          url: 'https://github.com/DeveloperSenior/gcae-app.git',
-          branch: 'develop'
-
-          dir('iac/api/env/dev') {
-                sh 'terraform init'
-                sh 'terraform plan -out tfplan'
-                sh 'terraform show -no-color tfplan > tfplan.txt'
+        stages{
+          stage('Checkout repository GIT') {
+            steps{
+              git credentialsId: 'CredencialesGitHub',
+              url: 'https://github.com/DeveloperSenior/gcae-app.git',
+              branch: 'develop'
+            }
+          }
+          stage('Infrastructure Terraform Init/Plan') {
+            steps{
+              dir('iac/api/env/dev') {
+                  sh 'terraform init'
+                  sh 'terraform plan -out tfplan'
+                  sh 'terraform show -no-color tfplan > tfplan.txt'
+            }
+            }
           }
         }
       }
@@ -44,7 +49,6 @@ pipeline {
          
         steps('Deploy') {
              dir('iac/api/env/dev') {
-             
                 sh 'terraform apply -input=false tfplan'     
              }
         }
