@@ -60,7 +60,7 @@ const router = express.Router();
 
 /**
  * @swagger
- * /auth/signin:
+ * @appApiPath@/auth/signin:
  *   put:
  *     security:
  *      - Authorization: []
@@ -111,7 +111,7 @@ router.put('/auth/signin', controller.signin);
 
 /**
  * @swagger
- * /auth/login:
+ * @appApiPath@/auth/login:
  *   post:
  *     security:
  *      - Authorization: []

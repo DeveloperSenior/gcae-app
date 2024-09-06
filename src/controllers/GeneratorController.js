@@ -78,6 +78,7 @@ const sanitizeBaseProject = (body, target, data, createFile) => {
         appPort,
         appApiPath,
         author,
+        company,
         email,
         appDescription,
         repository,
@@ -96,6 +97,7 @@ const sanitizeBaseProject = (body, target, data, createFile) => {
         .replaceAll('@appPort@', appPort || '3000')
         .replaceAll('@appApiPath@', appApiPath || '/api/v1')
         .replaceAll('@author@', author || 'TdeA')
+        .replaceAll('@company@',company || 'Tecnologico de Antioquia')
         .replaceAll('@dbHost@', dataBase?.host || 'change_it_example.com')
         .replaceAll('@dbName@', dataBase?.serviceName || 'dbName_change_it')
         .replaceAll('@dbUser@', dataBase?.user || 'dbUser_change_it')

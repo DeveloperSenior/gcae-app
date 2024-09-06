@@ -3,6 +3,7 @@
  * @date 2024
  * @copyright Tecnologico de Antioquia 2024
  */
+'use strict';
 
 const express = require('express');
 const swaggerUi = require("swagger-ui-express");
@@ -71,25 +72,6 @@ const options = {
         description: 'software that automates the process of generating base code with standard architectures within the framework of SOLID principles focused on the Back-end.',
       },
     ],
-    schemes: ['http'],
-    servers: [{
-      url: 'http://localhost:{port}/api/{basePath}',
-      variables: {
-        port: {
-          enum: [
-            "3000",
-            "8443",
-            "443"
-          ],
-          default: "3000"
-        },
-        basePath: { 
-          enum: [
-          "v1"
-        ],
-        default: 'v1' },
-      }
-    }]
   },
   apis: ['./src/routes/*.js', './src/routes/config/*.js'],
 };

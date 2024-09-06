@@ -8,7 +8,6 @@ const express = require('express');
 const verifyTokenSession = require('../middleware/AuthMiddleware');
 const controller = require('../controllers/GeneratorController');
 const router = express.Router();
-
 /**
  * @swagger
  * components:
@@ -23,7 +22,7 @@ const router = express.Router();
  */
 /**
  * @swagger
- * /generateApp:
+ * /api/v1/generateApp:
  *   put:
  *     security:
  *      - Authorization: []

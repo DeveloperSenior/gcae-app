@@ -71,29 +71,6 @@ const options = {
         description: '@appDescription@',
       },
     ],
-    schemes: ['http'],
-    servers: [{
-      url: 'http://localhost:{port}/api/{basePath}',
-      variables: {
-        port: {
-          enum: [
-            process.env.PORT || '3000',
-            "8443",
-            "443"
-          ],
-          default: process.env.PORT || '3000'
-        },
-        basePath: { 
-          enum: [
-          "v1",
-          "v2",
-          "v3",
-          "v4",
-          "v5"
-        ],
-        default: 'v1' },
-      }
-    }]
   },
   apis: ['./src/routes/*.js', './src/routes/config/*.js'],
 };

@@ -40,7 +40,7 @@ const verifyTokenSession = require('../middleware/AuthMiddleware');
 
 /**
  * @swagger
- * /create@EntityName@:
+ * @appApiPath@/create@EntityName@:
  *   put:
  *     security:
  *      - Authorization: []
@@ -91,7 +91,7 @@ router.put('/create@EntityName@',verifyTokenSession, controller.create@EntityNam
 
 /**
  * @swagger
- * /get@EntityName@/{_id}:
+ * @appApiPath@/get@EntityName@/{_id}:
  *   get:
  *     security:
  *      - Authorization: []
@@ -142,7 +142,7 @@ router.get('/get@EntityName@/:_id',verifyTokenSession, controller.get@EntityName
 
 /**
  * @swagger
- * /getAll@EntityName@:
+ * @appApiPath@/getAll@EntityName@:
  *   get:
  *     security:
  *      - Authorization: []
@@ -187,7 +187,7 @@ router.get('/getAll@EntityName@',verifyTokenSession, controller.getAll@EntityNam
 
 /**
  * @swagger
- * /get@EntityName@/{pageSize}/{pageNumber}:
+ * @appApiPath@/get@EntityName@/{pageSize}/{pageNumber}:
  *   post:
  *     security:
  *      - Authorization: []
@@ -243,7 +243,7 @@ router.post('/get@EntityName@/:pageSize/:pageNumber', controller.get@EntityName@
 
 /**
  * @swagger
- * /@entityName@/{_id}:
+ * @appApiPath@/@entityName@/{_id}:
  *   patch:
  *     security:
  *      - Authorization: []
@@ -293,7 +293,7 @@ router.patch('/@entityName@/:_id',verifyTokenSession, controller.update@EntityNa
 
 /**
  * @swagger
- * /@entityName@/{_id}:
+ * @appApiPath@/@entityName@/{_id}:
  *   delete:
  *     security:
  *      - Authorization: []
