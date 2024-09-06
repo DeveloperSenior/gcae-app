@@ -8,7 +8,7 @@ terraform {
 
   backend "s3" {
     bucket = "gcae-state-backend-terraform"
-    key    = "state/dev/gcae-api/terraform.tfstate"
+    key    = "state/dllo/gcae-api/terraform.tfstate"
     region = "us-east-1"
   }
 
@@ -40,6 +40,8 @@ module "ECS-Cluster" {
   availability_zones    = local.availability_zones
 
   gcae_app_task_famliy         = local.gcae_app_task_famliy
+  gcae_app_task_memory         = local.gcae_app_task_memory
+  gcae_app_task_cpu            = local.gcae_app_task_cpu
   ecr_repo_url                 = module.ECR-Repository.repository_url
   container_port               = local.container_port
   gcae_app_task_name           = local.gcae_app_task_name
@@ -48,6 +50,8 @@ module "ECS-Cluster" {
   application_load_balancer_name = local.application_load_balancer_name
   target_group_name              = local.target_group_name
   gcae_app_service_name          = local.gcae_app_service_name
+  gcae_app_service_network_mode  = local.gcae_app_service_network_mode
+  gcae_app_service_launch_type   = local.gcae_app_service_launch_type
 
   gcae_app_awslogs_group         = local.cloudwatch_logs_group
   gcae_app_awslogs_region        = data.aws_region.current.name

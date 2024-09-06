@@ -39,6 +39,16 @@ variable "ecs_task_execution_role_name" {
   type        = string
 }
 
+variable "gcae_app_task_memory" {
+  description = "ECS Task memory"
+  type        = number
+}
+
+variable "gcae_app_task_cpu" {
+  description = "ECS Task vCPU"
+  type        = number
+}
+
 variable "application_load_balancer_name" {
   description = "ALB Name"
   type        = string
@@ -51,6 +61,16 @@ variable "target_group_name" {
 
 variable "gcae_app_service_name" {
   description = "ECS Service Name"
+  type        = string
+}
+
+variable "gcae_app_service_network_mode" {
+  description = "ECS network mode"
+  type        = string
+}
+
+variable "gcae_app_service_launch_type" {
+  description = "ECS launch type"
   type        = string
 }
 

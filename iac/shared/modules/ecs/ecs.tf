@@ -48,15 +48,15 @@ resource "aws_ecs_task_definition" "gcae_app_task" {
           "hostPort": ${var.container_port}
         }
       ],
-      "memory": 1024,
-      "cpu": 256
+      "memory": ${var.gcae_app_task_memory},
+      "cpu": ${var.gcae_app_task_cpu}
     }
   ]
   DEFINITION
-  requires_compatibilities = ["FARGATE"]
-  network_mode             = "awsvpc"
-  memory                   = 1024
-  cpu                      = 256
+  requires_compatibilities = [var.gcae_app_service_launch_type]
+  network_mode             = var.gcae_app_service_network_mode
+  memory                   = var.gcae_app_task_memory
+  cpu                      = var.gcae_app_task_cpu
   execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
   tags = var.additional_tags
 }
@@ -64,6 +64,7 @@ resource "aws_ecs_task_definition" "gcae_app_task" {
 resource "aws_iam_role" "ecs_task_execution_role" {
   name               = var.ecs_task_execution_role_name
   assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json
+  tags = var.additional_tags
 }
 
 resource "aws_iam_role_policy_attachment" "ecs_task_execution_role_policy" {
@@ -80,6 +81,7 @@ resource "aws_alb" "application_load_balancer" {
     "${aws_default_subnet.default_subnet_c.id}"
   ]
   security_groups = ["${aws_security_group.load_balancer_security_group.id}"]
+  tags = var.additional_tags
 }
 
 resource "aws_security_group" "load_balancer_security_group" {
@@ -96,6 +98,7 @@ resource "aws_security_group" "load_balancer_security_group" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
+  tags = var.additional_tags
 }
 
 resource "aws_lb_target_group" "target_group" {
@@ -104,6 +107,7 @@ resource "aws_lb_target_group" "target_group" {
   protocol    = "HTTP"
   target_type = "ip"
   vpc_id      = aws_default_vpc.default_vpc.id
+  tags = var.additional_tags
 }
 
 resource "aws_lb_listener" "listener" {
@@ -114,13 +118,14 @@ resource "aws_lb_listener" "listener" {
     type             = "forward"
     target_group_arn = aws_lb_target_group.target_group.arn
   }
+  tags = var.additional_tags
 }
 
 resource "aws_ecs_service" "gcae_app_service" {
   name            = var.gcae_app_service_name
   cluster         = aws_ecs_cluster.gcae_app_cluster.id
   task_definition = aws_ecs_task_definition.gcae_app_task.arn
-  launch_type     = "FARGATE"
+  launch_type     = var.gcae_app_service_launch_type
   desired_count   = 1
 
   load_balancer {
@@ -134,6 +139,7 @@ resource "aws_ecs_service" "gcae_app_service" {
     assign_public_ip = true
     security_groups  = ["${aws_security_group.service_security_group.id}"]
   }
+  tags = var.additional_tags
 }
 
 resource "aws_security_group" "service_security_group" {
@@ -150,4 +156,5 @@ resource "aws_security_group" "service_security_group" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
+  tags = var.additional_tags
 }
