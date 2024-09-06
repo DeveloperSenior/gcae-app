@@ -12,21 +12,21 @@ locals {
 
   ecr_repo_name = "@appname@-apiservices-${var.stage}"
 
-  gcae_app_cluster_name        = "@appname@-app-cluster-${var.stage}"
+  @appname@_app_cluster_name        = "@appname@-app-cluster-${var.stage}"
   availability_zones           = ["us-east-1a", "us-east-1b", "us-east-1c"]
-  gcae_app_task_famliy         = "@appname@-app-task-${var.stage}"
-  gcae_app_task_memory         = 1024
-  gcae_app_task_cpu            = 256
+  @appname@_app_task_famliy         = "@appname@-app-task-${var.stage}"
+  @appname@_app_task_memory         = 1024
+  @appname@_app_task_cpu            = 256
   container_port               = @appPort@
-  gcae_app_task_name           = "@appname@-app-task-${var.stage}"
+  @appname@_app_task_name           = "@appname@-app-task-${var.stage}"
   ecs_task_execution_role_name = "@appname@-app-task-execution-role"
 
   application_load_balancer_name = "cc-@appname@-app-alb-${var.stage}"
   target_group_name              = "cc-@appname@-alb-tg"
 
-  gcae_app_service_name         = "cc-@appname@-app-service-${var.stage}"
-  gcae_app_service_network_mode = "awsvpc"
-  gcae_app_service_launch_type  = "FARGATE"
+  @appname@_app_service_name         = "cc-@appname@-app-service-${var.stage}"
+  @appname@_app_service_network_mode = "awsvpc"
+  @appname@_app_service_launch_type  = "FARGATE"
 
   additional_tags = var.additional_tags
 

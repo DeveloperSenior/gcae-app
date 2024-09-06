@@ -1,0 +1,80 @@
+{
+	"appName": "Discover",
+	"appPort": 3001,
+	"appDescription": "Prueba de autogeneración",
+	"author": "Andres Escobar",
+	"company": "Dev S.A",
+	"version": "1.0",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/DeveloperSenior/discover.git"
+	},
+	"auth": {
+		"jwtSecretKey": "VEVTVC1HRU5FUkFUT1I="
+	},
+	"cache": {
+		"ttl": 3600
+	},
+	"dataBase": {
+		"type": "MONGO",
+		"serviceName": "gcae-app",
+		"host": "discoverappcluster0.224hpiv.mongodb.net",
+		"protocol": "mongodb+srv",
+		"user": "gcaeapp",
+		"pass": "SkZBZHYwOTlFc0VXckY5dg=="
+	},
+	"entities": [
+		{
+			"name": "Person",
+			"description": "Some description",
+			"fields": [
+				{
+					"name": "dni",
+					"type": "String",
+					"pk": true,
+					"required": true
+				},
+				{
+					"name": "name",
+					"type": "String",
+					"required": true
+				},
+				{
+					"name": "lastName",
+					"type": "String",
+					"required": true
+				}
+			]
+		},
+		{
+			"name": "Car",
+			"description": "Some description",
+			"fields": [
+				{
+					"name": "colors",
+					"type": "array",
+					"items": {
+						"type": "Object",
+						"ref": "Color"
+					},
+					"pk": true,
+					"required": true
+				},
+				{
+					"name": "name",
+					"type": "String",
+					"required": false
+				},
+				{
+					"name": "Engine",
+					"type": "array",
+					"items": {
+						"type": "String",
+						"ref": null
+					},
+					"required": true
+				}
+			]
+		}
+	]
+}

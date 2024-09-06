@@ -6,5 +6,5 @@
  */
 
 output "repository_url" {
-  value = aws_ecr_repository.gcae_app_ecr_repo.repository_url
+  value = aws_ecr_repository.@appname@_app_ecr_repo.repository_url
 }

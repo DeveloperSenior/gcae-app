@@ -5,7 +5,7 @@
  * @copyright Tecnologico de Antioquia 2024
  */
 
-variable "gcae_app_cluster_name" {
+variable "@appname@_app_cluster_name" {
   description = "ECS Cluster Name"
   type        = string
 }
@@ -15,7 +15,7 @@ variable "availability_zones" {
   type        = list(string)
 }
 
-variable "gcae_app_task_famliy" {
+variable "@appname@_app_task_famliy" {
   description = "ECS Task Family"
   type        = string
 }
@@ -30,7 +30,7 @@ variable "container_port" {
   type        = number
 }
 
-variable "gcae_app_task_name" {
+variable "@appname@_app_task_name" {
   description = "ECS Task Name"
   type        = string
 }
@@ -40,12 +40,12 @@ variable "ecs_task_execution_role_name" {
   type        = string
 }
 
-variable "gcae_app_task_memory" {
+variable "@appname@_app_task_memory" {
   description = "ECS Task memory"
   type        = number
 }
 
-variable "gcae_app_task_cpu" {
+variable "@appname@_app_task_cpu" {
   description = "ECS Task vCPU"
   type        = number
 }
@@ -60,32 +60,32 @@ variable "target_group_name" {
   type        = string
 }
 
-variable "gcae_app_service_name" {
+variable "@appname@_app_service_name" {
   description = "ECS Service Name"
   type        = string
 }
 
-variable "gcae_app_service_network_mode" {
+variable "@appname@_app_service_network_mode" {
   description = "ECS network mode"
   type        = string
 }
 
-variable "gcae_app_service_launch_type" {
+variable "@appname@_app_service_launch_type" {
   description = "ECS launch type"
   type        = string
 }
 
-variable "gcae_app_awslogs_group" {
+variable "@appname@_app_awslogs_group" {
     description = "Logs group"
     type = string
 }
 
-variable "gcae_app_awslogs_region" {
+variable "@appname@_app_awslogs_region" {
     description = "Region logs group"
     type = string
 }
 
-variable "gcae_app_awslogs_stream_prefix" {
+variable "@appname@_app_awslogs_stream_prefix" {
     description = "Prefix region logs group"
     type = string
 }

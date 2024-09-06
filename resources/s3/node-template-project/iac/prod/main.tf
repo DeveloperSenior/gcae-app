@@ -37,26 +37,26 @@ module "ECR-Repository" {
 module "ECS-Cluster" {
   source = "../shared/modules/ecs"
 
-  gcae_app_cluster_name = local.gcae_app_cluster_name
+  @appname@_app_cluster_name = local.@appname@_app_cluster_name
   availability_zones    = local.availability_zones
 
-  gcae_app_task_famliy         = local.gcae_app_task_famliy
-  gcae_app_task_memory         = local.gcae_app_task_memory
-  gcae_app_task_cpu            = local.gcae_app_task_cpu
+  @appname@_app_task_famliy         = local.@appname@_app_task_famliy
+  @appname@_app_task_memory         = local.@appname@_app_task_memory
+  @appname@_app_task_cpu            = local.@appname@_app_task_cpu
   ecr_repo_url                 = module.ECR-Repository.repository_url
   container_port               = local.container_port
-  gcae_app_task_name           = local.gcae_app_task_name
+  @appname@_app_task_name           = local.@appname@_app_task_name
   ecs_task_execution_role_name = local.ecs_task_execution_role_name
 
   application_load_balancer_name = local.application_load_balancer_name
   target_group_name              = local.target_group_name
-  gcae_app_service_name          = local.gcae_app_service_name
-  gcae_app_service_network_mode  = local.gcae_app_service_network_mode
-  gcae_app_service_launch_type   = local.gcae_app_service_launch_type
+  @appname@_app_service_name          = local.@appname@_app_service_name
+  @appname@_app_service_network_mode  = local.@appname@_app_service_network_mode
+  @appname@_app_service_launch_type   = local.@appname@_app_service_launch_type
 
-  gcae_app_awslogs_group         = local.cloudwatch_logs_group
-  gcae_app_awslogs_region        = data.aws_region.current.name
-  gcae_app_awslogs_stream_prefix = local.cloudwatch_logs_stream_prefix
+  @appname@_app_awslogs_group         = local.cloudwatch_logs_group
+  @appname@_app_awslogs_region        = data.aws_region.current.name
+  @appname@_app_awslogs_stream_prefix = local.cloudwatch_logs_stream_prefix
 
   additional_tags = local.additional_tags
 

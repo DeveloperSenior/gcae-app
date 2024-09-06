@@ -87,7 +87,7 @@ const RepositoryGeneratorService = () => {
 
         /** Generate Test repository */
         const { target: targetTest, data: dataTest } = await ioFileServicesInject.generateFileFromTemplate(TEMPLATE_TEST, `${appfolder}/${FOLDER_TEMPLATE_TEST}/${toPascalCase(name + TEMPLATE)}.test.js`);
-        generateTest(entityModel, targetTest, dataTest, createFile);
+        generateTest(entityModel, targetTest, dataTest, createFile,attrModelBuildValue);
     }
 
     return {

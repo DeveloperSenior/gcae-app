@@ -17,7 +17,7 @@ pipeline{
                 steps{
                     //checkout scm
                     git credentialsId: 'CredencialesGitHub',
-                    url: 'https://github.com/DeveloperSenior/gcae-app.git',
+                    url: '@urlRepository@',
                     branch: 'develop'
                 }
             }
@@ -41,7 +41,7 @@ pipeline{
 
             stage('Build Image DOCKER'){
                 steps{
-                    sh 'docker build -f ./Dockerfile -t gcae-app:latest .'
+                    sh 'docker build -f ./Dockerfile -t @appname@-app:latest .'
                 }               
             }           
 
@@ -50,7 +50,7 @@ pipeline{
         stage('Approval') {
             input {
                 message "Do you want to approve the deployment?"
-                submitter "afescobar" // Jenkins User ID
+                submitter "" // Jenkins User ID
                 parameters {
                     string(name: 'Approval', description: 'Please review the deployment', defaultValue: '')
                 }
@@ -69,23 +69,23 @@ pipeline{
 
             stage('Login repository AWS') {
                 steps{
-                 sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 754802997149.dkr.ecr.us-east-1.amazonaws.com'
+                 sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin <<AWS_id_account>>.dkr.ecr.us-east-1.amazonaws.com'
                 }
             }
 
            stage('Tag Image Version ECR AWS') {
                 steps{
-                    sh 'docker tag gcae-app:latest 754802997149.dkr.ecr.us-east-1.amazonaws.com/gcae-apiservices-dllo:latest'
+                    sh 'docker tag @appname@-app:latest <<AWS_id_account>>.dkr.ecr.us-east-1.amazonaws.com/@appname@-apiservices-dllo:latest'
                 }               
             }
             stage('Push Tag Image ECR AWS') {
                 steps{
-                    sh 'docker push 754802997149.dkr.ecr.us-east-1.amazonaws.com/gcae-apiservices-dllo:latest'
+                    sh 'docker push <<AWS_id_account>>.dkr.ecr.us-east-1.amazonaws.com/@appname@-apiservices-dllo:latest'
                 }               
             }
             stage('Deploy version') {
                 steps{
-                    sh 'aws ecs update-service --region us-east-1 --cluster gcae-app-cluster-dllo --service cc-gcae-app-service-dllo --task-definition gcae-app-task-dllo:1 --force-new-deployment --deployment-configuration "deploymentCircuitBreaker={enable=true,rollback=true}"'
+                    sh 'aws ecs update-service --region us-east-1 --cluster @appname@-app-cluster-dllo --service cc-@appname@-app-service-dllo --task-definition @appname@-app-task-dllo:1 --force-new-deployment --deployment-configuration "deploymentCircuitBreaker={enable=true,rollback=true}"'
                 }               
             }
            }

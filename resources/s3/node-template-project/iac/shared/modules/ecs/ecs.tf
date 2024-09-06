@@ -5,8 +5,8 @@
  * @copyright Tecnologico de Antioquia 2024
  */
 
-resource "aws_ecs_cluster" "gcae_app_cluster" {
-  name = var.gcae_app_cluster_name
+resource "aws_ecs_cluster" "@appname@_app_cluster" {
+  name = var.@appname@_app_cluster_name
   tags = var.additional_tags
 }
 
@@ -27,20 +27,20 @@ resource "aws_default_subnet" "default_subnet_c" {
   tags = var.additional_tags
 }
 
-resource "aws_ecs_task_definition" "gcae_app_task" {
-  family                   = var.gcae_app_task_famliy
+resource "aws_ecs_task_definition" "@appname@_app_task" {
+  family                   = var.@appname@_app_task_famliy
   container_definitions    = <<DEFINITION
   [
     {
-      "name": "${var.gcae_app_task_name}",
+      "name": "${var.@appname@_app_task_name}",
       "image": "${var.ecr_repo_url}",
       "essential": true,
       "logConfiguration":{
           "logDriver" : "awslogs",
           "options" : {
-            "awslogs-group" : "${var.gcae_app_awslogs_group}",
-            "awslogs-region" : "${var.gcae_app_awslogs_region}",
-            "awslogs-stream-prefix" : "${var.gcae_app_awslogs_stream_prefix}"          
+            "awslogs-group" : "${var.@appname@_app_awslogs_group}",
+            "awslogs-region" : "${var.@appname@_app_awslogs_region}",
+            "awslogs-stream-prefix" : "${var.@appname@_app_awslogs_stream_prefix}"          
           }
       },
       "portMappings": [
@@ -49,15 +49,15 @@ resource "aws_ecs_task_definition" "gcae_app_task" {
           "hostPort": ${var.container_port}
         }
       ],
-      "memory": ${var.gcae_app_task_memory},
-      "cpu": ${var.gcae_app_task_cpu}
+      "memory": ${var.@appname@_app_task_memory},
+      "cpu": ${var.@appname@_app_task_cpu}
     }
   ]
   DEFINITION
-  requires_compatibilities = [var.gcae_app_service_launch_type]
-  network_mode             = var.gcae_app_service_network_mode
-  memory                   = var.gcae_app_task_memory
-  cpu                      = var.gcae_app_task_cpu
+  requires_compatibilities = [var.@appname@_app_service_launch_type]
+  network_mode             = var.@appname@_app_service_network_mode
+  memory                   = var.@appname@_app_task_memory
+  cpu                      = var.@appname@_app_task_cpu
   execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
   tags = var.additional_tags
 }
@@ -122,16 +122,16 @@ resource "aws_lb_listener" "listener" {
   tags = var.additional_tags
 }
 
-resource "aws_ecs_service" "gcae_app_service" {
-  name            = var.gcae_app_service_name
-  cluster         = aws_ecs_cluster.gcae_app_cluster.id
-  task_definition = aws_ecs_task_definition.gcae_app_task.arn
-  launch_type     = var.gcae_app_service_launch_type
+resource "aws_ecs_service" "@appname@_app_service" {
+  name            = var.@appname@_app_service_name
+  cluster         = aws_ecs_cluster.@appname@_app_cluster.id
+  task_definition = aws_ecs_task_definition.@appname@_app_task.arn
+  launch_type     = var.@appname@_app_service_launch_type
   desired_count   = 1
 
   load_balancer {
     target_group_arn = aws_lb_target_group.target_group.arn
-    container_name   = aws_ecs_task_definition.gcae_app_task.family
+    container_name   = aws_ecs_task_definition.@appname@_app_task.family
     container_port   = var.container_port
   }
 

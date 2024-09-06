@@ -89,6 +89,7 @@ const sanitizeBaseProject = (body, target, data, createFile) => {
     } = body;
 
     const buffer = data.replaceAll('@appName@', toCamelCase(appName))
+        .replaceAll('@appname@',appName.toLowerCase())
         .replaceAll('@version@', version || '1.0')
         .replaceAll('@email@', email || '')
         .replaceAll('@appDescription@', appDescription)

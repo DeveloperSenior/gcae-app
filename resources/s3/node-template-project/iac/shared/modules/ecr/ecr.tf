@@ -5,7 +5,7 @@
  * @copyright Tecnologico de Antioquia 2024
  */
 
-resource "aws_ecr_repository" "gcae_app_ecr_repo" {
+resource "aws_ecr_repository" "@appname@_app_ecr_repo" {
   name = var.ecr_repo_name
   tags = var.additional_tags
   image_tag_mutability = "MUTABLE"
