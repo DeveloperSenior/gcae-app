@@ -6,6 +6,9 @@
 
 locals {
 
+  cloudwatch_logs_group         = "/ecs/gcae-app-${var.stage}"
+  cloudwatch_logs_stream_prefix = "ecs"
+
   ecr_repo_name = "gcae-apiservices-${var.stage}"
 
   gcae_app_cluster_name        = "gcae-app-cluster-${var.stage}"

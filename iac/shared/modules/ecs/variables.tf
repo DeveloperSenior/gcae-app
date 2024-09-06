@@ -54,6 +54,21 @@ variable "gcae_app_service_name" {
   type        = string
 }
 
+variable "gcae_app_awslogs_group" {
+    description = "Logs group"
+    type = string
+}
+
+variable "gcae_app_awslogs_region" {
+    description = "Region logs group"
+    type = string
+}
+
+variable "gcae_app_awslogs_stream_prefix" {
+    description = "Prefix region logs group"
+    type = string
+}
+
 variable "additional_tags" {
    default = {}
    description = "Additional resource tag"

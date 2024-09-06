@@ -21,6 +21,12 @@ terraform {
 
 }
 
+module "CloudWatch-Logs-groups" {
+  source                = "../shared/modules/cloudwatch"
+  cloudwatch_logs_group = local.cloudwatch_logs_group
+  additional_tags       = local.additional_tags
+}
+
 module "ECR-Repository" {
   source          = "../shared/modules/ecr"
   ecr_repo_name   = local.ecr_repo_name
@@ -42,6 +48,11 @@ module "ECS-Cluster" {
   application_load_balancer_name = local.application_load_balancer_name
   target_group_name              = local.target_group_name
   gcae_app_service_name          = local.gcae_app_service_name
-  additional_tags                = local.additional_tags
+
+  gcae_app_awslogs_group         = local.cloudwatch_logs_group
+  gcae_app_awslogs_region        = data.aws_region.current.name
+  gcae_app_awslogs_stream_prefix = local.cloudwatch_logs_stream_prefix
+
+  additional_tags = local.additional_tags
 
 }

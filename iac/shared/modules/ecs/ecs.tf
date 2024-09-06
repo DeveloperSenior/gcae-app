@@ -34,6 +34,14 @@ resource "aws_ecs_task_definition" "gcae_app_task" {
       "name": "${var.gcae_app_task_name}",
       "image": "${var.ecr_repo_url}",
       "essential": true,
+      "logConfiguration":{
+          "logDriver" = "awslogs",
+          "options" = {
+            "awslogs-group" = "${var.gcae_app_awslogs_group}"
+            "awslogs-region" = "${var.gcae_app_awslogs_region}"
+            "awslogs-stream-prefix" = "${var.gcae_app_awslogs_stream_prefix}"           
+          }
+      }
       "portMappings": [
         {
           "containerPort": ${var.container_port},
