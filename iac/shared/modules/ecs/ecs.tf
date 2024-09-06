@@ -37,11 +37,11 @@ resource "aws_ecs_task_definition" "gcae_app_task" {
       "logConfiguration":{
           "logDriver" : "awslogs",
           "options" : {
-            "awslogs-group" : "${var.gcae_app_awslogs_group}"
-            "awslogs-region" : "${var.gcae_app_awslogs_region}"
-            "awslogs-stream-prefix" : "${var.gcae_app_awslogs_stream_prefix}"           
+            "awslogs-group" : "${var.gcae_app_awslogs_group}",
+            "awslogs-region" : "${var.gcae_app_awslogs_region}",
+            "awslogs-stream-prefix" : "${var.gcae_app_awslogs_stream_prefix}"          
           }
-      }
+      },
       "portMappings": [
         {
           "containerPort": ${var.container_port},
