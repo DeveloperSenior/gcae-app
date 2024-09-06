@@ -5,7 +5,7 @@ RUN mkdir ~/.aws
 RUN touch ~/.aws/credentials
 
 ENV VERSION 1.0
-ENV PORT 7380
+ENV PORT 3000
 ENV API_PATH /api/v1
 ENV ENV dllo
 
@@ -50,6 +50,8 @@ RUN --mount=type=bind,source=package.json,target=package.json \
     --mount=type=cache,target=/root/.npm \
     npm ci --omit=dev
 COPY . .
+
+EXPOSE 3000
 
 CMD ["npm","run","star"]
 

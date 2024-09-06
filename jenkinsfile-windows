@@ -23,20 +23,26 @@ pipeline{
 
             stage('Install Dependencies NPM'){
                 steps{
-                  sh 'npm install'
+                  bat 'npm install'
                 }
             }
 
-            stage('Build & Run Test'){
+            stage('Run Test'){
                 steps{
-                    sh 'npm test'
+                    bat 'npm test'
                 }
                 post{
                     always{
                         junit '**/build/report/tests/junit.xml'
                     }
                 }                
-            }            
+            }
+
+            stage('Build Image DOCKER'){
+                steps{
+                    bat 'docker build -f ./Dockerfile -t gcae-app:beta .'
+                }               
+            }           
 
           }
         }
@@ -55,23 +61,32 @@ pipeline{
         stage('Continuous Delivery') {
             
             
-            tools {
+           /* tools {
               dockerTool 'docker'
-            }
+            }*/
            stages {
 
             stage('Login repository AWS') {
                 steps{
-                 sh '''docker login -u AWS https://754802997149.dkr.ecr.us-east-1.amazonaws.com -p $(aws ecr get-login-password --region us-east-1)'''
-                 
+                 bat 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 754802997149.dkr.ecr.us-east-1.amazonaws.com'
                 }
             }
 
-           /*stage('Push Image Docker AWS') {
+           stage('Tag Image Version ECR AWS') {
                 steps{
-                    sh 'aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin 754802997149.dkr.ecr.us-east-1.amazonaws.com'
+                    bat 'docker tag gcae-app:beta 754802997149.dkr.ecr.us-east-1.amazonaws.com/gcae-apiservices:beta'
                 }               
-            }*/
+            }
+            stage('Push Tag Image ECR AWS') {
+                steps{
+                    bat 'docker push 754802997149.dkr.ecr.us-east-1.amazonaws.com/gcae-apiservices:beta'
+                }               
+            }
+            stage('Deploy version') {
+                steps{
+                    bat 'aws ecs update-service --region us-east-1 --cluster ambiente-gcae-api-dllo --service gcae-apidllo-services --task-definition gcae-apiTsk:$BUILD_NUMBER --force-new-deployment --deployment-configuration "deploymentCircuitBreaker={enable=true,rollback=true}"'
+                }               
+            }
            }
 
       }

@@ -39,7 +39,7 @@ const router = express.Router();
  *     type: object
  *     required:
  *       - email
- *       - password
+ *       - tokenId
  *     properties:
  *       email:
  *         type: string

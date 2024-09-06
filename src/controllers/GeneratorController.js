@@ -6,8 +6,6 @@
 
 const { inject, getSession } = require('../utilities/Utilities');
 const { HTTP_CODE } = require('../utilities/Constants');
-const { of, defer, Observable } = require('rxjs');
-const { toPascalCase, toCamelCase } = require('js-convert-case');
 
 const IOFileService = require('../services/IOFileService');
 const RouteGeneratorService = require('../services/RouteGeneratorService');

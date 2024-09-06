@@ -1,0 +1,47 @@
+/** 
+ * @author Andres Felipe Escobar López
+ * @date 2024
+ * @copyright Tecnologico de Antioquia 2024
+ */
+
+terraform {
+
+  backend "s3" {
+    bucket = "gcae-state-backend-terraform"
+    key    = "state/dev/gcae-api/terraform.tfstate"
+    region = "us-east-1"
+  }
+
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
+    }
+  }
+
+}
+
+module "ECR-Repository" {
+  source          = "../shared/modules/ecr"
+  ecr_repo_name   = local.ecr_repo_name
+  additional_tags = local.additional_tags
+}
+
+module "ECS-Cluster" {
+  source = "../shared/modules/ecs"
+
+  gcae_app_cluster_name = local.gcae_app_cluster_name
+  availability_zones    = local.availability_zones
+
+  gcae_app_task_famliy         = local.gcae_app_task_famliy
+  ecr_repo_url                 = module.ECR-Repository.repository_url
+  container_port               = local.container_port
+  gcae_app_task_name           = local.gcae_app_task_name
+  ecs_task_execution_role_name = local.ecs_task_execution_role_name
+
+  application_load_balancer_name = local.application_load_balancer_name
+  target_group_name              = local.target_group_name
+  gcae_app_service_name          = local.gcae_app_service_name
+  additional_tags                = local.additional_tags
+
+}
