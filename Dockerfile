@@ -1,8 +1,6 @@
 FROM node:20
 
-RUN mkdir ~/.aws
-
-RUN touch ~/.aws/credentials
+RUN mkdir ~/.aws && touch ~/.aws/credentials
 
 ENV VERSION 1.0
 ENV PORT 3000

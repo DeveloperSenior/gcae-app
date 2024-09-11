@@ -1,8 +1,8 @@
 # GCAE-APP
 software that automates the process of generating base code with standard architectures within the framework of SOLID principles focused on the Back-end.
 
-# Team members
-- [Andres Escobar](https://github.com/DeveloperSenior)
+# Author
+- [Andres Felipe Escobar Lopez](https://github.com/DeveloperSenior)
 
 # Technology in which it was developed
 - NodeJS v20.16.0
