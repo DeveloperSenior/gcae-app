@@ -7,7 +7,6 @@ software that automates the process of generating base code with standard archit
 # Technology in which it was developed
 - NodeJS v20.16.0
 - AWS
-- Terraform
 
 # Project's name
 `GCAE FRAMEWORK for generating the BACK-END of an application from JSON objects (JSON-NODEJS Generator) under SOLID principles` software that automates the process of generating base code with standard architectures within the framework of SOLID principles focused on the Back-end.
@@ -29,32 +28,7 @@ Rest API server and usage
 11. `adm-zip` ADM-ZIP is a pure JavaScript implementation for zip data compression for NodeJS.
 
 ```
-GCAE-APP
-   L iac
-      L dllo
-         data.tf
-         locals.tf
-         main.tf
-         providers.tf
-         variables.tf
-      L prod
-         data.tf
-         locals.tf
-         main.tf
-         providers.tf
-         variables.tf
-      L test
-         data.tf
-         locals.tf
-         main.tf
-         providers.tf
-         variables.tf
-      L shared
-         L cloudwatch
-         L ecr
-         L ecs
-      jenkinsfile
-      jenkisfile-windows
+gcae-app
    L resources
    L src
       L controllers 
