@@ -8,7 +8,8 @@ const { inject, isDebug } = require('../utilities/Utilities');
 const { createFolders,
     createFile,
     createFileAndUnzip,
-    readFile } = require('../utilities/IOUtil');
+    readFile,
+    unzipFile } = require('../utilities/IOUtil');
 const S3Service = require('./aws/S3Service');
 const admz = require('adm-zip');
 
@@ -57,11 +58,13 @@ const IOFileService = generatorRepository => {
         if (isDebug)
             console.log('Crear folders');
         createFolders(appfolder);
+        createFolders(`${appfolder}-iac`);
 
         const s3ServiceInject = inject(() => { }, S3Service)();
 
         const { fileName, data } = await s3ServiceInject.getObjectAsByteArray(bucketTemplates, nodeTemplateProject);
         await createFileAndUnzip(`${appfolder}/${fileName}`, appfolder, data);
+        await unzipFile(`${appfolder}/iac.zip`,`${appfolder}-iac`);
         return { target: appfolder, data: data }
     }
 
@@ -108,7 +111,8 @@ const IOFileService = generatorRepository => {
         const s3ServiceInject = inject(() => { }, S3Service)();
         const zp = new admz();
         const zipName = `${folder}.zip`;
-        zp.addLocalFolder(`${basePath}/${folder}`);
+        zp.addLocalFolder(`${basePath}/${folder}`,`${folder}-server`);
+        zp.addLocalFolder(`${basePath}/${folder}-iac`,`${folder}-iac`);
 
         const data = zp.toBuffer();
 

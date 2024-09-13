@@ -89,6 +89,7 @@ const sanitizeBaseProject = (body, target, data, createFile) => {
     } = body;
 
     const buffer = data.replaceAll('@appName@', toCamelCase(appName))
+        .replaceAll('@APPNAME@', appName.toUpperCase())
         .replaceAll('@appname@',appName.toLowerCase())
         .replaceAll('@version@', version || '1.0')
         .replaceAll('@email@', email || '')
@@ -182,14 +183,28 @@ const main = async (request, response) => {
         }
         console.log('END sanitize');
 
+        baseIaCFiles = readDir(`${basePath}/${appfolder}-iac`, true, true);
+
+        /** sanitize base IaC file content */
+        console.log('INIT sanitize IaC');
+        const dataIaCToSanitize = baseIaCFiles?.filter(item => item.isFile());
+        for await (file of dataIaCToSanitize) {
+            const { path, name } = file;
+            const { target, content, createFile } = await ioFileServicesInject.sanitizeFileContent(`${path}/${name}`, `${path}/${name}`);
+            sanitizeBaseProject(body, target, content, createFile);
+        }
+        console.log('END sanitize IaC');
+
         console.log('END PROCESS');
         /** Create App DB */
         await generatorServiceInject.createApp(body, userSession);
         /** put Zip S3*/
-        await ioFileServicesInject.saveFile(basePath, `${appfolder}`);
-
-
-        return response.status(HTTP_CODE.CREATED).json(body);
+        const {fileName, buffer} = await ioFileServicesInject.saveFile(basePath, `${appfolder}`);
+        response.set('Content-Type', 'application/octet-stream');
+        response.set('Content-Disposition', `attachment; filename=${fileName}`);
+        response.set('Content-Length', buffer.length);
+        
+        return response.status(HTTP_CODE.CREATED).send(buffer);
 
     } catch (error) {
         console.log(error);

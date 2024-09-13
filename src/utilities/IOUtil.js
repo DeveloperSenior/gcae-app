@@ -43,6 +43,27 @@ const createFile = (path, content) => {
 }
 
 /**
+ * Unzip file to target
+ * @param {String} path 
+ * @param {String} target 
+ * @param {Object} content
+ */
+const unzipFile = async (path, target) => {
+    try {
+
+        await decompress(path, target);
+        if (isDebug())
+            console.log('Unzip file done!');
+        fs.rmSync(path);
+
+    } catch (e) {
+        console.error('Error: ', e);
+        const excepcion = new DefaultException(e.message);
+        throw excepcion;
+    }
+}
+
+/**
  * create File compress And Unzip
  * @param {String} path 
  * @param {String} target 
@@ -111,5 +132,6 @@ module.exports = {
     createFileAndUnzip,
     readFile,
     readDir,
-    deleteFile
+    deleteFile,
+    unzipFile
 }

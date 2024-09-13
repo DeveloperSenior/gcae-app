@@ -40,12 +40,12 @@ const router = express.Router();
  *                      $ref: '#/components/schemas/AppModel'
  *     responses:
  *       '201':
- *         description: App created
+ *         description: App created and Download Zip file project
  *         content:
- *          application/json:
+ *          application/octet-stream:
  *            schema:
- *             $ref: '#/components/schemas/AppModel'
- *            type: object
+ *              type: string
+ *              format: binary
  *       '401':
  *         description: Unauthorized
  *         content:

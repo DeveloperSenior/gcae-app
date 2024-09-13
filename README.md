@@ -67,7 +67,7 @@ gcae-app
    jenkinsfile-windows
    jest.config.js
    package.json
-   READEME.md
+   README.md
    server.js
 ```
 # How to run the project
