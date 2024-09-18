@@ -11,6 +11,7 @@ Before starting you must install Git, NodeJS, AWS CLI, Docker & Jenkins on your 
 [Install Docker](https://docs.docker.com/engine/install/), [Install AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html),
 [Install Jenkins](https://www.jenkins.io/doc/book/installing/)
 
+- VSCode. [Install VSCode](https://code.visualstudio.com/download)
 - NodeJS v20.17.0 LTS
 - Git
 - Docker - Docker Compose
