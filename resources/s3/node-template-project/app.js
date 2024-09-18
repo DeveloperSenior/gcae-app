@@ -11,8 +11,15 @@ const express = require('express');
 const cors = require('cors');
 const routerVersion = express.Router();
 const routersApp = require('./src/routes/config/SuscriptionRoutesAppConf');
+const helmet = require('helmet');
 
 var app = express();
+
+// Reduce fingerprinting
+app.disable('x-powered-by');
+
+//Helmet helps secure Express apps by setting HTTP response headers.
+app.use(helmet())
 
 /**
  * Allowed cors

@@ -17,10 +17,10 @@
 	},
 	"dataBase": {
 		"type": "MONGO",
-		"serviceName": "gcae-app",
-		"host": "discoverappcluster0.224hpiv.mongodb.net",
-		"protocol": "mongodb+srv",
-		"user": "gcaeapp",
+		"serviceName": "example-app",
+		"host": "localhost:27017",
+		"protocol": "mongodb",
+		"user": "example-app-user",
 		"pass": "SkZBZHYwOTlFc0VXckY5dg=="
 	},
 	"entities": [

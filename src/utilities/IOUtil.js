@@ -122,7 +122,7 @@ const readDir = (path, _recursive = false, _withFileTypes = false) => {
  * @param {*} path 
  */
 const deleteFile = (path) => {
-    fs.rmSync(path);
+    fs.rmSync(path,{recursive: true});
 }
 
 

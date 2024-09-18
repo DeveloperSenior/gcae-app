@@ -4,14 +4,25 @@
 # Author
 - [@author@](@urlRepository@)
 
+
 # Technology in which it was developed
-- NodeJS v20.16.0
+
+Before starting you must install Git, NodeJS, AWS CLI, Docker & Jenkins on your applicable operating system go to the official site [Install NodeJS](https://nodejs.org/en/download/package-manager), [Install Git](https://git-scm.com/downloads),
+[Install Docker](https://docs.docker.com/engine/install/), [Install AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html),
+[Install Jenkins](https://www.jenkins.io/doc/book/installing/)
+
+- NodeJS v20.17.0 LTS
+- Git
+- Docker - Docker Compose
+- AWS CLI
+- Jenkins
+- (Optional) Snyk: gives you the visibility, context, and control you need to work alongside developers on reducing application risk. [Install snyk](https://snyk.io/) or visit site [best-practice-security-express](https://expressjs.com/en/advanced/best-practice-security.html)
 
 # Project's name
 `@APPNAME@` @appDescription@.
 
 # Back-End Project Structure
-The project was developed for the back-end with NodeJS v20.16.0, using the following support libraries:
+The project was developed for the back-end with NodeJS v20.17.0 LTS, using the following support libraries:
 
 1. `express` for the creation of the container
 Rest API server and usage
@@ -23,6 +34,7 @@ Rest API server and usage
 7. `mongoose` as ODM to persist JSON documents in MongoDB and`mongoose-paginate-v2` to perform paginated queries to MongoDB.
 8. `jsonwebtoken` to authenticate and authorize each transaction in the API exposed by `express`.
 9. `bcrypt` to encrypt and validate passwords that are stored in MongoDB
+10. `helmet` Helmet helps secure Express apps by setting HTTP response headers. [Doc Site](https://helmetjs.github.io/)
 
 ```
 @appname@-api-server
@@ -114,5 +126,19 @@ It means that our server is up.
 7. **View Documentation :**
 The API documentation is in the url http://localhost:3000/api/v1/api-docs/
 
-7. **Postman collection :**
+8. **Postman collection :**
 In the Postman tool import the file `@appname@-api-server.postman_collection` which is at the root of the project.
+
+9. **(Optional) Run scan code security with snyk:**
+
+```bash
+# install snyk with npm
+npm install -g snyk
+
+# login snyk
+snyk auth
+
+# scan code with report
+snyk test --report
+
+```

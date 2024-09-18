@@ -64,7 +64,7 @@ const IOFileService = generatorRepository => {
 
         const { fileName, data } = await s3ServiceInject.getObjectAsByteArray(bucketTemplates, nodeTemplateProject);
         await createFileAndUnzip(`${appfolder}/${fileName}`, appfolder, data);
-        await unzipFile(`${appfolder}/iac.zip`,`${appfolder}-iac`);
+        await unzipFile(`${appfolder}/iac.zip`, `${appfolder}-iac`);
         return { target: appfolder, data: data }
     }
 
@@ -111,8 +111,8 @@ const IOFileService = generatorRepository => {
         const s3ServiceInject = inject(() => { }, S3Service)();
         const zp = new admz();
         const zipName = `${folder}.zip`;
-        zp.addLocalFolder(`${basePath}/${folder}`,`${folder}-server`);
-        zp.addLocalFolder(`${basePath}/${folder}-iac`,`${folder}-iac`);
+        zp.addLocalFolder(`${basePath}/${folder}`, `${folder}-server`);
+        zp.addLocalFolder(`${basePath}/${folder}-iac`, `${folder}-iac`);
 
         const data = zp.toBuffer();
 
@@ -122,13 +122,27 @@ const IOFileService = generatorRepository => {
 
     }
 
+    /**
+     * get app file AWS 
+     * @param {*} appName 
+     */
+    const getAppFile = async (appName) => {
+
+        const zipName = `${appName}.zip`;
+
+        const s3ServiceInject = inject(() => { }, S3Service)();
+        const { data } = await s3ServiceInject.getObjectAsByteArray(bucketTemplates, `${bucketFolderApps}/${zipName}`);
+        return { fileName: zipName, buffer: data };
+
+    }
 
     return {
         generateBaseProject,
         generateFileFromTemplate,
         getContentFileFromTemplate,
         sanitizeFileContent,
-        saveFile
+        saveFile,
+        getAppFile
     }
 
 }

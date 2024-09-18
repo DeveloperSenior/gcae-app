@@ -31,6 +31,7 @@
         "decompress": "^4.2.1",
         "express": "^4.19.2",
         "fluent-json-schema": "^5.0.0",
+        "helmet": "^7.1.0",
         "js-convert-case": "^4.2.0",
         "jsonwebtoken": "^9.0.2",
         "moment": "^2.30.1",

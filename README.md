@@ -5,14 +5,23 @@ software that automates the process of generating base code with standard archit
 - [Andres Felipe Escobar Lopez](https://github.com/DeveloperSenior)
 
 # Technology in which it was developed
-- NodeJS v20.16.0
-- AWS
+
+Before starting you must install Git, NodeJS, AWS CLI, Docker & Jenkins on your applicable operating system go to the official site [Install NodeJS](https://nodejs.org/en/download/package-manager), [Install Git](https://git-scm.com/downloads),
+[Install Docker](https://docs.docker.com/engine/install/), [Install AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html),
+[Install Jenkins](https://www.jenkins.io/doc/book/installing/)
+
+- NodeJS v20.17.0 LTS
+- Git
+- Docker - Docker Compose
+- AWS CLI
+- Jenkins
+- (Optional) Snyk: gives you the visibility, context, and control you need to work alongside developers on reducing application risk. [Install snyk](https://snyk.io/) or visit site [best-practice-security-express](https://expressjs.com/en/advanced/best-practice-security.html)
 
 # Project's name
 `GCAE FRAMEWORK for generating the BACK-END of an application from JSON objects (JSON-NODEJS Generator) under SOLID principles` software that automates the process of generating base code with standard architectures within the framework of SOLID principles focused on the Back-end.
 
 # Back-End Project Structure
-The project was developed for the back-end with NodeJS v20.16.0, using the following support libraries:
+The project was developed for the back-end with NodeJS v20.17.0 LTS, using the following support libraries:
 
 1. `express` for the creation of the container
 Rest API server and usage
@@ -26,6 +35,7 @@ Rest API server and usage
 9. `bcrypt` to encrypt and validate passwords that are stored in MongoDB
 10. `AWS SDK` Allows to connect your application to Amazon AWS services
 11. `adm-zip` ADM-ZIP is a pure JavaScript implementation for zip data compression for NodeJS.
+12. `helmet` Helmet helps secure Express apps by setting HTTP response headers. [Doc Site](https://helmetjs.github.io/)
 
 ```
 gcae-app
@@ -119,5 +129,19 @@ It means that our server is up.
 7. **View Documentation :**
 The API documentation is in the url http://localhost:3000/api/v1/api-docs/
 
-7. **Postman collection :**
+8. **Postman collection :**
 In the Postman tool import the file `gcae-app.postman_collection` which is at the root of the project.
+
+9. **(Optional) Run scan code security with snyk:**
+
+```bash
+# install snyk with npm
+npm install -g snyk
+
+# login snyk
+snyk auth
+
+# scan code with report
+snyk test --report
+
+```

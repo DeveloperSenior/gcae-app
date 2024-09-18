@@ -18,20 +18,23 @@ const HTTP_CODE = {
 const ERROR_CODE = {
     DEFAULT: 'API-01-001',
     ACCESS: 'API-02-001',
-    VALIDATE: 'API-03-001'
+    VALIDATE: 'API-03-001',
+    NOT_FOUND: 'API-04-404'
 }
 
 const ERROR_TYPE = {
     DEFAULT: 'Technical',
     ACCESS: 'Access',
-    VALIDATE: 'Validate'
+    VALIDATE: 'Validate',
+    NOT_FOUND: 'NOT FOUND'
 }
 
 const ERROR_MESSAGE = {
     DEFAULT: 'An unexpected exception was found in the application. Review details in the log',
     ACCESS: 'An unexpected exception was found in the Access, put valid Bearer token Authorization Header',
     ENTITY_ISNT_SESSION: 'An unexpected exception was found in the validate ENTITY, the ENTITY does not belong to the user in session',
-    ENTITY_NOT_FOUND: 'An unexpected exception was found in the validate ENTITY, the ENTITY does not found'
+    ENTITY_NOT_FOUND: 'An unexpected exception was found in the validate ENTITY, the ENTITY does not found',
+    NOT_FOUND: "Sorry can't find that!"
 
 }
 

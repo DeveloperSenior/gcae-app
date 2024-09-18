@@ -79,8 +79,8 @@ const S3Service = () => {
                         Key: name,
                     })
                 );
-                content = await Body.transformToByteArray();
-                cache.set(key, Buffer.from(content))
+                content = Buffer.from(await Body.transformToByteArray());
+                cache.set(key, content)
             }
             return {
                 fileName: name,

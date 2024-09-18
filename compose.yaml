@@ -13,6 +13,8 @@ services:
       context: .
     environment:
       NODE_ENV: production
+      AWS_ACCESS_KEY_ID: <<PUT_AWS_ACCESS_KEY_ID>>
+      AWS_SECRET_ACCESS_KEY: <<PUT_AWS_SECRET_ACCESS_KEY>>
     ports:
       - 3000:3000
       - 8081:8081

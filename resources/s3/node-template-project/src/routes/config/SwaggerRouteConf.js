@@ -45,8 +45,8 @@ const options = {
     openapi: '3.0.1',
     info: {
       title: 'REST - Swagger',
-      version: '1.0.0',
-      description: 'REST API with Swagger doc',
+      version: `${process.env.VERSION || '1.0.0'} - ${process.env.ENV || 'dllo'}`,
+      description: '@APPNAME@ REST API with Swagger doc: <br><br> [Site application](@urlRepository@)',
       contact: {
         email: '@email@',
       },

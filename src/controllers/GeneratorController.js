@@ -20,7 +20,7 @@ const GeneratorService = require('../services/GeneratorService');
 const GeneratorRepository = require('../db/GeneratorRepository');
 const { AppModel } = require('../models/AppModel');
 
-const { readDir } = require('../utilities/IOUtil');
+const { readDir, deleteFile } = require('../utilities/IOUtil');
 
 /** Dependency Inject */
 const ioFileServicesInject = inject(() => { }, IOFileService)();
@@ -90,7 +90,7 @@ const sanitizeBaseProject = (body, target, data, createFile) => {
 
     const buffer = data.replaceAll('@appName@', toCamelCase(appName))
         .replaceAll('@APPNAME@', appName.toUpperCase())
-        .replaceAll('@appname@',appName.toLowerCase())
+        .replaceAll('@appname@', appName.toLowerCase())
         .replaceAll('@version@', version || '1.0')
         .replaceAll('@email@', email || '')
         .replaceAll('@appDescription@', appDescription)
@@ -99,7 +99,7 @@ const sanitizeBaseProject = (body, target, data, createFile) => {
         .replaceAll('@appPort@', appPort || '3000')
         .replaceAll('@appApiPath@', appApiPath || '/api/v1')
         .replaceAll('@author@', author || 'TdeA')
-        .replaceAll('@company@',company || 'Tecnologico de Antioquia')
+        .replaceAll('@company@', company || 'Tecnologico de Antioquia')
         .replaceAll('@dbHost@', dataBase?.host || 'change_it_example.com')
         .replaceAll('@dbName@', dataBase?.serviceName || 'dbName_change_it')
         .replaceAll('@dbUser@', dataBase?.user || 'dbUser_change_it')
@@ -107,8 +107,9 @@ const sanitizeBaseProject = (body, target, data, createFile) => {
         .replaceAll('@dbProtocol@', dataBase?.protocol || 'http_change_it')
         .replaceAll('@jwtSecretKey@', auth?.jwtSecretKey || 'jwtSecretkey_change_it_base64')
         .replaceAll('@cacheTTL@', cache?.ttl || '3600')
+        .replaceAll('@endpoints@', '')
         /** always count 2 routes default */
-        .replaceAll('@countEntity@', 2 + entities?.length );
+        .replaceAll('@countEntity@', 2 + entities?.length);
     createFile(target, buffer);
 }
 
@@ -199,11 +200,16 @@ const main = async (request, response) => {
         /** Create App DB */
         await generatorServiceInject.createApp(body, userSession);
         /** put Zip S3*/
-        const {fileName, buffer} = await ioFileServicesInject.saveFile(basePath, `${appfolder}`);
+        const { fileName, buffer } = await ioFileServicesInject.saveFile(basePath, `${appfolder}`);
         response.set('Content-Type', 'application/octet-stream');
         response.set('Content-Disposition', `attachment; filename=${fileName}`);
         response.set('Content-Length', buffer.length);
-        
+
+        /** Clear FileSystem */
+        deleteFile(`${basePath}/${appfolder}`);
+        deleteFile(`${basePath}/${appfolder}-iac`);
+
+
         return response.status(HTTP_CODE.CREATED).send(buffer);
 
     } catch (error) {
@@ -215,6 +221,64 @@ const main = async (request, response) => {
 
 }
 
+/**
+ * get existing App
+ * @param {*} request 
+ * @param {*} response 
+ * @returns 
+ */
+const getApp = async (request, response) => {
+    try {
+        const generatorServiceInject = inject(GeneratorRepository, GeneratorService)(AppModel);
+        const { params } = request;
+        const { appName } = params;
+        const userSession = getSession(request);
+        const appfolder = `${appName.toLowerCase()}-api`;
+        const { fileName, buffer } = await generatorServiceInject.getAppByName(appName,appfolder,userSession);
+        
+        response.set('Content-Type', 'application/octet-stream');
+        response.set('Content-Disposition', `attachment; filename=${fileName}`);
+        response.set('Content-Length', buffer.length);
+
+        return response.status(HTTP_CODE.OK).send(buffer);
+
+    } catch (error) {
+        console.log(error);
+        return response.status(HTTP_CODE.ERROR).json(error);
+
+    }
+}
+
+/**
+ * get existing App
+ * @param {*} request 
+ * @param {*} response 
+ * @returns 
+ */
+const getDemo = async (request, response) => {
+    try {
+        const generatorServiceInject = inject(GeneratorRepository, GeneratorService)(AppModel);
+        const { params } = request;
+        const { appName } = params;
+        const userSession = getSession(request);
+        const appfolder = `${appName.toLowerCase()}-api`;
+        const { fileName, buffer } = await generatorServiceInject.getAppByName(appName,appfolder,userSession);
+        
+        response.set('Content-Type', 'application/octet-stream');
+        response.set('Content-Disposition', `attachment; filename=${fileName}`);
+        response.set('Content-Length', buffer.length);
+
+        return response.status(HTTP_CODE.OK).send(buffer);
+
+    } catch (error) {
+        console.log(error);
+        return response.status(HTTP_CODE.ERROR).json(error);
+
+    }
+}
+
 module.exports = {
-    main
+    main,
+    getApp,
+    getDemo
 }
