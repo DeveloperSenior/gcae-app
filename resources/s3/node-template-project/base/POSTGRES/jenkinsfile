@@ -1,0 +1,103 @@
+pipeline{
+    agent any
+
+    environment{
+        AWS_CREDENTIAL = credentials('aws-credential-dllo')
+        AWS_REGION = 'us-east-1'
+        
+    }
+
+    stages{
+        stage('Continuous Integration') {
+          tools {
+            nodejs 'node_20'
+          }
+          stages {
+            stage('Checkout repository GIT'){
+                steps{
+                    //checkout scm
+                    git credentialsId: 'CredencialesGitHub',
+                    url: '@urlRepository@',
+                    branch: 'develop'
+                }
+            }
+
+            stage('Install Dependencies NPM'){
+                steps{
+                  sh 'npm install'
+                }
+            }
+
+            stage('Run Test'){
+                steps{
+                    sh 'npm test'
+                }
+                post{
+                    always{
+                        junit '**/build/report/tests/junit.xml'
+                    }
+                }                
+            }
+
+            stage('Build Image DOCKER'){
+                steps{
+                    sh 'docker build -f ./Dockerfile -t @appname@-app:latest .'
+                }               
+            }           
+
+          }
+        }
+        stage('Approval') {
+            input {
+                message "Do you want to approve the deployment?"
+                submitter "" // Jenkins User ID
+                parameters {
+                    string(name: 'Approval', description: 'Please review the deployment', defaultValue: '')
+                }
+            }
+            steps {
+                echo "${Approval}, Approval"
+            }
+        }
+        stage('Continuous Delivery') {
+            
+            
+           /* tools {
+              dockerTool 'docker'
+            }*/
+           stages {
+
+            stage('Login repository AWS') {
+                steps{
+                 sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin <<AWS_id_account>>.dkr.ecr.us-east-1.amazonaws.com'
+                }
+            }
+
+           stage('Tag Image Version ECR AWS') {
+                steps{
+                    sh 'docker tag @appname@-app:latest <<AWS_id_account>>.dkr.ecr.us-east-1.amazonaws.com/@appname@-apiservices-dllo:latest'
+                }               
+            }
+            stage('Push Tag Image ECR AWS') {
+                steps{
+                    sh 'docker push <<AWS_id_account>>.dkr.ecr.us-east-1.amazonaws.com/@appname@-apiservices-dllo:latest'
+                }               
+            }
+            stage('Deploy version') {
+                steps{
+                    sh 'aws ecs update-service --region us-east-1 --cluster @appname@-app-cluster-dllo --service cc-@appname@-app-service-dllo --task-definition @appname@-app-task-dllo:1 --force-new-deployment --deployment-configuration "deploymentCircuitBreaker={enable=true,rollback=true}"'
+                }               
+            }
+           }
+
+      }
+            
+    }
+    
+    post{
+        always{
+            cleanWs()
+        }
+    }
+
+}

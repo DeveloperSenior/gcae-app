@@ -22,7 +22,7 @@ const admz = require('adm-zip');
 const IOFileService = generatorRepository => {
 
     const bucketTemplates = process.env.BUCKET_TEMPLATE || `${process.env.ENV || 'dllo'}-gcae-templates`
-    const nodeTemplateProject = process.env.NODE_TEMPLATE_PROJECT || 'node-template-project.zip';
+    const nodeTemplateProject = process.env.NODE_TEMPLATE_PROJECT || 'node-template.zip';
     const nodeTemplates = process.env.NODE_TEMPLATES || 'node-templates';
     const bucketFolderApps = process.env.BUCKET_FOLDER_APPS || 'apps';
 
@@ -51,7 +51,7 @@ const IOFileService = generatorRepository => {
      * Generate Base Project to app model data
      * @param {String} appfolder Configuration model of the app to be created
      */
-    const generateBaseProject = async (appfolder) => {
+    const generateBaseProject = async (appfolder, dbType) => {
 
 
         /** project root is created */
@@ -62,8 +62,8 @@ const IOFileService = generatorRepository => {
 
         const s3ServiceInject = inject(() => { }, S3Service)();
 
-        const { fileName, data } = await s3ServiceInject.getObjectAsByteArray(bucketTemplates, nodeTemplateProject);
-        await createFileAndUnzip(`${appfolder}/${fileName}`, appfolder, data);
+        const { data } = await s3ServiceInject.getObjectAsByteArray(bucketTemplates, `base/${dbType.toUpperCase()}/${nodeTemplateProject}`);
+        await createFileAndUnzip(`${appfolder}/${nodeTemplateProject}`, appfolder, data);
         await unzipFile(`${appfolder}/iac.zip`, `${appfolder}-iac`);
         return { target: appfolder, data: data }
     }

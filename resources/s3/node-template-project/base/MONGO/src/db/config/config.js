@@ -18,7 +18,8 @@ const connectDB = async () => {
     const dbName = process.env.DB_NAME;
     const dbToken = process.env.DB_TOKEN;
     const protocol = process.env.DB_PROTOCOL;
-    const url = `${protocol}://${user}:${decodeBase64(dbToken)}@${host}/${dbName}`;
+    const port = process.env.DB_PORT ? `:${process.env.DB_PORT}` : '';
+    const url = `${protocol}://${user}:${decodeBase64(dbToken)}@${host}${port}/${dbName}`;
     await mongoose.connect(url);
 
     const dbConnection = mongoose.connection;

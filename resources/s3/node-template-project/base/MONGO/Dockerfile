@@ -19,6 +19,7 @@ ENV DB_NAME @dbName@
 ENV DB_USER @dbUser@
 ENV DB_TOKEN @dbToken@
 ENV DB_PROTOCOL @dbProtocol@
+ENV DB_PORT @dbPort@
 
 # JWT config
 

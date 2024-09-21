@@ -164,12 +164,13 @@ const main = async (request, response) => {
 
         const {
             appName,
+            dataBase,
             entities
         } = body;
 
         const appfolder = `${appName.toLowerCase()}-api`;
         console.log('INIT PROCESS');
-        await ioFileServicesInject.generateBaseProject(`${basePath}/${appfolder}`);
+        await ioFileServicesInject.generateBaseProject(`${basePath}/${appfolder}`,dataBase.type);
         await generateProject(body, entities, appfolder, userSession);
 
         baseFiles = readDir(`${basePath}/${appfolder}`, true, true);
@@ -249,36 +250,7 @@ const getApp = async (request, response) => {
     }
 }
 
-/**
- * get existing App
- * @param {*} request 
- * @param {*} response 
- * @returns 
- */
-const getDemo = async (request, response) => {
-    try {
-        const generatorServiceInject = inject(GeneratorRepository, GeneratorService)(AppModel);
-        const { params } = request;
-        const { appName } = params;
-        const userSession = getSession(request);
-        const appfolder = `${appName.toLowerCase()}-api`;
-        const { fileName, buffer } = await generatorServiceInject.getAppByName(appName,appfolder,userSession);
-        
-        response.set('Content-Type', 'application/octet-stream');
-        response.set('Content-Disposition', `attachment; filename=${fileName}`);
-        response.set('Content-Length', buffer.length);
-
-        return response.status(HTTP_CODE.OK).send(buffer);
-
-    } catch (error) {
-        console.log(error);
-        return response.status(HTTP_CODE.ERROR).json(error);
-
-    }
-}
-
 module.exports = {
     main,
-    getApp,
-    getDemo
+    getApp
 }

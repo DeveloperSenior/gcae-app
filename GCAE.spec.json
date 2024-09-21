@@ -18,7 +18,8 @@
 	"dataBase": {
 		"type": "MONGO",
 		"serviceName": "example-app",
-		"host": "localhost:27017",
+		"host": "localhost",
+		"port": "27017",
 		"protocol": "mongodb",
 		"user": "example-app-user",
 		"pass": "SkZBZHYwOTlFc0VXckY5dg=="
