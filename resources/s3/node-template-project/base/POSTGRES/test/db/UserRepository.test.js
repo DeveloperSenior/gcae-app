@@ -11,7 +11,7 @@ const moment = require('moment');
 const { DATE_FORMAT } = require('../../src/utilities/Constants');
 
 /**
- * Mock user mongo document 
+ * Mock user postges model 
  */
 const userMock =     {
     _id: "1",

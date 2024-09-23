@@ -98,7 +98,12 @@ describe("Generator Controller", () => {
                 generateFileFromTemplate: jest.fn(async (fileTemplateName, target) => { }),
                 getContentFileFromTemplate: jest.fn(async (fileTemplateName) => { }),
                 sanitizeFileContent: jest.fn(async (file, target, isLocal = true) => ({ target: 'targetMock', content: 'contentMock', createFile: jest.fn() })),
-                saveFile: jest.fn(async (basePath, folder) => { })
+                saveFile: jest.fn(async (basePath, folder) => {
+                    return {
+                        file: '',
+                        buffer: []
+                    }
+                })
             }
         });
 
@@ -106,7 +111,13 @@ describe("Generator Controller", () => {
         const service = require('../../src/services/GeneratorService');
         service.mockImplementation(() => {
             return {
-                createApp: jest.fn(async (app, userSession) => appMock)
+                createApp: jest.fn(async (app, userSession) => appMock),
+                getAppByName: jest.fn(async (appName, appfolder, userSession) => {
+                    return {
+                        file: '',
+                        buffer: []
+                    }
+                })
             }
         });
         const controller = require('../../src/services/ControllerGeneratorService');
@@ -168,6 +179,7 @@ describe("Generator Controller", () => {
         const spyController = jest.spyOn(controller, 'main');
         await controller.main(mockRequest, mockResponse);
         expect(spyController).toHaveBeenCalled();
+        expect(mockResponse.statusCode).toEqual(HTTP_CODE.CREATED);
 
     });
 
@@ -233,6 +245,44 @@ describe("Generator Controller", () => {
         const spyController = jest.spyOn(controller, 'main');
         await controller.main(mockRequest, mockResponse);
         expect(spyController).toHaveBeenCalled();
+
+    });
+
+    it("should method been call function getApp", async () => {
+
+        const mockResponse = httpMock.createResponse();
+
+        const mockRequest = httpMock.createRequest({
+            params: { appName: 'mock' },
+            headers: { 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJ0ZXN0VXNlckBnbWFpbC5jb20iLCJpYXQiOjE3MTE4NTA4MzcsImV4cCI6MTcxMTg1NDQzN30.gInF0fCogGhQzO-kWVP9xis4_OGopuclZFM3HzRYcoI' }
+        });
+        const verify = jest.spyOn(jwt, 'verify');
+        verify.mockImplementation(() => userSessionMock);
+
+        const controller = require('../../src/controllers/GeneratorController');
+        const spyController = jest.spyOn(controller, 'getApp');
+        await controller.getApp(mockRequest, mockResponse);
+        expect(spyController).toHaveBeenCalled();
+        expect(mockResponse.statusCode).toEqual(HTTP_CODE.OK);
+
+
+    });
+
+    it("should method been call function getApp with Exception", async () => {
+
+        const mockResponse = httpMock.createResponse();
+
+        const mockRequest = httpMock.createRequest({
+            headers: { 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJ0ZXN0VXNlckBnbWFpbC5jb20iLCJpYXQiOjE3MTE4NTA4MzcsImV4cCI6MTcxMTg1NDQzN30.gInF0fCogGhQzO-kWVP9xis4_OGopuclZFM3HzRYcoI' }
+        });
+        const verify = jest.spyOn(jwt, 'verify');
+        verify.mockImplementation(() => userSessionMock);
+
+        const controller = require('../../src/controllers/GeneratorController');
+        const spyController = jest.spyOn(controller, 'getApp');
+        await controller.getApp(mockRequest, mockResponse);
+        expect(spyController).toHaveBeenCalled();
+        expect(mockResponse.statusCode).toEqual(HTTP_CODE.ERROR);
 
     });
 

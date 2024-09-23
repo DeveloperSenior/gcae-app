@@ -8,8 +8,8 @@ const Pool = require("pg").Pool;
 const { decodeBase64 } = require('../../utilities/Base64Util');
 
 /**
- * connectDB function pen connection to mongoDB cloud database discover-app
- * @returns instance object mongoose.connection
+ * connectDB function pen connection to Postgres DB cloud database discover-app
+ * @returns instance object PG pool.connection
  */
 
 const connectDB = async () => {

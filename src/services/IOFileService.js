@@ -9,7 +9,10 @@ const { createFolders,
     createFile,
     createFileAndUnzip,
     readFile,
-    unzipFile } = require('../utilities/IOUtil');
+    unzipFile,
+    readDir,
+    createReadStreamFile, 
+    deleteFile} = require('../utilities/IOUtil');
 const S3Service = require('./aws/S3Service');
 const admz = require('adm-zip');
 
@@ -136,13 +139,81 @@ const IOFileService = generatorRepository => {
 
     }
 
+
+    /**
+     * put all Templates S3
+     */
+    const putTemplatesToS3 = async (folderOrigin) => {
+
+        const s3ServiceInject = inject(() => { }, S3Service)();
+
+        const files = readDir(folderOrigin, true, true);
+
+        console.log(`INIT put files into bucket ${bucketTemplates}/${nodeTemplates}`);
+        const filesToPut = files?.filter(item => item.isFile());
+        for await (file of filesToPut) {
+            const { path, name } = file;
+            const fileStream = createReadStreamFile(`${path}/${name}`);
+            await s3ServiceInject.putObject(`${bucketTemplates}`, `${nodeTemplates}/${name}`, fileStream);
+        }
+        console.log('END put files');
+
+    }
+
+    /**
+ * put all Templates S3
+ */
+    const putBaseProjectsTemplatesToS3 = async (folderOrigin) => {
+
+        const s3ServiceInject = inject(() => { }, S3Service)();
+
+        const filesIac = readDir(folderOrigin, false, true);
+        const zipIaC = new admz();
+        const zipIaCName = 'iac.zip';
+        zipIaC.addLocalFolder(`${folderOrigin}/iac`);
+        const dataIaCZip = zipIaC.toBuffer();
+
+        const iacFilesToZip = filesIac?.filter(item => !item.isFile() && item.name !== 'iac');
+        for await (file of iacFilesToZip) {
+            const { path, name } = file;
+            createFile(`${path}/${name}/${zipIaCName}`,dataIaCZip);
+        }
+
+        const baseFiles = readDir(folderOrigin, false, true);
+
+        const baseFilesToZip = baseFiles?.filter(item => item.name !== 'iac');
+        for await (file of baseFilesToZip) {
+            const { path, name } = file;
+            const zp = new admz();
+            const zipName = nodeTemplateProject;
+            zp.addLocalFolder(`${folderOrigin}/${name}`);
+            const data = zp.toBuffer();
+            createFile(`${path}/${name}/${zipName}`,data);
+        }
+
+        const files = readDir(folderOrigin, false, true);
+        console.log(`INIT put files into bucket ${bucketTemplates}/`);
+        const filesToPut = files?.filter(item => item.name !== 'iac');
+        for await (file of filesToPut) {
+            const { path, name } = file;
+            const fileStream = createReadStreamFile(`${path}/${name}/${nodeTemplateProject}`);
+            await s3ServiceInject.putObject(`${bucketTemplates}`, `base/${name.toUpperCase()}/${nodeTemplateProject}`, fileStream);
+            deleteFile(`${path}/${name}/${nodeTemplateProject}`);
+            deleteFile(`${path}/${name}/${zipIaCName}`);
+        }
+        console.log('END put files');
+
+    }
+
     return {
         generateBaseProject,
         generateFileFromTemplate,
         getContentFileFromTemplate,
         sanitizeFileContent,
         saveFile,
-        getAppFile
+        getAppFile,
+        putTemplatesToS3,
+        putBaseProjectsTemplatesToS3
     }
 
 }

@@ -6,6 +6,7 @@
 
 const IOFileService = require('./IOFileService');
 const { inject } = require('../utilities/Utilities');
+const { DB_TYPE } = require('../utilities/Constants');
 const { toCamelCase, toPascalCase } = require('js-convert-case');
 const { Observable } = require('rxjs');
 const DefaultException = require('../models/exception/DefaultException');
@@ -19,6 +20,7 @@ const ModelGeneratorService = () => {
 
     const TEMPLATE = 'Model';
     const FOLDER_TEMPLATE = 'src/models';
+    const SQL_TYPE = "SQL";
 
     /**
      * generate Model
@@ -83,7 +85,7 @@ const ModelGeneratorService = () => {
         fields?.forEach(attr => {
 
             attrsModel = attrsModel + `${toCamelCase(attr.name)},`;
-            attrModelSet = attrModelSet + `this.${toCamelCase(attr.name)} = ${toCamelCase(attr.name)};\n`;
+            attrModelSet = attrModelSet + `this.${toCamelCase(attr.name)} = data?.${toCamelCase(attr.name)};\n`;
             attrModelBuild = attrModelBuild + modelBuilder.replaceAll('@AttrName@', toPascalCase(attr.name))
                 .replaceAll('@attrName@', toCamelCase(attr.name)).replaceAll('@entityName@', toCamelCase(name)) + "\n";
         }
@@ -113,13 +115,17 @@ const ModelGeneratorService = () => {
             const { name } = entityModel;
             const ioFileServicesInject = inject(() => { }, IOFileService)();
             const { data: modelBuilder } = await ioFileServicesInject.getContentFileFromTemplate('ModelDTOBuilder');
-            const { data: modelAttrDataBase } = await ioFileServicesInject.getContentFileFromTemplate(`Model${dataBaseType.toUpperCase()}Attr`);
-            /** Model Generate */
-            const { target, data, createFile } = await ioFileServicesInject.generateFileFromTemplate(TEMPLATE + dataBaseType.toUpperCase(), `${appfolder}/${FOLDER_TEMPLATE}/${toPascalCase(name + TEMPLATE)}.js`);
-            generateModel(entityModel,target, data, createFile, modelAttrDataBase);
+            
+            if(SQL_TYPE === DB_TYPE(dataBaseType.toUpperCase())){
+                const { data: modelAttrDataBase } = await ioFileServicesInject.getContentFileFromTemplate(`Model${dataBaseType.toUpperCase()}Attr`);
+                /** Model Generate */
+                const { target, data, createFile } = await ioFileServicesInject.generateFileFromTemplate(TEMPLATE + dataBaseType.toUpperCase(), `${appfolder}/${FOLDER_TEMPLATE}/${toPascalCase(name + TEMPLATE)}.js`);
+                generateModel(entityModel,target, data, createFile, modelAttrDataBase);    
+            }
+
             /** DTO Generate */
-            const { target: targetDTO, data: dataDTO } =  await ioFileServicesInject.generateFileFromTemplate(`${TEMPLATE}DTO`, `${appfolder}/${FOLDER_TEMPLATE}/dto/${toPascalCase(name)}.js`);
-            generateDTO(entityModel,targetDTO, dataDTO, createFile, modelBuilder);
+            const { target: targetDTO, data: dataDTO, createFile: createFileDto} =  await ioFileServicesInject.generateFileFromTemplate(`${TEMPLATE}DTO`, `${appfolder}/${FOLDER_TEMPLATE}/dto/${toPascalCase(name)}.js`);
+            generateDTO(entityModel,targetDTO, dataDTO, createFileDto, modelBuilder);
         } catch (e) {
             console.log(e);
             const excepcion = new DefaultException(e.message);

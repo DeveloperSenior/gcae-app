@@ -4,7 +4,10 @@ pipeline{
     environment{
         AWS_CREDENTIAL = credentials('aws-credential-dllo')
         AWS_REGION = 'us-east-1'
-        
+        BUCKET_TEMPLATE = 'dllo-gcae-templates'
+        NODE_TEMPLATES = 'node-templates'
+        NODE_TEMPLATE_PROJECT = 'node-template.zip'
+        APP_DEBUG = 'S'
     }
 
     stages{
@@ -84,6 +87,9 @@ pipeline{
                 }               
             }
             stage('Deploy version') {
+                steps{
+                    bat 'npm run update-s3-templates'
+                }                 
                 steps{
                     bat 'aws ecs update-service --region us-east-1 --cluster gcae-app-cluster-dllo --service cc-gcae-app-service-dllo --task-definition gcae-app-task-dllo:1 --force-new-deployment --deployment-configuration "deploymentCircuitBreaker={enable=true,rollback=true}"'
                 }               

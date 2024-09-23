@@ -14,13 +14,13 @@ class User {
     /**
      * 
      * @param {*} _id 
-     * @param {*} data {username, bio, avatar, email, password}
+     * @param {*} data {userName, bio, avatar, email, password}
      * @param {*} createdAt 
      * @param {*} updatedAt 
      */
     constructor(_id, data , createdAt, updatedAt,) {
         this._id = _id;
-        this.username = data?.username;
+        this.userName = data?.userName;
         this.bio = data?.bio;
         this.avatar = data?.avatar;
         this.email = data?.email;

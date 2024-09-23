@@ -10,7 +10,7 @@ const moment = require('moment');
 const { DATE_FORMAT, ERROR_MESSAGE,ERROR_CODE, ERROR_TYPE } = require('../utilities/Constants');
 const IOFileService = require('../services/IOFileService');
 const { inject } = require('../utilities/Utilities');
-const DefaultException = require('../models/exception/DefaultException')
+const DefaultException = require('../models/exception/DefaultException');
 /**
  * Generator Service
  * @param {*} generatorRepository 

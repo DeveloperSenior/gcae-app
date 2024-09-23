@@ -7,7 +7,7 @@
 const { @EntityName@ } = require('../../src/models/dto/@EntityName@');
 const DefaultException = require('../../src/models/exception/DefaultException');
 const { ERROR_MESSAGE, ERROR_CODE, ERROR_TYPE } = require('../../src/utilities/Constants');
-
+const { inject } = require('../../src/utilities/Utilities');
 
 const userSessionMock = { email: 'test@test.com', userId: '123123' };
 const @entityName@Mock = new @EntityName@.Builder()
@@ -54,7 +54,8 @@ describe("@EntityName@ Service", () => {
     it('should create @EntityName@', async () => {
         const repository = require('../../src/db/@EntityName@Repository');
         const @EntityName@Service = require('../../src/services/@EntityName@Service');
-        const response = await @EntityName@Service(repository()).create@EntityName@(@entityName@Mock, userSessionMock);
+        const inject@EntityName@Service = inject(repository, @EntityName@Service)();
+        const response = await inject@EntityName@Service.create@EntityName@(@entityName@Mock, userSessionMock);
         expect(response).toEqual(@entityName@Mock);
 
     });
@@ -62,7 +63,8 @@ describe("@EntityName@ Service", () => {
     it('should get @EntityName@', async () => {
         const repository = require('../../src/db/@EntityName@Repository');
         const @EntityName@Service = require('../../src/services/@EntityName@Service');
-        const response = await @EntityName@Service(repository()).get@EntityName@(@entityName@Mock, userSessionMock);
+        const inject@EntityName@Service = inject(repository, @EntityName@Service)();
+        const response = await inject@EntityName@Service.get@EntityName@(@entityName@Mock, userSessionMock);
         expect(response).toEqual(@entityName@Mock);
         expect(response.createdAt).toEqual('2024-08-09');
 
@@ -71,7 +73,8 @@ describe("@EntityName@ Service", () => {
     it('should get All @EntityName@', async () => {
         const repository = require('../../src/db/@EntityName@Repository');
         const @EntityName@Service = require('../../src/services/@EntityName@Service');
-        const response = await @EntityName@Service(repository()).getAll@EntityName@(userSessionMock);
+        const inject@EntityName@Service = inject(repository, @EntityName@Service)();
+        const response = await inject@EntityName@Service.getAll@EntityName@(userSessionMock);
         expect(response).toBeInstanceOf(Array);
         expect(response).toHaveLength(1);
         expect(response).toEqual([@entityName@Mock]);
@@ -85,7 +88,8 @@ describe("@EntityName@ Service", () => {
         const filters = new @EntityName@.Builder().build();
         const repository = require('../../src/db/@EntityName@Repository');
         const @EntityName@Service = require('../../src/services/@EntityName@Service');
-        const response = await @EntityName@Service(repository()).get@EntityName@Pager(pageSize, pageNumber, filters);
+        const inject@EntityName@Service = inject(repository, @EntityName@Service)();
+        const response = await inject@EntityName@Service.get@EntityName@Pager(pageSize, pageNumber, filters);
         expect(response).toBeInstanceOf(Array);
         expect(response).toHaveLength(1);
         expect(response[0]).toHaveProperty('totalPage', 1);
@@ -97,7 +101,8 @@ describe("@EntityName@ Service", () => {
 
         const repository = require('../../src/db/@EntityName@Repository');
         const @EntityName@Service = require('../../src/services/@EntityName@Service');
-        const response = await @EntityName@Service(repository()).update@EntityName@(@entityName@Mock._id, @entityName@Mock, userSessionMock)
+        const inject@EntityName@Service = inject(repository, @EntityName@Service)();
+        const response = await inject@EntityName@Service.update@EntityName@(@entityName@Mock._id, @entityName@Mock, userSessionMock)
         expect(response).toEqual(@entityName@Mock);
         expect(response._id).toEqual(@entityName@Mock._id);
         expect(response.updatedAt).toEqual('2024-08-09');
@@ -118,7 +123,8 @@ describe("@EntityName@ Service", () => {
         errorMock.code = ERROR_CODE.VALIDATE;
         errorMock.type = ERROR_TYPE.VALIDATE;
         expect.assertions(2);
-        await @EntityName@Service(repository()).update@EntityName@(@entityName@Mock._id, @entityName@Mock, userSessionMock).catch(error => {
+        const inject@EntityName@Service = inject(repository, @EntityName@Service)();
+        await inject@EntityName@Service.update@EntityName@(@entityName@Mock._id, @entityName@Mock, userSessionMock).catch(error => {
             expect(error).toBeInstanceOf(DefaultException);
             expect(error.exception).toMatch(errorMock.exception);
         });
@@ -129,7 +135,8 @@ describe("@EntityName@ Service", () => {
 
         const repository = require('../../src/db/@EntityName@Repository');
         const @EntityName@Service = require('../../src/services/@EntityName@Service');
-        const response = await @EntityName@Service(repository()).delete@EntityName@(@entityName@Mock._id, userSessionMock)
+        const inject@EntityName@Service = inject(repository, @EntityName@Service)();
+        const response = await inject@EntityName@Service.delete@EntityName@(@entityName@Mock._id, userSessionMock)
         expect(response).toBeUndefined();
 
     });
@@ -148,7 +155,8 @@ describe("@EntityName@ Service", () => {
         errorMock.code = ERROR_CODE.VALIDATE;
         errorMock.type = ERROR_TYPE.VALIDATE;
         expect.assertions(2);
-        await @EntityName@Service(repository()).delete@EntityName@(@entityName@Mock._id, @entityName@Mock, userSessionMock).catch(error => {
+        const inject@EntityName@Service = inject(repository, @EntityName@Service)();
+        await inject@EntityName@Service.delete@EntityName@(@entityName@Mock._id, @entityName@Mock, userSessionMock).catch(error => {
             expect(error).toBeInstanceOf(DefaultException);
             expect(error.exception).toMatch(errorMock.exception);
         });

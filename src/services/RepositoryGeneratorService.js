@@ -19,7 +19,7 @@ const RepositoryGeneratorService = () => {
 
     const TEMPLATE = 'Repository';
     const FOLDER_TEMPLATE = 'src/db';
-    const TEMPLATE_TEST = 'RepositoryTest';
+    const TEMPLATE_TEST = 'Repository{dataBaseType}Test';
     const FOLDER_TEMPLATE_TEST = 'test/db';
 
     /**
@@ -65,29 +65,36 @@ const RepositoryGeneratorService = () => {
      * @param {*} appConfig 
      */
     const generate = async (appfolder, entityModel, appConfig) => {
+        try {
+            const { type: dataBaseType } = appConfig.dataBase;
 
-        const {
-            name,
-            fields
-        } = entityModel;
+            const {
+                name,
+                fields
+            } = entityModel;
 
-        const ioFileServicesInject = inject(() => { }, IOFileService)();
+            const ioFileServicesInject = inject(() => { }, IOFileService)();
 
-        /** Generate repository */
-        const { target, data, createFile } = await ioFileServicesInject.generateFileFromTemplate(TEMPLATE, `${appfolder}/${FOLDER_TEMPLATE}/${toPascalCase(name + TEMPLATE)}.js`);
-        generateRepository(entityModel, target, data, createFile);
+            /** Generate repository */
+            const { target, data, createFile } = await ioFileServicesInject.generateFileFromTemplate(TEMPLATE+dataBaseType.toUpperCase(), `${appfolder}/${FOLDER_TEMPLATE}/${toPascalCase(name + TEMPLATE)}.js`);
+            generateRepository(entityModel, target, data, createFile);
 
-        let attrModelBuildValue = "";
-        fields?.forEach(attr => {
+            let attrModelBuildValue = "";
+            fields?.forEach(attr => {
 
-            attrModelBuildValue = attrModelBuildValue + `.with${toPascalCase(attr.name)}(${getValueTest(attr)})\n`;
+                attrModelBuildValue = attrModelBuildValue + `.with${toPascalCase(attr.name)}(${getValueTest(attr)})\n`;
 
+            }
+            );
+
+            /** Generate Test repository */
+            const { target: targetTest, data: dataTest } = await ioFileServicesInject.generateFileFromTemplate(TEMPLATE_TEST.replaceAll('{dataBaseType}',dataBaseType.toUpperCase()), `${appfolder}/${FOLDER_TEMPLATE_TEST}/${toPascalCase(name + TEMPLATE)}.test.js`);
+            generateTest(entityModel, targetTest, dataTest, createFile, attrModelBuildValue);
+        } catch (e) {
+            console.log(e);
+            const excepcion = new DefaultException(e.message);
+            throw excepcion;
         }
-        );
-
-        /** Generate Test repository */
-        const { target: targetTest, data: dataTest } = await ioFileServicesInject.generateFileFromTemplate(TEMPLATE_TEST, `${appfolder}/${FOLDER_TEMPLATE_TEST}/${toPascalCase(name + TEMPLATE)}.test.js`);
-        generateTest(entityModel, targetTest, dataTest, createFile,attrModelBuildValue);
     }
 
     return {

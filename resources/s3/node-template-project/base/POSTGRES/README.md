@@ -35,7 +35,7 @@ Rest API server and usage
 7. `pg` Non-blocking PostgreSQL client for Node.js. Pure JavaScript and optional native libpq bindings.
 8. `pg-format` Node.js implementation of PostgreSQL format() to safely create dynamic SQL queries. SQL identifiers and literals are escaped to help prevent SQL injection. The behavior is equivalent to PostgreSQL format(). This module also supports Node buffers, arrays, and objects
 9. `jsonwebtoken` to authenticate and authorize each transaction in the API exposed by `express`.
-10. `bcrypt` to encrypt and validate passwords that are stored in MongoDB
+10. `bcrypt` to encrypt and validate passwords that are stored in Postgres DB
 11. `helmet` Helmet helps secure Express apps by setting HTTP response headers. [Doc Site](https://helmetjs.github.io/)
 
 ```
@@ -98,7 +98,12 @@ npm run test
 
 4. **Run the local application:**
 
-**NOTE:** Before running the server, review the file `.env-example` and turn it into `.env` so that the server takes the initial configuration parameters. 
+**NOTE:** Before running the server, make sure to check the following:
+
+
+* The `.env-example` file and convert it to `.env` so that the server takes the initial configuration parameters.
+* The migrations from the `migrations.sql` file exist in the database.
+
 ```bash
 npm run runDev
 ```

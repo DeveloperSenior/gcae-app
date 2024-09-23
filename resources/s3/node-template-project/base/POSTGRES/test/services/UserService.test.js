@@ -4,7 +4,7 @@ const DefaultException = require('../../src/models/exception/DefaultException');
 const { encodeBase64 } = require('../../src/utilities/Base64Util');
 
 /**
- * Mock user mongo document 
+ * Mock user Postgres model 
  */
 const userMock = {
     _id: "6615b9d07547e0fc5387077c",

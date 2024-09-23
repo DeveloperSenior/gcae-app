@@ -125,6 +125,18 @@ const deleteFile = (path) => {
     fs.rmSync(path,{recursive: true});
 }
 
+/**
+ * create Read Stream File
+ * @param {*} file 
+ * @returns 
+ */
+const createReadStreamFile = (file)=>{
+    var fileStream = fs.createReadStream(file);
+    fileStream.on("error", function (err) {
+        console.log("File Error", err);
+      });
+    return fileStream;
+}
 
 module.exports = {
     createFolders,
@@ -133,5 +145,6 @@ module.exports = {
     readFile,
     readDir,
     deleteFile,
-    unzipFile
+    unzipFile,
+    createReadStreamFile
 }

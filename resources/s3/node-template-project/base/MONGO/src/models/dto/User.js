@@ -10,13 +10,21 @@
  * User Model builder object
  */
 class User {
-    constructor(_id, username, bio, avatar, email, password, createdAt, updatedAt,) {
+    
+    /**
+     * 
+     * @param {*} _id 
+     * @param {*} data {userName, bio, avatar, email, password}
+     * @param {*} createdAt 
+     * @param {*} updatedAt 
+     */
+    constructor(_id, data , createdAt, updatedAt,) {
         this._id = _id;
-        this.username = username;
-        this.bio = bio;
-        this.avatar = avatar;
-        this.email = email;
-        this.password = password ;
+        this.userName = data?.userName;
+        this.bio = data?.bio;
+        this.avatar = data?.avatar;
+        this.email = data?.email;
+        this.password = data?.password ;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
 

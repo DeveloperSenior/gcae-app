@@ -47,7 +47,7 @@ beforeAll(() => {
 
 });
 /**
- * Mock user mongo document 
+ * Mock user PG model 
  */
 const userMock =
 {

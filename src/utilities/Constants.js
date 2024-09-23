@@ -43,13 +43,24 @@ const HEADERS = {
 }
 
 const DATE_FORMAT = {
-    DEFAULT : 'YYYY-MM-DD'
+    DEFAULT: 'YYYY-MM-DD'
 }
 
 const STATES = {
-    INITIAL: 'P', 
+    INITIAL: 'P',
     ACTIVE: 'A',
     INACTIVE: 'I'
 }
 
-module.exports = { HTTP_CODE, HEADERS, ERROR_CODE, ERROR_TYPE, ERROR_MESSAGE, DATE_FORMAT, STATES }
+const DB_TYPE = (key) => {
+    const types = new Map();
+    types.set( "MONGO", "NO_SQL");
+    types.set( "POSTGRES", "SQL");
+    types.set( "MYSQL", "SQL");
+    types.set( "ORACLE", "SQL");
+    types.set( "DYNAMO", "NO_SQL");
+    types.set( "COSMOS", "NO_SQL");
+    return types.get(key);
+}
+
+module.exports = { HTTP_CODE, HEADERS, ERROR_CODE, ERROR_TYPE, ERROR_MESSAGE, DATE_FORMAT, STATES, DB_TYPE }

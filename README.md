@@ -100,7 +100,12 @@ npm run test
 
 4. **Run the local application:**
 
-**NOTE:** Before running the server, review the file `.env-example` and turn it into `.env` so that the server takes the initial configuration parameters. 
+**NOTE:** Before running the server, make sure to check the following:
+
+* The S3 environment on AWS is created correctly, see how to configure it [here](#setting-up-s3-environment-on-aws)
+* The `.env-example` file and convert it to `.env` so that the server takes the initial configuration parameters.
+
+
 ```bash
 npm run runDev
 ```
@@ -110,14 +115,12 @@ View Dockerfile & compose.yaml configuration and configure ENV needed to run the
 
 ```bash
 # into gcae-app folder run next script docker compose
-cd gcae-app
 docker compose up -d
 ```
 **NOTE:** Only if you need to down your docker app services
 
 ```bash
 # into gcae-app folder run next script docker compose
-cd gcae-app
 docker compose down
 ```
 
@@ -146,3 +149,14 @@ snyk auth
 snyk test --report
 
 ```
+
+# Setting up S3 environment on AWS
+
+**NOTE:** Before running the script, be sure to check your AWS CLI credentials, see [here](https://docs.aws.amazon.com/es_es/cli/latest/userguide/cli-chap-configure.html)
+
+```bash
+# into gcae-app folder run next script
+npm run update-s3-templates
+```
+
+This script packages the required code generator templates from the `./resources/s3/` folder and uploads them to the S3 bucket configured in the `BUCKET_TEMPLATE` environment variable in the `.env` file.
