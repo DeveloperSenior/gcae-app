@@ -8,6 +8,7 @@ const IOFileService = require('./IOFileService');
 const { inject } = require('../utilities/Utilities');
 const { toCamelCase, toPascalCase } = require('js-convert-case');
 const { getValueTest } = require('../utilities/ValuesTest');
+const DefaultException = require('../models/exception/DefaultException');
 
 
 

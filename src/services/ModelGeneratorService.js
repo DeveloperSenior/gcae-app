@@ -8,7 +8,6 @@ const IOFileService = require('./IOFileService');
 const { inject } = require('../utilities/Utilities');
 const { DB_TYPE } = require('../utilities/Constants');
 const { toCamelCase, toPascalCase } = require('js-convert-case');
-const { Observable } = require('rxjs');
 const DefaultException = require('../models/exception/DefaultException');
 
 
