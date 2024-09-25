@@ -1,7 +1,7 @@
 {
 	"appName": "Discover",
 	"appPort": 3001,
-	"appDescription": "Prueba de autogeneración",
+	"appDescription": "Prueba de autogeneración MONGO",
 	"author": "Andres Escobar",
 	"company": "Dev S.A",
 	"version": "1.0",
@@ -19,7 +19,7 @@
 		"type": "MONGO",
 		"serviceName": "example-app",
 		"host": "localhost",
-		"port": "27017",
+		"port": 27017,
 		"protocol": "mongodb",
 		"user": "example-app-user",
 		"pass": "SkZBZHYwOTlFc0VXckY5dg=="
