@@ -48,8 +48,9 @@ const options = {
       title: 'REST - Swagger',
       version: `${process.env.VERSION || '1.0.0'} - ${process.env.ENV}`,
       description: `GCAE REST API with Swagger doc: 
-                     <br><br> [Download JSON from the sample application for MONGO](https://github.com/DeveloperSenior/gcae-app/blob/main/GCAE_MONGO.spec.json){:target="_blank"}
-                     <br><br> [Download JSON from the sample application for POSTGRES](https://github.com/DeveloperSenior/gcae-app/blob/main/GCAE_POSTGRES.spec.json){:target="_blank"}`,
+                     <br><br> [Download PDF application user manual](https://github.com/DeveloperSenior/gcae-app/blob/main/MANUAL_USO_GCAE.pdf)
+                     <br><br> [Download JSON from the sample application for MONGO](https://github.com/DeveloperSenior/gcae-app/blob/main/GCAE_MONGO.spec.json)
+                     <br><br> [Download JSON from the sample application for POSTGRES](https://github.com/DeveloperSenior/gcae-app/blob/main/GCAE_POSTGRES.spec.json)`,
       contact: {
         email: 'aescoba7@correo.tdea.edu.co',
       },
