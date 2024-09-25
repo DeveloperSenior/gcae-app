@@ -2,21 +2,21 @@
 software that automates the process of generating base code with standard architectures within the framework of SOLID principles focused on the Back-end.
 
 # Author
-- [Andres Felipe Escobar Lopez](https://github.com/DeveloperSenior){:target="_blank"}
+- [Andres Felipe Escobar Lopez](https://github.com/DeveloperSenior)
 
 # Technology in which it was developed
 
-Before starting you must install Git, NodeJS, AWS CLI, Docker & Jenkins on your applicable operating system go to the official site [Install NodeJS](https://nodejs.org/en/download/package-manager){:target="_blank"}, [Install Git](https://git-scm.com/downloads){:target="_blank"},
-[Install Docker](https://docs.docker.com/engine/install/){:target="_blank"}, [Install AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html){:target="_blank"},
-[Install Jenkins](https://www.jenkins.io/doc/book/installing/){:target="_blank"}
+Before starting you must install Git, NodeJS, AWS CLI, Docker & Jenkins on your applicable operating system go to the official site [Install NodeJS](https://nodejs.org/en/download/package-manager), [Install Git](https://git-scm.com/downloads),
+[Install Docker](https://docs.docker.com/engine/install/), [Install AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html),
+[Install Jenkins](https://www.jenkins.io/doc/book/installing/)
 
-- VSCode. [Install VSCode](https://code.visualstudio.com/download){:target="_blank"}
+- VSCode. [Install VSCode](https://code.visualstudio.com/download)
 - NodeJS v20.17.0 LTS
 - Git
 - Docker - Docker Compose
 - AWS CLI
 - Jenkins
-- (Optional) Snyk: gives you the visibility, context, and control you need to work alongside developers on reducing application risk. [Install snyk](https://snyk.io/){:target="_blank"} or visit site [best-practice-security-express](https://expressjs.com/en/advanced/best-practice-security.html){:target="_blank"}
+- (Optional) Snyk: gives you the visibility, context, and control you need to work alongside developers on reducing application risk. [Install snyk](https://snyk.io/) or visit site [best-practice-security-express](https://expressjs.com/en/advanced/best-practice-security.html)
 
 # Project's name
 `GCAE FRAMEWORK for generating the BACK-END of an application from JSON objects (JSON-NODEJS Generator) under SOLID principles` software that automates the process of generating base code with standard architectures within the framework of SOLID principles focused on the Back-end.
@@ -36,7 +36,7 @@ Rest API server and usage
 9. `bcrypt` to encrypt and validate passwords that are stored in MongoDB
 10. `AWS SDK` Allows to connect your application to Amazon AWS services
 11. `adm-zip` ADM-ZIP is a pure JavaScript implementation for zip data compression for NodeJS.
-12. `helmet` Helmet helps secure Express apps by setting HTTP response headers. [Doc Site](https://helmetjs.github.io/){:target="_blank"}
+12. `helmet` Helmet helps secure Express apps by setting HTTP response headers. [Doc Site](https://helmetjs.github.io/)
 
 ```
 gcae-app
@@ -152,7 +152,7 @@ snyk test --report
 
 # Setting up S3 environment on AWS
 
-**NOTE:** Before running the script, be sure to check your AWS CLI credentials, see [here](https://docs.aws.amazon.com/es_es/cli/latest/userguide/cli-chap-configure.html){:target="_blank"}
+**NOTE:** Before running the script, be sure to check your AWS CLI credentials, see [here](https://docs.aws.amazon.com/es_es/cli/latest/userguide/cli-chap-configure.html?target=_blank)
 
 ```bash
 # into gcae-app folder run next script
