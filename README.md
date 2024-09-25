@@ -152,7 +152,7 @@ snyk test --report
 
 # Setting up S3 environment on AWS
 
-**NOTE:** Before running the script, be sure to check your AWS CLI credentials, see [here](https://docs.aws.amazon.com/es_es/cli/latest/userguide/cli-chap-configure.html?target=_blank)
+**NOTE:** Before running the script, be sure to check your AWS CLI credentials, see [here](https://docs.aws.amazon.com/es_es/cli/latest/userguide/cli-chap-configure.html)
 
 ```bash
 # into gcae-app folder run next script
