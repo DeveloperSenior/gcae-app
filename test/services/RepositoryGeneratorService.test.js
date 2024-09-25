@@ -11,13 +11,13 @@ const DefaultException = require('../../src/models/exception/DefaultException');
 const appMock = {
     "appName": "AppTest",
     "appDescription": "Prueba de autogeneración",
-    "repository": {
-    },
+    "repository": {},
     "auth": {
     },
     "cache": {
     },
     "dataBase": {
+        "type":"MONGO"
     },
     "entities": [
         {

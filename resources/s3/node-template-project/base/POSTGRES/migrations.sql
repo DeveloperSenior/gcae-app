@@ -1,3 +1,8 @@
+-- Auto Generated 
+-- @author Andres Felipe Escobar López
+-- @date 2024
+-- @copyright Tecnologico de Antioquia 2024
+
 -- TUSERS DEFINITION
 
 -- DROP TABLE
@@ -18,4 +23,7 @@ CREATE TABLE TUSERS (
 	CONSTRAINT TUSER_EMAIL_KEY UNIQUE (EMAIL)
 );
 
-@CREATE_TABLES@
+COMMENT ON TABLE TUSERS IS 'User management.';
+
+
+@CREATETABLE@

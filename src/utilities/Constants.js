@@ -63,4 +63,24 @@ const DB_TYPE = (key) => {
     return types.get(key);
 }
 
-module.exports = { HTTP_CODE, HEADERS, ERROR_CODE, ERROR_TYPE, ERROR_MESSAGE, DATE_FORMAT, STATES, DB_TYPE }
+const FIELD_TYPE = (key) => {
+    const types = new Map();
+    types.set( "STRING", "VARCHAR");
+    types.set( "NUMBER", "NUMERIC");
+    types.set( "DATE", "DATE");
+    types.set( "OBJECT", "TEXT");
+    types.set( "RELATION", "INT4");
+    return types.get(key);
+}
+
+const NUMBERS_TYPES = ['Relation', 'Numeric','Number', 'Integer', 'Int'];
+
+module.exports = { HTTP_CODE,
+                   HEADERS,
+                   ERROR_CODE,
+                   ERROR_TYPE,
+                   ERROR_MESSAGE,
+                   DATE_FORMAT,
+                   STATES, DB_TYPE,
+                   FIELD_TYPE,
+                   NUMBERS_TYPES }

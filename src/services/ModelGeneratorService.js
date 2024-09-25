@@ -115,7 +115,7 @@ const ModelGeneratorService = () => {
             const ioFileServicesInject = inject(() => { }, IOFileService)();
             const { data: modelBuilder } = await ioFileServicesInject.getContentFileFromTemplate('ModelDTOBuilder');
             
-            if(SQL_TYPE === DB_TYPE(dataBaseType.toUpperCase())){
+            if(SQL_TYPE !== DB_TYPE(dataBaseType.toUpperCase())){
                 const { data: modelAttrDataBase } = await ioFileServicesInject.getContentFileFromTemplate(`Model${dataBaseType.toUpperCase()}Attr`);
                 /** Model Generate */
                 const { target, data, createFile } = await ioFileServicesInject.generateFileFromTemplate(TEMPLATE + dataBaseType.toUpperCase(), `${appfolder}/${FOLDER_TEMPLATE}/${toPascalCase(name + TEMPLATE)}.js`);

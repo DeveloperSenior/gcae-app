@@ -6,6 +6,7 @@
 
 const IOFileService = require('./IOFileService');
 const { inject } = require('../utilities/Utilities');
+const { NUMBERS_TYPES } = require('../utilities/Constants');
 const { toCamelCase, toPascalCase } = require('js-convert-case');
 const { getValueTest } = require('../utilities/ValuesTest');
 
@@ -110,7 +111,7 @@ const ValidatorGeneratorService = () => {
             if (index < fields.length) {
                 quoted = ",";
             }
-
+            
             if ('Array' === toPascalCase(type)) {
 
                 const { type: itemtype, nullable, itemNullable } = items;
@@ -123,17 +124,36 @@ const ValidatorGeneratorService = () => {
                     .replaceAll('@attrNullable@', (nullable || required) || true)
                     .replaceAll('@quoted@', quoted);
 
-            } else {
+            } else if (NUMBERS_TYPES.includes(toPascalCase(type))) {
 
+                attrsModelProperties = attrsModelProperties + schemaAttrsNormalTemplate.replaceAll('@attrName@', toCamelCase(name))
+                    .replaceAll('@attrType@', toCamelCase('Number'))
+                    .replaceAll('@attrNullable@', (nullable || required) || true)
+                    .replaceAll('@quoted@', quoted);
+            } else{
                 attrsModelProperties = attrsModelProperties + schemaAttrsNormalTemplate.replaceAll('@attrName@', toCamelCase(name))
                     .replaceAll('@attrType@', toCamelCase(type))
                     .replaceAll('@attrNullable@', (nullable || required) || true)
                     .replaceAll('@quoted@', quoted);
             }
 
-            if (pk | required) {
-                attrsModelRequired = attrsModelRequired + `"${toCamelCase(name)}"${quoted}\n`;
+            ++index
+
+        }
+        );
+
+        index = 1;
+        const fieldsRequired = fields?.filter(attr => attr.pk || attr.required);
+        fieldsRequired?.forEach(attr => {
+
+            const { name, type, items, pk, required, nullable } = attr;
+            let quoted = "";
+
+            if (index < fieldsRequired.length) {
+                quoted = ",";
             }
+
+            attrsModelRequired = attrsModelRequired + `"${toCamelCase(name)}"${quoted}\n`;
 
             ++index
 

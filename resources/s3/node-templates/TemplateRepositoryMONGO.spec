@@ -9,6 +9,8 @@ const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
 const { STATES } = require('../utilities/Constants');
 const { @EntityName@Model } = require('../models/@EntityName@Model');
+const { Pager } = require('../models/dto/Pager');
+
 
 /**
  * @EntityName@ Repository
@@ -124,7 +126,12 @@ const @EntityName@Repository = DbModel => {
                     populate: { path: 'user', select: '-password -__v' }
                 });
             const { docs,totalDocs, totalPages, prevPage, nextPage } = data;
-            return { actualPage: pageNumber, totalPage: totalDocs, prevPage: prevPage, nextPage: nextPage, data: docs };
+            return new Pager.Builder()
+                .withActualPage(pageNumber)
+                .withTotalPage(totalDocs)
+                .withPrevPage(prevPage)
+                .withNextPage(nextPage)
+                .withData(docs).build();
         } catch (e) {
             const excepcion = new DefaultException(e.message);
             throw excepcion;

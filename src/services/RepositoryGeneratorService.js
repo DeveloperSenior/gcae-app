@@ -6,7 +6,8 @@
 
 const IOFileService = require('./IOFileService');
 const { inject } = require('../utilities/Utilities');
-const { toCamelCase, toPascalCase } = require('js-convert-case');
+const { DB_TYPE, FIELD_TYPE } = require('../utilities/Constants');
+const { toCamelCase, toPascalCase, toUpperCase, toSnakeCase } = require('js-convert-case');
 const { getValueTest } = require('../utilities/ValuesTest');
 const DefaultException = require('../models/exception/DefaultException');
 
@@ -22,6 +23,66 @@ const RepositoryGeneratorService = () => {
     const FOLDER_TEMPLATE = 'src/db';
     const TEMPLATE_TEST = 'Repository{dataBaseType}Test';
     const FOLDER_TEMPLATE_TEST = 'test/db';
+    const FILE_MIGRATIONS = 'migrations.sql';
+    const SQL_TYPE = "SQL";
+
+    /**
+     * generate Migrations only Data Base SQL type
+     * @param {*} entityModel 
+     * @param {*} target 
+     * @param {*} data 
+     * @param {*} createFile 
+     */
+    const generateMigrations = async (entityModel, target, data, createFile, ioFileServicesInject) => {
+
+        const { data: DDL } = await ioFileServicesInject.getContentFileFromTemplate('Migrations');
+
+        const {
+            name,
+            description,
+            fields
+        } = entityModel;
+
+        let attrModelUpper = '';
+        let constraints = '';
+        let alterTable = '';
+        let index = 1;
+
+        fields?.forEach(attr => {
+            const { name, type, pk, required, precision, scale } = attr;
+            const fieldName = toUpperCase(toSnakeCase(toCamelCase(name)));
+            const fieldPrecision = toPascalCase(type) === 'Relation' ? '' : `(${precision}${scale ? ',' + scale : ''})`;
+            const fieldDefinition = `${FIELD_TYPE(toUpperCase(type))} ${fieldPrecision} ${(pk || required ? 'NOT' : '')} NULL`;
+            attrModelUpper = attrModelUpper + `${fieldName} ${fieldDefinition},\n`;
+        }
+        );
+
+        const fieldsRequired = fields?.filter(field => (field.pk || field.required))
+        fieldsRequired.forEach(attr => {
+            const { name, type, items } = attr;
+            let quoted = "";
+            if (index < fieldsRequired.length) {
+                quoted = ",";
+            }
+            const fieldName = toUpperCase(toSnakeCase(toCamelCase(name)));
+            if (toPascalCase(type) === 'Relation') {
+                alterTable = alterTable + `ALTER TABLE T@ENTITYNAME@S ADD CONSTRAINT T@ENTITYNAME@_${fieldName}_FK FOREIGN KEY(${fieldName}) REFERENCES T${toUpperCase(items?.ref)}S(_ID);\n`;
+            } 
+
+            constraints = constraints + `CONSTRAINT T@ENTITYNAME@_${fieldName}_KEY UNIQUE (${fieldName})${quoted}\n`;
+            
+            ++index
+        }
+        );
+
+        const buffer = DDL.replaceAll('@ATTRMODEL@', attrModelUpper)
+            .replaceAll('@CONSTRAINTS@', constraints)
+            .replaceAll('@ALTERTABLE@', alterTable)
+            .replaceAll('@Description@', toUpperCase(description))
+            .replaceAll('@ENTITYNAME@', toUpperCase(name));
+
+        createFile(target, data.replaceAll('@CREATETABLE@', buffer));
+    }
 
     /**
      * generate Repository
@@ -32,10 +93,36 @@ const RepositoryGeneratorService = () => {
     const generateRepository = async (entityModel, target, data, createFile) => {
         const {
             name,
-            description
+            description,
+            fields
         } = entityModel;
+
+        let attrModelUpper = "";
+        attrModelUpperAlias = "";
+        let attrModel = "";
+        let attrUpdateField = "";
+        let index = 1;
+        fields?.forEach(attr => {
+            let quoted = "";
+            if (index < fields.length) {
+                quoted = ",";
+            }
+            attrModelUpper = attrModelUpper + `${toUpperCase(toSnakeCase(toCamelCase(attr.name)))}${quoted}`;
+            attrModelUpperAlias = attrModelUpperAlias + `T.${toUpperCase(toSnakeCase(toCamelCase(attr.name)))}${quoted}`;
+            attrModel = attrModel + `${toCamelCase(attr.name)}${quoted} `;
+            attrUpdateField = attrUpdateField + `${toUpperCase(toSnakeCase(toCamelCase(attr.name)))} = %L ${quoted}`;
+            ++index
+        }
+        );
+
+
         const buffer = data.replaceAll('@EntityName@', toPascalCase(name))
+            .replaceAll('@ENTITYNAME@', toUpperCase(name))
             .replaceAll('@entityName@', toCamelCase(name))
+            .replaceAll('@attrModel@', attrModel)
+            .replaceAll('@ATTRMODEL@', attrModelUpper)
+            .replaceAll('@ATTRMODELALIAS@', attrModelUpperAlias)
+            .replaceAll('@ATTRMODELUPDATE@', attrUpdateField)
             .replaceAll('@Description@', description);
         createFile(target, buffer);
     }
@@ -76,8 +163,14 @@ const RepositoryGeneratorService = () => {
 
             const ioFileServicesInject = inject(() => { }, IOFileService)();
 
+            if (SQL_TYPE === DB_TYPE(toUpperCase(dataBaseType))) {
+                /** Generate migrations */
+                const { target: targetMigrations, content: dataMigrations, createFile: createFileMigrations } = await ioFileServicesInject.sanitizeFileContent(`${appfolder}/${FILE_MIGRATIONS}`, `${appfolder}/${FILE_MIGRATIONS}`);
+                generateMigrations(entityModel, targetMigrations, dataMigrations, createFileMigrations, ioFileServicesInject);
+            }
+
             /** Generate repository */
-            const { target, data, createFile } = await ioFileServicesInject.generateFileFromTemplate(TEMPLATE+dataBaseType.toUpperCase(), `${appfolder}/${FOLDER_TEMPLATE}/${toPascalCase(name + TEMPLATE)}.js`);
+            const { target, data, createFile } = await ioFileServicesInject.generateFileFromTemplate(TEMPLATE + toUpperCase(dataBaseType), `${appfolder}/${FOLDER_TEMPLATE}/${toPascalCase(name + TEMPLATE)}.js`);
             generateRepository(entityModel, target, data, createFile);
 
             let attrModelBuildValue = "";
@@ -89,7 +182,7 @@ const RepositoryGeneratorService = () => {
             );
 
             /** Generate Test repository */
-            const { target: targetTest, data: dataTest } = await ioFileServicesInject.generateFileFromTemplate(TEMPLATE_TEST.replaceAll('{dataBaseType}',dataBaseType.toUpperCase()), `${appfolder}/${FOLDER_TEMPLATE_TEST}/${toPascalCase(name + TEMPLATE)}.test.js`);
+            const { target: targetTest, data: dataTest } = await ioFileServicesInject.generateFileFromTemplate(TEMPLATE_TEST.replaceAll('{dataBaseType}', toUpperCase(dataBaseType)), `${appfolder}/${FOLDER_TEMPLATE_TEST}/${toPascalCase(name + TEMPLATE)}.test.js`);
             generateTest(entityModel, targetTest, dataTest, createFile, attrModelBuildValue);
         } catch (e) {
             console.log(e);

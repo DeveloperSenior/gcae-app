@@ -8,7 +8,7 @@ const DefaultException = require('../models/exception/DefaultException');
 const format = require('pg-format');
 
 const QUERYS = {
-   signin : 'INSERT INTO TUSERS (USERNAME, BIO, AVATAR, EMAIL, PASSWORD, UPDATEDAT, CREATEDAT) VALUES (%L)',
+   signin : 'INSERT INTO TUSERS (USERNAME, BIO, AVATAR, EMAIL, PASSWORD, CREATEDAT) VALUES (%L)',
    login : 'SELECT _ID, USERNAME, PASSWORD FROM  TUSERS WHERE EMAIL = %L'
 }
 
@@ -29,7 +29,7 @@ const UserRepository = pool => {
          const {
             userName, bio, avatar, email, password,createdAt
          } = user;
-         const sql = format(QUERYS.signin, [userName,bio,avatar,email,password,null,createdAt]); 
+         const sql = format(QUERYS.signin, [userName,bio,avatar,email,password,createdAt]); 
          await pool.query(sql);
          return true;
       } catch (e) {

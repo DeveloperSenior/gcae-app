@@ -6,7 +6,7 @@
 
 const IOFileService = require('../services/IOFileService');
 const { inject } = require('../utilities/Utilities');
-const { toCamelCase, toPascalCase } = require('js-convert-case');
+const { toCamelCase, toPascalCase, toUpperCase } = require('js-convert-case');
 const { getValueTest } = require('../utilities/ValuesTest');
 
 
@@ -18,7 +18,7 @@ const ControllerGeneratorService = () => {
 
     const TEMPLATE = 'Controller';
     const FOLDER_TEMPLATE = 'src/controllers';
-    const TEMPLATE_TEST = 'ControllerTest';
+    const TEMPLATE_TEST = 'Controller{dataBaseType}Test';
     const FOLDER_TEMPLATE_TEST = 'test/controllers';
 
     /**
@@ -66,6 +66,8 @@ const ControllerGeneratorService = () => {
      */
     const generate = async (appfolder, entityModel, appConfig) => {
 
+        const { type: dataBaseType } = appConfig.dataBase;
+
         const {
             name,
             fields
@@ -73,7 +75,7 @@ const ControllerGeneratorService = () => {
 
         const ioFileServicesInject = inject(() => { }, IOFileService)();
         /** Generate Controller */
-        const { target, data, createFile } = await ioFileServicesInject.generateFileFromTemplate(TEMPLATE, `${appfolder}/${FOLDER_TEMPLATE}/${toPascalCase(name + TEMPLATE)}.js`);
+        const { target, data, createFile } = await ioFileServicesInject.generateFileFromTemplate(TEMPLATE+ toUpperCase(dataBaseType), `${appfolder}/${FOLDER_TEMPLATE}/${toPascalCase(name + TEMPLATE)}.js`);
         generateController(entityModel, target,data, createFile);
 
         let attrModelBuild = "";
@@ -88,7 +90,7 @@ const ControllerGeneratorService = () => {
         );
 
         /** Generate Test Controller */
-        const { target: targetTest, data: dataTest } = await ioFileServicesInject.generateFileFromTemplate(TEMPLATE_TEST, `${appfolder}/${FOLDER_TEMPLATE_TEST}/${toPascalCase(name + TEMPLATE)}.test.js`);
+        const { target: targetTest, data: dataTest } = await ioFileServicesInject.generateFileFromTemplate(TEMPLATE_TEST.replaceAll('{dataBaseType}', toUpperCase(dataBaseType)), `${appfolder}/${FOLDER_TEMPLATE_TEST}/${toPascalCase(name + TEMPLATE)}.test.js`);
         generateTest(entityModel, targetTest,dataTest,createFile, attrModelBuild, attrsModelRequired);
     }
 

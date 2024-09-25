@@ -1,4 +1,5 @@
 const { toCamelCase, toPascalCase } = require('js-convert-case');
+const { NUMBERS_TYPES } = require('./Constants');
 
 /**
  * Generate data unit test Model used to generator
@@ -28,7 +29,11 @@ const getValueTest = (attrField) => {
             value = `'${toCamelCase(name)}Test'`
             break;
         default:
-            value = `'${toCamelCase(name)}Test'`
+            if(NUMBERS_TYPES.includes(toPascalCase(type))){
+                value = `${ Math.floor(Math.random() * 9999)}`
+            }else{
+              value = `'${toCamelCase(name)}Test'`
+            }
             break;
     }
     return value;

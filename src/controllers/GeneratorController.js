@@ -105,9 +105,11 @@ const sanitizeBaseProject = (body, target, data, createFile) => {
         .replaceAll('@dbUser@', dataBase?.user || 'dbUser_change_it')
         .replaceAll('@dbToken@', dataBase?.pass || 'pass_change_it_base64')
         .replaceAll('@dbProtocol@', dataBase?.protocol || 'http_change_it')
+        .replaceAll('@dbPort@', dataBase?.port)
         .replaceAll('@jwtSecretKey@', auth?.jwtSecretKey || 'jwtSecretkey_change_it_base64')
         .replaceAll('@cacheTTL@', cache?.ttl || '3600')
         .replaceAll('@endpoints@', '')
+        .replaceAll('@CREATETABLE@', '')
         /** always count 2 routes default */
         .replaceAll('@countEntity@', 2 + entities?.length);
     createFile(target, buffer);
@@ -122,8 +124,8 @@ const sanitizeBaseProject = (body, target, data, createFile) => {
 const generateProject = async (body, entities, appfolder, userSession) => {
 
     console.log('INIT processEntity');
-    const dataToprocess = entities?.filter(entity => 'User' !== toPascalCase(entity.name) && 'Users' !== toPascalCase(entity.name));
-    for await (entity of dataToprocess) {
+    const data = entities?.filter(entity => 'User' !== toPascalCase(entity.name) && 'Users' !== toPascalCase(entity.name));
+    for await (entity of data) {
         try {
             console.log(`processing entity ${entity.name}`);
             await processEntity(body, entity, appfolder, userSession);
@@ -144,7 +146,7 @@ const generateProject = async (body, entities, appfolder, userSession) => {
  * @returns 
  */
 const main = async (request, response) => {
-
+    let appfolder = '';
     try {
 
         const generatorServiceInject = inject(GeneratorRepository, GeneratorService)(AppModel);
@@ -168,9 +170,9 @@ const main = async (request, response) => {
             entities
         } = body;
 
-        const appfolder = `${appName.toLowerCase()}-api`;
+        appfolder = `${appName.toLowerCase()}-api`;
         console.log('INIT PROCESS');
-        await ioFileServicesInject.generateBaseProject(`${basePath}/${appfolder}`,dataBase.type);
+        await ioFileServicesInject.generateBaseProject(`${basePath}/${appfolder}`, dataBase.type);
         await generateProject(body, entities, appfolder, userSession);
 
         baseFiles = readDir(`${basePath}/${appfolder}`, true, true);
@@ -206,17 +208,16 @@ const main = async (request, response) => {
         response.set('Content-Disposition', `attachment; filename=${fileName}`);
         response.set('Content-Length', buffer.length);
 
-        /** Clear FileSystem */
-        deleteFile(`${basePath}/${appfolder}`);
-        deleteFile(`${basePath}/${appfolder}-iac`);
-
-
         return response.status(HTTP_CODE.CREATED).send(buffer);
 
     } catch (error) {
         console.log(error);
         return response.status(HTTP_CODE.ERROR).json(error);
 
+    } finally {
+        /** Clear FileSystem */
+        deleteFile(`${basePath}/${appfolder}`);
+        deleteFile(`${basePath}/${appfolder}-iac`);
     }
 
 
@@ -235,8 +236,8 @@ const getApp = async (request, response) => {
         const { appName } = params;
         const userSession = getSession(request);
         const appfolder = `${appName.toLowerCase()}-api`;
-        const { fileName, buffer } = await generatorServiceInject.getAppByName(appName,appfolder,userSession);
-        
+        const { fileName, buffer } = await generatorServiceInject.getAppByName(appName, appfolder, userSession);
+
         response.set('Content-Type', 'application/octet-stream');
         response.set('Content-Disposition', `attachment; filename=${fileName}`);
         response.set('Content-Length', buffer.length);

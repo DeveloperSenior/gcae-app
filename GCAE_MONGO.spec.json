@@ -33,17 +33,20 @@
 					"name": "dni",
 					"type": "String",
 					"pk": true,
-					"required": true
+					"required": true,
+					"precision": 25
 				},
 				{
 					"name": "name",
 					"type": "String",
-					"required": true
+					"required": true,
+					"precision": 60
 				},
 				{
 					"name": "lastName",
 					"type": "String",
-					"required": true
+					"required": true,
+					"precision": 60
 				}
 			]
 		},
@@ -59,12 +62,14 @@
 						"ref": "Color"
 					},
 					"pk": true,
-					"required": true
+					"required": true,
+					"precision": 60
 				},
 				{
 					"name": "name",
 					"type": "String",
-					"required": false
+					"required": false,
+					"precision": 100
 				},
 				{
 					"name": "Engine",
@@ -73,7 +78,8 @@
 						"type": "String",
 						"ref": null
 					},
-					"required": true
+					"required": true,
+					"precision": 100
 				}
 			]
 		}

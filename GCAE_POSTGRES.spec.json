@@ -1,0 +1,121 @@
+{
+	"appName": "PgApp",
+	"appPort": 3001,
+	"appDescription": "Prueba de autogeneración Postgres",
+	"author": "Andres Escobar",
+	"company": "Dev S.A",
+	"version": "1.0",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/DeveloperSenior/pg-app.git"
+	},
+	"auth": {
+		"jwtSecretKey": "VEVTVC1HRU5FUkFUT1I="
+	},
+	"cache": {
+		"ttl": 3600
+	},
+	"dataBase": {
+		"type": "POSTGRES",
+		"serviceName": "postgres",
+		"host": "localhost",
+		"port": "32769",
+		"user": "postgres",
+		"pass": "cG9zdGdyZXNwdw=="
+	},
+	"entities": [
+		{
+			"name": "Person",
+			"description": "Some description",
+			"fields": [
+				{
+					"name": "dni",
+					"type": "String",
+					"pk": true,
+					"required": true,
+					"precision": 100
+				},
+				{
+					"name": "name",
+					"type": "String",
+					"required": true,
+					"precision": 100
+				},
+				{
+					"name": "lastName",
+					"type": "String",
+					"required": true,
+					"precision": 100
+				},
+				{
+					"name": "phone",
+					"type": "Number",
+					"required": false,
+					"precision": 10
+				}
+			]
+		},
+		{
+			"name": "Car",
+			"description": "Some description",
+			"fields": [
+				{
+					"name": "color",
+					"type": "Relation",
+					"items": {
+						"type": "Object",
+						"ref": "Color"
+					},
+					"required": true
+				},
+				{
+					"name": "name",
+					"type": "String",
+					"required": false,
+					"precision": 100
+				},
+				{
+					"name": "engine",
+					"type": "Relation",
+					"items": {
+						"type": "Object",
+						"ref": "Engine"
+					},
+					"required": true
+				}
+			]
+		},
+		{
+			"name": "Engine",
+			"description": "Some description",
+			"fields": [
+				{
+					"name": "serial",
+					"type": "String",
+					"pk": true,
+					"required": true,
+					"precision": 60
+				},
+				{
+					"name": "name",
+					"type": "String",
+					"required": false,
+					"precision": 120
+				}
+			]
+		},
+		{
+			"name": "Color",
+			"description": "Some description",
+			"fields": [
+				{
+					"name": "description",
+					"type": "String",
+					"pk": true,
+					"required": true,
+					"precision": 25
+				}
+			]
+		}
+	]
+}

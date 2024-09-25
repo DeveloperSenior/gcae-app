@@ -14,7 +14,7 @@
 # database or a cache. For examples, see the Awesome Compose repository:
 # https://github.com/docker/awesome-compose
 services:
-  @appName@-server:
+  @appname@-server:
     build:
       context: .
     environment:
