@@ -6,6 +6,7 @@ software automates the process of generating base code with standard architectur
 
 # How to use the application
 
+
 See technical user manual [here](/MANUAL_USO_GCAE.pdf)
 
 # Technology in which it was developed
@@ -90,37 +91,17 @@ gcae-app
 
 ### Use VSCode IDE - How install [here](#technology-in-which-it-was-developed)
 
-![VSCode gcae](/images/vscode.png)
+<img src="images/vscode.png" alt="drawing" width="400"/>
 
 ### Install recommended VSCode plugins
 
-* amazonwebservices.aws-toolkit-vscode
-
-![AWS Plugin](/images/aws-plugin.png)
-
-* ms-azuretools.vscode-docker 
-
-![Docker Plugin](/images/docker-plugin.png)
-
-* hashicorp.terraform 
-
-![Terrafor Plugin](/images/terraform-plugin.png)
-
-* firsttris.vscode-jest-runner 
-
-![Jest Plugin](/images/jest-plugin.png)
-
-* SonarSource.sonarlint-vscode
-
-![SonarLint Plugin](/images/sonarlint-plugin.png)
-
-* ms-vscode.vscode-typescript-next
-
-![ESLint Plugin](/images/js-ts-plugin.png)
-
-* dbaeumer.vscode-eslint
-
-![ESLint Plugin](/images/eslint-plugin.png)
+|                                                            |                                                 |
+| :--------------------------------------------------------: | :---------------------------------------------: |
+| ![AWS Plugin](/images/aws-plugin.png)        				    |   ![Docker Plugin](/images/docker-plugin.png)   |
+| ![Terraform Plugin](/images/terraform-plugin.png) 		    |   ![Jest Plugin](/images/jest-plugin.png)       |
+| ![SonarLint Plugin](/images/sonarlint-plugin.png)			 |   ![JS-TS Plugin](/images/js-ts-plugin.png)     |
+| ![ESLint Plugin](/images/eslint-plugin.png)        		    |                                                 |
+|                                                            |                                                 |
 
 
 1. **Clone Repository:**
@@ -207,8 +188,8 @@ npm run update-s3-templates
 
 This script packages the required code generator templates from the `./resources/s3/` folder and uploads them to the S3 bucket configured in the `BUCKET_TEMPLATE` environment variable in the `.env` file.
 
-![GCAE AWS S3 buckets](/images/gcae-buckets.png)
-
-![GCAE AWS S3 folder buckets](/images/gcae-buckets-folders.png)
-
-![GCAE AWS S3 base folder buckets](/images/gcae-buckets-folders-base.png)
+|                                                                        |                                                              |
+| :--------------------------------------------------------------------: | :----------------------------------------------------------: |
+| ![GCAE AWS S3 buckets](/images/gcae-buckets.png)			                |   ![GCAE AWS S3 buckets](/images/gcae-buckets-folders.png)   |
+| ![GCAE AWS S3 buckets](/images/gcae-buckets-folders-base.png) 		    |                                                              |
+|                                                                        |                                                              |
