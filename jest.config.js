@@ -32,7 +32,7 @@ module.exports = {
       }],
       ['./node_modules/jest-html-reporters', {
         publicPath: 'build/report/jest-report',
-        pageTitle: 'Jest Test Report'
+        pageTitle: 'GCAE Jest Test Report'
       }]
 ]
 };

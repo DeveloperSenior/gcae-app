@@ -82,11 +82,36 @@ gcae-app
    server.js
 ```
 # How to run the project
-1. **Clone the Repository:**
+## Set up development environment
+
+### Use VSCode IDE - How install [here](#technology-in-which-it-was-developed)
+
+![VSCode gcae](/images/vscode.png)
+
+### Install recommended VSCode plugins
+
+* amazonwebservices.aws-toolkit-vscode
+![AWS Plugin](/images/aws-plugin.png)
+* ms-azuretools.vscode-docker 
+![Docker Plugin](/images/docker-plugin.png)
+* hashicorp.terraform 
+![Terrafor Plugin](/images/terraform-plugin.png)
+* firsttris.vscode-jest-runner 
+![Jest Plugin](/images/jest-plugin.png)
+* SonarSource.sonarlint-vscode
+![SonarLint Plugin](/images/sonarlint-plugin.png)
+* ms-vscode.vscode-typescript-next
+![ESLint Plugin](/images/js-ts-plugin.png)
+* dbaeumer.vscode-eslint
+![ESLint Plugin](/images/eslint-plugin.png)
+
+
+1. **Clone Repository:**
 ```bash
 git clone
 https://github.com/DeveloperSenior/gcae-app.git
 ```
+
 2. **Install node modules:**
 ```bash
 cd gcae-app
@@ -97,6 +122,8 @@ npm install
 npm run test
 ```
 *NOTE:* To view TEST report `./build/report/jest-report/jest_html_reporters.html` and the coverage report open the file`./coverage/index.html`
+
+![GCAE Jest Test Report](images/gcae-jest-report.png)
 
 4. **Run the local application:**
 
@@ -133,6 +160,8 @@ It means that our server is up.
 7. **View Documentation :**
 The API documentation is in the url http://localhost:3000/api/v1/api-docs/
 
+![Swagger Doc](/images/gcae-swagger.png)
+
 8. **Postman collection :**
 In the Postman tool import the file `gcae-app.postman_collection` which is at the root of the project.
 
@@ -160,3 +189,9 @@ npm run update-s3-templates
 ```
 
 This script packages the required code generator templates from the `./resources/s3/` folder and uploads them to the S3 bucket configured in the `BUCKET_TEMPLATE` environment variable in the `.env` file.
+
+![GCAE AWS S3 buckets](/images/gcae-buckets.png)
+
+![GCAE AWS S3 folder buckets](/images/gcae-buckets-folders.png)
+
+![GCAE AWS S3 base folder buckets](/images/gcae-buckets-folders-base.png)
