@@ -53,6 +53,19 @@ describe("ValuesTest Utility", () => {
         expect(response).toBe('[{}]');
     });
 
+    it("should return Number type value Test", async () => {
+        
+        const mockField = {
+            name: "City",
+            type: "Number",
+            pk: true,
+            required: true
+        }
+
+        const response = getValueTest(mockField);
+        expect(response).not.toBeNull();
+    });
+
     it("should return other type value Test", async () => {
         
         const mockField = {

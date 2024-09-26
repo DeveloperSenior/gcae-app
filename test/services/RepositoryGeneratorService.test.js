@@ -40,14 +40,14 @@ const appMock = {
                     "required": false
                 },
                 {
-                    "name": "Engine",
-                    "type": "array",
+                    "name": "engine",
+                    "type": "Relation",
                     "items": {
-                        "type": "String",
-                        "ref": null
+                        "type": "Object",
+                        "ref": "Engine"
                     },
                     "required": true
-                }
+                },
             ]
         }
     ]
@@ -76,7 +76,7 @@ describe("Route Generator Service", () => {
 
     });
 
-    it("should method been call function generate", async () => {
+    it("should method been call function generate Type MONGO", async () => {
 
         const service = require('../../src/services/RepositoryGeneratorService');
         const injectService = inject(() => { }, service)();
@@ -84,6 +84,34 @@ describe("Route Generator Service", () => {
         await injectService.generate('appfolder', appMock.entities[0], appMock);
         expect(spyService).toHaveBeenCalled();
 
+    });
+
+    it("should method been call function generate Type POSTGRES ", async () => {
+
+        const service = require('../../src/services/RepositoryGeneratorService');
+        const injectService = inject(() => { }, service)();
+        const spyService = jest.spyOn(injectService, 'generate');
+        appMock.dataBase.type = 'POSTGRES';
+        await injectService.generate('appfolder', appMock.entities[0], appMock);
+        expect(spyService).toHaveBeenCalled();
+
+    });
+
+    it("should method been call function generate with exception", async () => {
+        try {
+            const ioFileService = require('../../src/services/IOFileService');
+            ioFileService.mockImplementation(() => {
+                return {
+                }
+            });
+            const service = require('../../src/services/RepositoryGeneratorService');
+            const injectService = inject(() => { }, service)();
+            const spyService = jest.spyOn(injectService, 'generate');
+            await injectService.generate('appfolder', {}, appMock);
+            expect(spyService).toHaveBeenCalled();
+        } catch (error) {
+            expect(error).toBeInstanceOf(DefaultException);
+        }
     });
 
 

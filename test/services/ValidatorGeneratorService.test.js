@@ -29,8 +29,7 @@ const appMock = {
                         "type": "Object",
                         "ref": "Color"
                     },
-                    "pk": true,
-                    "required": true
+                    "pk": true
                 },
                 {
                     "name": "name",
@@ -38,13 +37,18 @@ const appMock = {
                     "required": false
                 },
                 {
-                    "name": "Engine",
-                    "type": "array",
+                    "name": "engine",
+                    "type": "Relation",
                     "items": {
-                        "type": "String",
-                        "ref": null
+                        "type": "Object",
+                        "ref": "Engine"
                     },
                     "required": true
+                },
+                {
+                    "name": "id",
+                    "type": "Number",
+                    "required": false
                 }
             ]
         }

@@ -151,7 +151,7 @@ const IOFileService = generatorRepository => {
 
         console.log(`INIT put files into bucket ${bucketTemplates}/${nodeTemplates}`);
         const filesToPut = files?.filter(item => item.isFile());
-        for await (file of filesToPut) {
+        for await (let file of filesToPut) {
             const { path, name } = file;
             const fileStream = createReadStreamFile(`${path}/${name}`);
             await s3ServiceInject.putObject(`${bucketTemplates}`, `${nodeTemplates}/${name}`, fileStream);
@@ -174,7 +174,7 @@ const IOFileService = generatorRepository => {
         const dataIaCZip = zipIaC.toBuffer();
 
         const iacFilesToZip = filesIac?.filter(item => !item.isFile() && item.name !== 'iac');
-        for await (file of iacFilesToZip) {
+        for await (let file of iacFilesToZip) {
             const { path, name } = file;
             createFile(`${path}/${name}/${zipIaCName}`,dataIaCZip);
         }
@@ -182,7 +182,7 @@ const IOFileService = generatorRepository => {
         const baseFiles = readDir(folderOrigin, false, true);
 
         const baseFilesToZip = baseFiles?.filter(item => item.name !== 'iac');
-        for await (file of baseFilesToZip) {
+        for await (let file of baseFilesToZip) {
             const { path, name } = file;
             const zp = new admz();
             const zipName = nodeTemplateProject;
@@ -194,7 +194,7 @@ const IOFileService = generatorRepository => {
         const files = readDir(folderOrigin, false, true);
         console.log(`INIT put files into bucket ${bucketTemplates}/`);
         const filesToPut = files?.filter(item => item.name !== 'iac');
-        for await (file of filesToPut) {
+        for await (let file of filesToPut) {
             const { path, name } = file;
             const fileStream = createReadStreamFile(`${path}/${name}/${nodeTemplateProject}`);
             await s3ServiceInject.putObject(`${bucketTemplates}`, `base/${name.toUpperCase()}/${nodeTemplateProject}`, fileStream);

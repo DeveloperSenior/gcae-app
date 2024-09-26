@@ -1,8 +1,6 @@
 FROM node:20
 
-RUN mkdir ~/.aws
-
-RUN touch ~/.aws/credentials
+RUN mkdir ~/.aws && touch ~/.aws/credentials
 
 ENV VERSION @version@
 ENV PORT @appPort@
