@@ -4,6 +4,10 @@ software automates the process of generating base code with standard architectur
 # Author
 - [Andres Felipe Escobar Lopez](https://github.com/DeveloperSenior)
 
+# How to use the application
+
+See technical user manual [here](/MANUAL_USO_GCAE.pdf)
+
 # Technology in which it was developed
 
 Before starting you must install Git, NodeJS, AWS CLI, Docker & Jenkins on your applicable operating system go to the official site [Install NodeJS](https://nodejs.org/en/download/package-manager), [Install Git](https://git-scm.com/downloads),
