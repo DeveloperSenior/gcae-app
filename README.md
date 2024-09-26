@@ -1,5 +1,5 @@
 # GCAE-APP
-software that automates the process of generating base code with standard architectures within the framework of SOLID principles focused on the Back-end.
+software automates the process of generating base code with standard architectures within the framework of SOLID principles focused on the Back-end.
 
 # Author
 - [Andres Felipe Escobar Lopez](https://github.com/DeveloperSenior)
@@ -91,18 +91,31 @@ gcae-app
 ### Install recommended VSCode plugins
 
 * amazonwebservices.aws-toolkit-vscode
+
 ![AWS Plugin](/images/aws-plugin.png)
+
 * ms-azuretools.vscode-docker 
+
 ![Docker Plugin](/images/docker-plugin.png)
+
 * hashicorp.terraform 
+
 ![Terrafor Plugin](/images/terraform-plugin.png)
+
 * firsttris.vscode-jest-runner 
+
 ![Jest Plugin](/images/jest-plugin.png)
+
 * SonarSource.sonarlint-vscode
+
 ![SonarLint Plugin](/images/sonarlint-plugin.png)
+
 * ms-vscode.vscode-typescript-next
+
 ![ESLint Plugin](/images/js-ts-plugin.png)
+
 * dbaeumer.vscode-eslint
+
 ![ESLint Plugin](/images/eslint-plugin.png)
 
 
