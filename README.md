@@ -90,9 +90,9 @@ gcae-app
 ## Set up development environment
 
 ### Use VSCode IDE - How install [here](#technology-in-which-it-was-developed)
-
+<br><br>
 <img src="images/vscode.png" alt="drawing" width="400"/>
-
+<br><br>
 ### Install recommended VSCode plugins
 
 |                                                            |                                                 |
@@ -101,7 +101,6 @@ gcae-app
 | ![Terraform Plugin](/images/terraform-plugin.png) 		    |   ![Jest Plugin](/images/jest-plugin.png)       |
 | ![SonarLint Plugin](/images/sonarlint-plugin.png)			 |   ![JS-TS Plugin](/images/js-ts-plugin.png)     |
 | ![ESLint Plugin](/images/eslint-plugin.png)        		    |                                                 |
-|                                                            |                                                 |
 
 
 1. **Clone Repository:**
@@ -120,9 +119,9 @@ npm install
 npm run test
 ```
 *NOTE:* To view TEST report `./build/report/jest-report/jest_html_reporters.html` and the coverage report open the file`./coverage/index.html`
-
-![GCAE Jest Test Report](images/gcae-jest-report.png)
-
+<br><br>
+<img src="images/gcae-jest-report.png" alt="drawing" width="400"/>
+<br><br>
 4. **Run the local application:**
 
 **NOTE:** Before running the server, make sure to check the following:
@@ -157,9 +156,9 @@ It means that our server is up.
 
 7. **View Documentation :**
 The API documentation is in the url http://localhost:3000/api/v1/api-docs/
-
-![Swagger Doc](/images/gcae-swagger.png)
-
+<br><br>
+<img src="images/gcae-swagger.png" alt="drawing" width="400"/>
+<br><br>
 8. **Postman collection :**
 In the Postman tool import the file `gcae-app.postman_collection` which is at the root of the project.
 
