@@ -69,11 +69,13 @@ const FIELD_TYPE = (key) => {
     types.set( "NUMBER", "NUMERIC");
     types.set( "DATE", "DATE");
     types.set( "OBJECT", "TEXT");
-    types.set( "RELATION", "INT4");
+    types.set( "RELATIONSHIP", "INT4");
     return types.get(key);
 }
 
-const NUMBERS_TYPES = ['Relation', 'Numeric','Number', 'Integer', 'Int'];
+const NUMBERS_TYPES = [ 'Numeric','Number', 'Integer', 'Int'];
+
+const STRING_TYPES = ['Relationship','String', 'Date', 'Varchar', 'Text'];
 
 module.exports = { HTTP_CODE,
                    HEADERS,
@@ -83,4 +85,5 @@ module.exports = { HTTP_CODE,
                    DATE_FORMAT,
                    STATES, DB_TYPE,
                    FIELD_TYPE,
-                   NUMBERS_TYPES }
+                   NUMBERS_TYPES,
+                   STRING_TYPES }

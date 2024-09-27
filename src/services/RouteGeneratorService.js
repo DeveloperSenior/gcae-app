@@ -69,9 +69,6 @@ const RouteGeneratorService = () => {
                     .replaceAll('@attr_type@', toCamelCase(type));
             }
 
-            swaggerProperties = swaggerProperties;
-            swaggerRequireds = swaggerRequireds;
-
         });
 
         const buffer = data.replaceAll('@EntityName@', toPascalCase(name))

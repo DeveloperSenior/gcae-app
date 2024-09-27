@@ -38,7 +38,7 @@ const UserService = userRepository => {
                 .withEmail(email)
                 .withPassword(encodeBase64(hashedToken))
                 .withCreatedAt(currentDate).build();
-        const resp =await userRepository.signin(userCreate);
+        await userRepository.signin(userCreate);
         return await login(user);
     }
 

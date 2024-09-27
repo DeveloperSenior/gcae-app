@@ -23,8 +23,8 @@ describe("Constants", () => {
         expect(intType).toBe('DATE');
     });
 
-    it("Should convert RELATION Field Type to SQL INT4 Field type", async () => {
-        const intType = FIELD_TYPE('RELATION');
+    it("Should convert RELATIONSHIP Field Type to SQL INT4 Field type", async () => {
+        const intType = FIELD_TYPE('RELATIONSHIP');
         expect(intType).toBe('INT4');
     });
 

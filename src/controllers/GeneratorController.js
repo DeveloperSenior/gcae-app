@@ -19,6 +19,7 @@ const RepositoryGeneratorService = require('../services/RepositoryGeneratorServi
 const GeneratorService = require('../services/GeneratorService');
 const GeneratorRepository = require('../db/GeneratorRepository');
 const { AppModel } = require('../models/AppModel');
+const { validateApp, } = require('../validators/AppValidator');
 
 const { readDir, deleteFile } = require('../utilities/IOUtil');
 
@@ -105,7 +106,7 @@ const sanitizeBaseProject = (body, target, data, createFile) => {
         .replaceAll('@dbUser@', dataBase?.user || 'dbUser_change_it')
         .replaceAll('@dbToken@', dataBase?.pass || 'pass_change_it_base64')
         .replaceAll('@dbProtocol@', dataBase?.protocol || 'http_change_it')
-        .replaceAll('@dbPort@', dataBase?.port)
+        .replaceAll('@dbPort@', dataBase?.port || '')
         .replaceAll('@jwtSecretKey@', auth?.jwtSecretKey || 'jwtSecretkey_change_it_base64')
         .replaceAll('@cacheTTL@', cache?.ttl || '3600')
         .replaceAll('@endpoints@', '')
@@ -125,7 +126,7 @@ const generateProject = async (body, entities, appfolder, userSession) => {
 
     console.log('INIT processEntity');
     const data = entities?.filter(entity => 'User' !== toPascalCase(entity.name) && 'Users' !== toPascalCase(entity.name));
-    for await (entity of data) {
+    for await (let entity of data) {
         try {
             console.log(`processing entity ${entity.name}`);
             await processEntity(body, entity, appfolder, userSession);
@@ -155,14 +156,14 @@ const main = async (request, response) => {
         const userSession = getSession(request);
 
         // Validate generator Model
-        /* const validate = validateApp(body);
+         const validate = validateApp(body);
  
          if (!validate.isValid) {
  
              // if validation failure, send error response
              return response.status(HTTP_CODE.BAD_REQUEST).json({ message: validate.errors });
  
-         }*/
+         }
 
         const {
             appName,
@@ -175,24 +176,24 @@ const main = async (request, response) => {
         await ioFileServicesInject.generateBaseProject(`${basePath}/${appfolder}`, dataBase.type);
         await generateProject(body, entities, appfolder, userSession);
 
-        baseFiles = readDir(`${basePath}/${appfolder}`, true, true);
+        const baseFiles = readDir(`${basePath}/${appfolder}`, true, true);
 
         /** sanitize base file content */
         console.log('INIT sanitize');
         const dataToSanitize = baseFiles?.filter(item => item.isFile());
-        for await (file of dataToSanitize) {
+        for await (let file of dataToSanitize) {
             const { path, name } = file;
             const { target, content, createFile } = await ioFileServicesInject.sanitizeFileContent(`${path}/${name}`, `${path}/${name}`);
             sanitizeBaseProject(body, target, content, createFile);
         }
         console.log('END sanitize');
 
-        baseIaCFiles = readDir(`${basePath}/${appfolder}-iac`, true, true);
+        const baseIaCFiles = readDir(`${basePath}/${appfolder}-iac`, true, true);
 
         /** sanitize base IaC file content */
         console.log('INIT sanitize IaC');
         const dataIaCToSanitize = baseIaCFiles?.filter(item => item.isFile());
-        for await (file of dataIaCToSanitize) {
+        for await (let file of dataIaCToSanitize) {
             const { path, name } = file;
             const { target, content, createFile } = await ioFileServicesInject.sanitizeFileContent(`${path}/${name}`, `${path}/${name}`);
             sanitizeBaseProject(body, target, content, createFile);
@@ -215,6 +216,7 @@ const main = async (request, response) => {
         return response.status(HTTP_CODE.ERROR).json(error);
 
     } finally {
+        
         /** Clear FileSystem */
         deleteFile(`${basePath}/${appfolder}`);
         deleteFile(`${basePath}/${appfolder}-iac`);

@@ -7,7 +7,7 @@
 const IOFileService = require('./IOFileService');
 const { inject } = require('../utilities/Utilities');
 const { DB_TYPE, FIELD_TYPE } = require('../utilities/Constants');
-const { toCamelCase, toPascalCase, toUpperCase, toSnakeCase } = require('js-convert-case');
+const { toCamelCase, toPascalCase, toUpperCase, toSnakeCase, toLowerCase } = require('js-convert-case');
 const { getValueTest } = require('../utilities/ValuesTest');
 const DefaultException = require('../models/exception/DefaultException');
 
@@ -51,7 +51,8 @@ const RepositoryGeneratorService = () => {
         fields?.forEach(attr => {
             const { name, type, pk, required, precision, scale } = attr;
             const fieldName = toUpperCase(toSnakeCase(toCamelCase(name)));
-            const fieldPrecision = toPascalCase(type) === 'Relation' ? '' : `(${precision}${scale ? ',' + scale : ''})`;
+            const scaleValue = scale ? ',' + scale : '';
+            const fieldPrecision = toPascalCase(type) === 'Relationship' || toPascalCase(type) === 'Date' ? '' : `(${precision}${scaleValue})`;
             const fieldDefinition = `${FIELD_TYPE(toUpperCase(type))} ${fieldPrecision} ${(pk || required ? 'NOT' : '')} NULL`;
             attrModelUpper = attrModelUpper + `${fieldName} ${fieldDefinition},\n`;
         }
@@ -65,12 +66,12 @@ const RepositoryGeneratorService = () => {
                 quoted = ",";
             }
             const fieldName = toUpperCase(toSnakeCase(toCamelCase(name)));
-            if (toPascalCase(type) === 'Relation') {
-                alterTable = alterTable + `ALTER TABLE T@ENTITYNAME@S ADD CONSTRAINT T@ENTITYNAME@_${fieldName}_FK FOREIGN KEY(${fieldName}) REFERENCES T${toUpperCase(items?.ref)}S(_ID);\n`;
-            } 
+            if (toPascalCase(type) === 'Relationship') {
+                alterTable = alterTable + `ALTER TABLE T@ENTITYNAME@ ADD CONSTRAINT T@ENTITYNAME@_${fieldName}_FK FOREIGN KEY(${fieldName}) REFERENCES T${toUpperCase(items?.ref)}(_ID);\n`;
+            }
 
             constraints = constraints + `CONSTRAINT T@ENTITYNAME@_${fieldName}_KEY UNIQUE (${fieldName})${quoted}\n`;
-            
+
             ++index
         }
         );
@@ -98,7 +99,7 @@ const RepositoryGeneratorService = () => {
         } = entityModel;
 
         let attrModelUpper = "";
-        attrModelUpperAlias = "";
+        let attrModelUpperAlias = "";
         let attrModel = "";
         let attrUpdateField = "";
         let index = 1;
@@ -115,6 +116,15 @@ const RepositoryGeneratorService = () => {
         }
         );
 
+        let attrRelationship = '';
+        let attrRelationshipPager = '';
+        const relationshipFilter = fields?.filter(attr => toPascalCase(attr.type) === 'Relationship');
+        relationshipFilter.forEach(attr => {
+            attrRelationship = attrRelationship + `.populate('${toCamelCase(attr.name)}','-user -__v ')`;
+            attrRelationshipPager = attrRelationshipPager + `{ path: '${toCamelCase(attr.name)}', select: '-user -__v' },`;
+        }
+        );
+
 
         const buffer = data.replaceAll('@EntityName@', toPascalCase(name))
             .replaceAll('@ENTITYNAME@', toUpperCase(name))
@@ -123,6 +133,8 @@ const RepositoryGeneratorService = () => {
             .replaceAll('@ATTRMODEL@', attrModelUpper)
             .replaceAll('@ATTRMODELALIAS@', attrModelUpperAlias)
             .replaceAll('@ATTRMODELUPDATE@', attrUpdateField)
+            .replaceAll('@relationship@', attrRelationship)
+            .replaceAll('@relationshippager@', attrRelationshipPager)
             .replaceAll('@Description@', description);
         createFile(target, buffer);
     }

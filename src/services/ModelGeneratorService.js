@@ -42,6 +42,8 @@ const ModelGeneratorService = () => {
                 let dataType = '';
                 if ("Array" === toPascalCase(type)) {
                     dataType = `[${toPascalCase(items.type)}]`
+                } else if ("Relationship" === toPascalCase(type)) {
+                    dataType = `Schema.Types.ObjectId, ref: '${toPascalCase(items.ref)}'`
                 } else {
                     dataType = `${toPascalCase(type)}`
                 }

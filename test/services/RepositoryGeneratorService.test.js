@@ -41,7 +41,7 @@ const appMock = {
                 },
                 {
                     "name": "engine",
-                    "type": "Relation",
+                    "type": "Relationship",
                     "items": {
                         "type": "Object",
                         "ref": "Engine"

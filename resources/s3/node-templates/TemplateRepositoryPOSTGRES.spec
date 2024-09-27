@@ -10,25 +10,25 @@ const format = require('pg-format');
 const { Pager } = require('../models/dto/Pager');
 
 const QUERYS = {
-   insert : 'INSERT INTO T@ENTITYNAME@S (@ATTRMODEL@, USERID, CREATEDAT ) VALUES (%L) RETURNING _ID',
-   findById : 'SELECT T._ID,U._ID AS USERID, @ATTRMODELALIAS@, T.CREATEDAT, T.UPDATEDAT FROM  T@ENTITYNAME@S T, TUSERS U WHERE T.USERID = U._ID AND T._ID = %L',
-   find : 'SELECT T._ID,U._ID AS USERID, @ATTRMODELALIAS@, T.CREATEDAT, T.UPDATEDAT FROM  T@ENTITYNAME@S T, TUSERS U WHERE T.USERID = U._ID',
+   insert : 'INSERT INTO T@ENTITYNAME@ (@ATTRMODEL@, USERID, CREATEDAT ) VALUES (%L) RETURNING _ID',
+   findById : 'SELECT T._ID,U._ID AS USERID, @ATTRMODELALIAS@, T.CREATEDAT, T.UPDATEDAT FROM  T@ENTITYNAME@ T, TUSERS U WHERE T.USERID = U._ID AND T._ID = %L',
+   find : 'SELECT T._ID,U._ID AS USERID, @ATTRMODELALIAS@, T.CREATEDAT, T.UPDATEDAT FROM  T@ENTITYNAME@ T, TUSERS U WHERE T.USERID = U._ID',
    findPager : `SELECT T._ID,U._ID AS USERID, 
                 @ATTRMODELALIAS@,
                 T.CREATEDAT,
                 T.UPDATEDAT 
-                FROM  T@ENTITYNAME@S T, TUSERS U 
+                FROM  T@ENTITYNAME@ T, TUSERS U 
                 WHERE T.USERID = U._ID
                 %s
                 %s`,
-    count : 'SELECT COUNT(1) total FROM T@ENTITYNAME@S T WHERE T.CREATEDAT IS NOT NULL',
-    update : `UPDATE T@ENTITYNAME@S
+    count : 'SELECT COUNT(1) total FROM T@ENTITYNAME@ T WHERE T.CREATEDAT IS NOT NULL',
+    update : `UPDATE T@ENTITYNAME@
               SET 
                 USERID = %L,
                 CREATEDAT = NOW(),
                 @ATTRMODELUPDATE@
               WHERE _ID = %L`,
-    delete : `DELETE FROM T@ENTITYNAME@S T
+    delete : `DELETE FROM T@ENTITYNAME@ T
               WHERE T._ID = %L`
     }
 

@@ -16,6 +16,8 @@ const appMock = {
     "cache": {
     },
     "dataBase": {
+        "type": "MONGO",
+        "port": 80
     },
     "entities": [
         {
@@ -30,12 +32,14 @@ const appMock = {
                         "ref": "Color"
                     },
                     "pk": true,
-                    "required": true
+                    "required": true,
+                    "precision": 25
                 },
                 {
                     "name": "name",
                     "type": "String",
-                    "required": false
+                    "required": false,
+                    "precision": 100
                 },
                 {
                     "name": "Engine",
@@ -44,7 +48,8 @@ const appMock = {
                         "type": "String",
                         "ref": null
                     },
-                    "required": true
+                    "required": true,
+                    "precision": 100
                 }
             ]
         }

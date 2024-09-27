@@ -19,7 +19,7 @@ const createFolders = (folderName) => {
             fs.mkdirSync(folderName, { recursive: true });
         }
     } catch (e) {
-        console.error('Error: ',e);
+        console.error('Error: ', e);
         const excepcion = new DefaultException(e.message);
         throw excepcion;
     }
@@ -111,7 +111,7 @@ const readDir = (path, _recursive = false, _withFileTypes = false) => {
         const data = fs.readdirSync(path, { withFileTypes: _withFileTypes, recursive: _recursive });
         return data;
     } catch (e) {
-        console.error('Error: ',e);
+        console.error('Error: ', e);
         const excepcion = new DefaultException(e.message);
         throw excepcion;
     }
@@ -122,7 +122,9 @@ const readDir = (path, _recursive = false, _withFileTypes = false) => {
  * @param {*} path 
  */
 const deleteFile = (path) => {
-    fs.rmSync(path,{recursive: true});
+    if(fs.existsSync(path)){
+        fs.rmSync(path, { recursive: true });
+    }
 }
 
 /**
@@ -130,11 +132,11 @@ const deleteFile = (path) => {
  * @param {*} file 
  * @returns 
  */
-const createReadStreamFile = (file)=>{
+const createReadStreamFile = (file) => {
     var fileStream = fs.createReadStream(file);
     fileStream.on("error", function (err) {
         console.log("File Error", err);
-      });
+    });
     return fileStream;
 }
 

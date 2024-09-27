@@ -31,6 +31,7 @@ const @EntityName@Repository = DbModel => {
             const new@EntityName@ = new DbModel(@entityName@);
             await new@EntityName@.save();
             return await DbModel.findOne({ _id: @entityName@._id }).select("-__v") // Retrieve without __v
+            @relationship@
             .populate('user', '-password -__v'); // Retrieve without password and __v
         } catch (e) {
             const excepcion = new DefaultException(e.message);
@@ -52,6 +53,7 @@ const @EntityName@Repository = DbModel => {
         }
         try {
             return await DbModel.findOne(options).select("-__v") // Retrieve without __v
+            @relationship@
             .populate('user', '-password -__v'); // Retrieve without password and __v
         } catch (e) {
             const excepcion = new DefaultException(e.message);
@@ -68,6 +70,7 @@ const @EntityName@Repository = DbModel => {
     const getAll@EntityName@ = async (@entityName@) => {
         try {
             return await DbModel.find().select("-__v") // Retrieve without __v
+            @relationship@
             .populate('user', '-password -__v'); // Retrieve without password and __v
         } catch (e) {
             const excepcion = new DefaultException(e.message);
@@ -82,7 +85,10 @@ const @EntityName@Repository = DbModel => {
      */
     const get@EntityName@ById = async (_id,userId) => {
         try {
-            return await DbModel.findOne({ _id: _id }).select("-__v"); // Retrieve without __v
+            return await DbModel.findOne({ _id: _id })
+            @relationship@
+            .populate('user', '-password -__v') // Retrieve without password and __v
+            .select("-__v"); // Retrieve without __v
         } catch (e) {
             const excepcion = new DefaultException(e.message);
             throw excepcion;
@@ -123,7 +129,11 @@ const @EntityName@Repository = DbModel => {
                     limit: pageSize,
                     sort: { createdAt: 'asc' },
                     select: '-__v', // Retrieve without __v
-                    populate: { path: 'user', select: '-password -__v' }
+                    populate: [
+                        
+                        { path: 'user', select: '-password -__v' },
+                        @relationshippager@
+                    ]
                 });
             const { docs,totalDocs, totalPages, prevPage, nextPage } = data;
             return new Pager.Builder()
@@ -151,6 +161,7 @@ const @EntityName@Repository = DbModel => {
         try {
             await DbModel.findOneAndUpdate(options, set);
             return await DbModel.findOne(options).select("-__v")// Retrieve without __v
+                @relationship@
                 .populate('user', '-password -__v'); // Retrieve without password and __v
                 
         } catch (e) {

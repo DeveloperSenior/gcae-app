@@ -6,7 +6,7 @@
 
 const IOFileService = require('./IOFileService');
 const { inject } = require('../utilities/Utilities');
-const { NUMBERS_TYPES } = require('../utilities/Constants');
+const { NUMBERS_TYPES, STRING_TYPES } = require('../utilities/Constants');
 const { toCamelCase, toPascalCase } = require('js-convert-case');
 const { getValueTest } = require('../utilities/ValuesTest');
 
@@ -43,33 +43,13 @@ const ValidatorGeneratorService = () => {
     }
 
     /**
-     * generate Validator
+     * replace Data
      * @param {*} entityModel 
      * @param {*} target 
      * @param {*} data 
      * @param {*} createFile 
      */
-    const generateValidator = async (entityModel, target, data, createFile) => {
-
-        const {
-            name,
-            description
-        } = entityModel;
-
-        const buffer = data.replaceAll('@EntityName@', toPascalCase(name))
-            .replaceAll('@entityName@', toCamelCase(name))
-            .replaceAll('@Description@', description);
-        createFile(target, buffer);
-    }
-
-    /**
-     * generate Test
-     * @param {*} entityModel 
-     * @param {*} target 
-     * @param {*} data 
-     * @param {*} createFile 
-     */
-    const generateTest = async (entityModel, target, data, createFile) => {
+    const replaceData = async (entityModel, target, data, createFile) => {
         const {
             name,
             description
@@ -105,13 +85,13 @@ const ValidatorGeneratorService = () => {
         let index = 1;
         fields?.forEach(attr => {
 
-            const { name, type, items, pk, required, nullable } = attr;
+            const { name, type, items, required, nullable } = attr;
             let quoted = "";
 
             if (index < fields.length) {
                 quoted = ",";
             }
-            
+
             if ('Array' === toPascalCase(type)) {
 
                 const { type: itemtype, nullable, itemNullable } = items;
@@ -130,11 +110,21 @@ const ValidatorGeneratorService = () => {
                     .replaceAll('@attrType@', toCamelCase('Number'))
                     .replaceAll('@attrNullable@', (nullable || required) || true)
                     .replaceAll('@quoted@', quoted);
-            } else{
+
+            } else if (STRING_TYPES.includes(toPascalCase(type))) {
+
+                attrsModelProperties = attrsModelProperties + schemaAttrsNormalTemplate.replaceAll('@attrName@', toCamelCase(name))
+                    .replaceAll('@attrType@', toCamelCase('String'))
+                    .replaceAll('@attrNullable@', (nullable || required) || true)
+                    .replaceAll('@quoted@', quoted);
+
+            } else {
+
                 attrsModelProperties = attrsModelProperties + schemaAttrsNormalTemplate.replaceAll('@attrName@', toCamelCase(name))
                     .replaceAll('@attrType@', toCamelCase(type))
                     .replaceAll('@attrNullable@', (nullable || required) || true)
                     .replaceAll('@quoted@', quoted);
+
             }
 
             ++index
@@ -146,7 +136,7 @@ const ValidatorGeneratorService = () => {
         const fieldsRequired = fields?.filter(attr => attr.pk || attr.required);
         fieldsRequired?.forEach(attr => {
 
-            const { name, type, items, pk, required, nullable } = attr;
+            const { name } = attr;
             let quoted = "";
 
             if (index < fieldsRequired.length) {
@@ -166,11 +156,11 @@ const ValidatorGeneratorService = () => {
 
         /** Generate Validator */
         const { target, data } = await ioFileServicesInject.generateFileFromTemplate(TEMPLATE, `${appfolder}/${FOLDER_TEMPLATE}/${toPascalCase(name + TEMPLATE)}.js`);
-        generateValidator(entityModel, target, data, createFile);
+        replaceData(entityModel, target, data, createFile);
 
         /** Generate Test Service */
         const { target: targetTest, data: dataTest } = await ioFileServicesInject.generateFileFromTemplate(TEMPLATE_TEST, `${appfolder}/${FOLDER_TEMPLATE_TEST}/${toPascalCase(name + TEMPLATE)}.test.js`);
-        generateTest(entityModel, targetTest, dataTest, createFile);
+        replaceData(entityModel, targetTest, dataTest, createFile);
 
     }
 
