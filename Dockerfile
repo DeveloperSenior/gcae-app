@@ -6,6 +6,8 @@ ENV VERSION 1.0
 ENV PORT 3000
 ENV API_PATH /api/v1
 ENV ENV dllo
+ENV APP_SUPPORT MONGO,POSTGRES
+ENV TYPES_SUPPORT String,Object,Array,Number,Date,Relationship
 
 # FileSystem
 ENV BASE_PATH /tmp/gcae

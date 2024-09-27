@@ -45,7 +45,7 @@ const options = {
   swaggerDefinition: {
     openapi: '3.0.1',
     info: {
-      title: 'REST - Swagger',
+      title: 'GCAE REST - Swagger',
       version: `${process.env.VERSION || '1.0.0'} - ${process.env.ENV}`,
       description: `GCAE REST API with Swagger doc: 
                      <br><br> [Download PDF application user manual](https://github.com/DeveloperSenior/gcae-app/blob/main/MANUAL_USO_GCAE.pdf)

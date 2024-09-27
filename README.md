@@ -6,8 +6,8 @@ software automates the process of generating base code with standard architectur
 
 # How to use the application
 
-
-See technical user manual [here](/MANUAL_USO_GCAE.pdf)
+* GCAE uses replacement tagging to dynamically generate NODEJS modules, see tag reference table [here](replacement_tags.md)
+* See technical user manual [here](/MANUAL_USO_GCAE.pdf)
 
 # Technology in which it was developed
 

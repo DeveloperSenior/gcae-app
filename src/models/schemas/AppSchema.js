@@ -1,4 +1,4 @@
-{
+module.exports = {
     "type": "object",
     "properties": {
       "appName": {"type": "string", "nullable" : false},
@@ -36,7 +36,7 @@
       "dataBase": {
         "type": "object",
         "properties": { 
-          "type": {"enum":["MONGO","POSTGRES"]},
+          "type": {"enum":[...process.env.APP_SUPPORT.split(',')]},
           "serviceName": {"type": "string", "nullable" : true},
           "user": {"type": "string", "nullable" : true},
           "pass": {"type": "string", "nullable" : true},
@@ -62,35 +62,13 @@
                    "properties": {
                       "name": {"type": "string", "nullable" : false},
                       "type": {
-                        "enum": [
-                          "String",
-                          "Object",
-                          "Array",
-                          "Number",
-                          "Date",
-                          "Relationship",
-                          "string",
-                          "object",
-                          "array",
-                          "number",
-                          "date",
-                          "relationship"
-                        ]
+                        "enum": [...process.env.TYPES_SUPPORT.split(',')]
                       },
                       "items": {
                          "type":"object",
                          "properties": {
                           "type": {
-                            "enum": [
-                              "String",
-                              "Object",
-                              "Number",
-                              "Date",
-                              "string",
-                              "object",
-                              "number",
-                              "date"
-                            ]
+                            "enum": [...process.env.TYPES_SUPPORT.split(',')]
                           },
                           "ref":{"type": "string", "nullable" : true}
                          },

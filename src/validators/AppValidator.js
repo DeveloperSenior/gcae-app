@@ -6,7 +6,7 @@
 
 const Schema = require("fluent-json-schema");
 const Ajv = require("ajv");
-const appSchema = require("../models/schemas/AppSchema.json")
+const appSchema = require("../models/schemas/AppSchema")
 const ajv = new Ajv({ allErrors: true });
 // Ajv option allErrors is required
 require("ajv-errors")(ajv);
