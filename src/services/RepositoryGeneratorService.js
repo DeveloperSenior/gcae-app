@@ -70,14 +70,16 @@ const RepositoryGeneratorService = () => {
                 alterTable = alterTable + `ALTER TABLE T@ENTITYNAME@ ADD CONSTRAINT T@ENTITYNAME@_${fieldName}_FK FOREIGN KEY(${fieldName}) REFERENCES T${toUpperCase(items?.ref)}(_ID);\n`;
             }
 
-            constraints = constraints + `CONSTRAINT T@ENTITYNAME@_${fieldName}_KEY UNIQUE (${fieldName})${quoted}\n`;
+            constraints = constraints + `${fieldName}${quoted}`;
 
             ++index
         }
         );
 
+        const constraint = `CONSTRAINT T@ENTITYNAME@_UK UNIQUE (${constraints})`;
+
         const buffer = DDL.replaceAll('@ATTRMODEL@', attrModelUpper)
-            .replaceAll('@CONSTRAINTS@', constraints)
+            .replaceAll('@CONSTRAINTS@', constraint)
             .replaceAll('@ALTERTABLE@', alterTable)
             .replaceAll('@Description@', toUpperCase(description))
             .replaceAll('@ENTITYNAME@', toUpperCase(name));

@@ -49,6 +49,7 @@ const @EntityName@Service = @entityName@Repository => {
         
         const @entityName@ToGetBuilder = new @EntityName@.Builder()
         /** add params filters to builder here*/
+            .withId(params._id)
             .withUser(userId).build();
 
         return await @entityName@Repository.get@EntityName@(@entityName@ToGetBuilder);

@@ -135,10 +135,10 @@ const @EntityName@Repository = DbModel => {
                         @relationshippager@
                     ]
                 });
-            const { docs,totalDocs, totalPages, prevPage, nextPage } = data;
+            const { docs, totalPages, prevPage, nextPage } = data;
             return new Pager.Builder()
                 .withActualPage(pageNumber)
-                .withTotalPage(totalDocs)
+                .withTotalPage(totalPages)
                 .withPrevPage(prevPage)
                 .withNextPage(nextPage)
                 .withData(docs).build();
