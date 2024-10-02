@@ -1,5 +1,5 @@
 # GCAE APP REPLACEMENT TAGS
-GCAE uses replacement tags for code generation, this tagging facilitates modular generation.
+GCAE uses environment variables to launch the code generator services, these variables facilitate the dynamic configuration of the application.
 
 # Author
 - [Andres Felipe Escobar Lopez](https://github.com/DeveloperSenior)
