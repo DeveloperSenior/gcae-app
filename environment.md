@@ -4,9 +4,9 @@ GCAE uses environment variables to launch the code generator services, these var
 # Author
 - [Andres Felipe Escobar Lopez](https://github.com/DeveloperSenior)
 
-# Environment table
+# Environment variables table
 
-|          ENVIRONMENT          |     USE     |      VALUE          |
+|          VARIABLE          |     USE     |      VALUE          |
 | :--------------------: | :---------: | :-----------------: |
 | **`VERSION`** | REST API version | `String` default `'v1.0.0'` |
 | **`PORT`** | Listener server port | `Number` default `3000` |
