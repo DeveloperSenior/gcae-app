@@ -26,7 +26,7 @@ const appMock = {
             "fields": [
                 {
                     "name": "colors",
-                    "type": "array",
+                    "type": "Array",
                     "items": {
                         "type": "Object",
                         "ref": "Color"
@@ -43,7 +43,7 @@ const appMock = {
                 },
                 {
                     "name": "Engine",
-                    "type": "array",
+                    "type": "Array",
                     "items": {
                         "type": "String",
                         "ref": null

@@ -68,7 +68,7 @@ describe("IO File Service", () => {
         const s3Service = require('../../src/services/aws/S3Service');
         s3Service.mockImplementation(() => {
             return {
-                getObjectAsString: jest.fn(async (bucket, name) => {throw new DefaultException('Error')})
+                getObjectAsString: jest.fn(async (bucket, name) => { throw new DefaultException('Error') })
             }
         });
         const injectService = inject(() => { }, service)();
@@ -162,9 +162,35 @@ describe("IO File Service", () => {
 
     });
 
+    it("should method been call function putTemplatesToS3, fetch files", async () => {
+        const ioUtil = require('../../src/utilities/IOUtil');
+        ioUtil.readDir.mockReturnValue([{ path: 'mockPath', name: 'mockName', isFile: jest.fn(() => true) }]);
+        const service = require('../../src/services/IOFileService');
+        const injectService = inject(() => { }, service)();
+        const spyService = jest.spyOn(injectService, 'putTemplatesToS3');
+        await injectService.putTemplatesToS3('folderOriginMock');
+        expect(spyService).toHaveBeenCalled();
+
+    });
+
     it("should method been call function putBaseProjectsTemplatesToS3", async () => {
         const ioUtil = require('../../src/utilities/IOUtil');
         ioUtil.readDir.mockReturnValue([]);
+        const service = require('../../src/services/IOFileService');
+        const injectService = inject(() => { }, service)();
+        const spyService = jest.spyOn(injectService, 'putBaseProjectsTemplatesToS3');
+        await injectService.putBaseProjectsTemplatesToS3('folderOriginMock');
+        expect(spyService).toHaveBeenCalled();
+
+    });
+
+    it("should method been call function putBaseProjectsTemplatesToS3, process folders", async () => {
+        const ioUtil = require('../../src/utilities/IOUtil');
+        ioUtil.readDir.mockReturnValue([{
+            path: 'mockPath',
+            name: 'mockName',
+            isFile: jest.fn(() => false)
+        }]);
         const service = require('../../src/services/IOFileService');
         const injectService = inject(() => { }, service)();
         const spyService = jest.spyOn(injectService, 'putBaseProjectsTemplatesToS3');
