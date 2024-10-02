@@ -4,7 +4,7 @@ GCAE uses environment variables to launch the code generator services, these var
 # Author
 - [Andres Felipe Escobar Lopez](https://github.com/DeveloperSenior)
 
-# Tags table
+# Environment table
 
 |          ENVIRONMENT          |     USE     |      VALUE          |
 | :--------------------: | :---------: | :-----------------: |
