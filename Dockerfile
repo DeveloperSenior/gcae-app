@@ -18,7 +18,7 @@ ENV APP_SUPPORT MONGO,POSTGRES
 ENV TYPES_SUPPORT String,Object,Array,Number,Date,Relationship
 
 # FileSystem
-ENV BASE_PATH /tmp/gcae
+ENV BASE_PATH /app/tmp/gcae
 
 # S3 config
 ENV BUCKET_TEMPLATE $BUCKET_TEMPLATE
@@ -48,6 +48,11 @@ ENV AWS_SECRET_ACCESS_KEY $AWS_SECRET_ACCESS_KEY
 ENV NODE_USE_ARN_REGION_ENV_NAME  "AWS_S3_USE_ARN_REGION"
 
 RUN mkdir /app
+RUN mkdir /app/tmp
+RUN mkdir /app/tmp/gcae
+
+RUN chown -R daemon: /app
+RUN chmod 777 /app
 
 WORKDIR /app
 
@@ -61,5 +66,6 @@ COPY . .
 
 EXPOSE 3000
 
+USER daemon
 CMD ["npm","run","star"]
 
