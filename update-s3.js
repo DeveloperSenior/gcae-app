@@ -5,8 +5,6 @@
  */
 
 const { inject } = require('./src/utilities/Utilities');
-const { HTTP_CODE } = require('./src/utilities/Constants');
-const { toCamelCase, toPascalCase } = require('js-convert-case');
 
 const IOFileService = require('./src/services/IOFileService');
 
