@@ -8,7 +8,6 @@
  * Module that defines the routers to be published in the container
  */
 const routersApp = [
-    require('./SwaggerRouteConf'),
     require('../GeneratorRoute'),
     require('../UserRoute'),
     /** Import routes here */

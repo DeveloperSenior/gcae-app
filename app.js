@@ -20,8 +20,6 @@ var app = express();
 // Reduce fingerprinting
 app.disable('x-powered-by');
 
-//Helmet helps secure Express apps by setting HTTP response headers.
-app.use(helmet())
 
 /**
  * Allowed cors
@@ -36,6 +34,11 @@ app.use(express.json());
  */
 const apiPath = process.env.API_PATH || '/api/v1';
 const apiVersion = process.env.VERSION || '1.0';
+
+app.use(apiPath,  require('./src/routes/config/SwaggerRouteConf'));
+
+//Helmet helps secure Express apps by setting HTTP response headers.
+app.use(helmet());
 
 /**
  * List of routers to be exposed in the API
