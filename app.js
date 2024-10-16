@@ -38,7 +38,13 @@ const apiVersion = process.env.VERSION || '1.0';
 app.use(apiPath,  require('./src/routes/config/SwaggerRouteConf'));
 
 //Helmet helps secure Express apps by setting HTTP response headers.
-app.use(helmet());
+app.use(helmet({
+    contentSecurityPolicy: {
+      directives: {
+        "script-src": ["'self'"],
+      },
+    },
+  }));
 
 /**
  * List of routers to be exposed in the API
