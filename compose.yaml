@@ -11,10 +11,11 @@ services:
   server:
     build:
       context: .
+      args:
+       - AWS_ACCESS_KEY_ID=<<PUT_AWS_ACCESS_KEY_ID>>
+       - AWS_SECRET_ACCESS_KEY=<<PUT_AWS_SECRET_ACCESS_KEY>>
     environment:
       NODE_ENV: production
-      AWS_ACCESS_KEY_ID: <<PUT_AWS_ACCESS_KEY_ID>>
-      AWS_SECRET_ACCESS_KEY: <<PUT_AWS_SECRET_ACCESS_KEY>>
     ports:
       - 3000:3000
       - 7001:3000

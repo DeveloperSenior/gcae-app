@@ -2,6 +2,10 @@ FROM node:20
 
 RUN mkdir ~/.aws && touch ~/.aws/credentials
 
+# Inject AWS credentials as environment variables
+ARG AWS_ACCESS_KEY_ID
+ARG AWS_SECRET_ACCESS_KEY
+
 ENV VERSION 1.0
 ENV PORT 3000
 ENV API_PATH /api/v1
