@@ -1,13 +1,13 @@
 {
-	"appName": "PgApp",
-	"appPort": 3001,
-	"appDescription": "Prueba de autogeneración Postgres",
-	"author": "Andres Escobar",
-	"company": "Dev S.A",
-	"version": "1.0",
+	"appName": "Ciclas",
+	"appPort": 7001,
+	"appDescription": "Gestion de competencias en ciclismo",
+	"author": "Tecnologico de antioquia",
+	"company": "TdeA S.A",
+	"version": "1.0-BETA",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/DeveloperSenior/pg-app.git"
+		"url": "https://github.com/tdea/ciclas-app.git"
 	},
 	"auth": {
 		"jwtSecretKey": "VEVTVC1HRU5FUkFUT1I="
@@ -21,101 +21,144 @@
 		"host": "localhost",
 		"port": 32769,
 		"user": "postgres",
-		"pass": "cG9zdGdyZXNwdw=="
+		"pass": "cG9zdGdyZXNwdw==",
+        "protocol":null
+
 	},
 	"entities": [
 		{
-			"name": "Person",
-			"description": "Some description",
+			"name": "Pais",
+			"description": "Contiene los paises de las competencias",
 			"fields": [
 				{
-					"name": "dni",
+					"name": "codigo",
 					"type": "String",
 					"pk": true,
 					"required": true,
-					"precision": 100
+					"precision": 4
 				},
 				{
-					"name": "name",
+					"name": "nombre",
 					"type": "String",
 					"required": true,
-					"precision": 100
-				},
+					"precision": 20
+				}
+			]
+		},
+		{
+			"name": "Equipo",
+			"description": "contiene los equipos que compiten",
+			"fields": [
 				{
-					"name": "lastName",
-					"type": "String",
-					"required": true,
-					"precision": 100
-				},
-				{
-					"name": "phone",
+					"name": "numero",
 					"type": "Number",
-					"required": false,
-					"precision": 10
-				}
-			]
-		},
-		{
-			"name": "Car",
-			"description": "Some description",
-			"fields": [
+					"required": true,
+					"pk": true,
+					"precision": 4
+				},
 				{
-					"name": "color",
+					"name": "nombre",
+					"type": "String",
+					"required": true,
+					"precision": 30
+				},
+				{
+					"name": "codPais",
 					"type": "Relationship",
 					"items": {
 						"type": "Object",
-						"ref": "Color"
+						"ref": "Pais"
 					},
 					"required": true,
-					"precision": 10
-				},
+					"precision": 4
+				}
+			]
+		},
+		{
+			"name": "Ciclista",
+			"description": "Contiene los ciclistas",
+			"fields": [
 				{
-					"name": "name",
+					"name": "nombre",
 					"type": "String",
-					"required": false,
-					"precision": 100
+					"required": true,
+					"precision": 30
 				},
 				{
-					"name": "engine",
+					"name": "numEquipo",
 					"type": "Relationship",
 					"items": {
 						"type": "Object",
-						"ref": "Engine"
+						"ref": "Equipo"
 					},
 					"required": true,
-					"precision": 10
+					"precision": 4
 				}
 			]
 		},
 		{
-			"name": "Engine",
-			"description": "Some description",
+			"name": "Competencia",
+			"description": "Contiene las competencias de ciclismo",
 			"fields": [
 				{
-					"name": "serial",
+					"name": "nombre",
 					"type": "String",
-					"pk": true,
 					"required": true,
-					"precision": 60
+					"precision": 30
 				},
 				{
-					"name": "name",
-					"type": "String",
-					"required": false,
-					"precision": 120
+					"name": "diasDuracion",
+					"type": "Number",
+					"required": true,
+					"precision": 3
+				},
+				{
+					"name": "fechaInicio",
+					"type": "Date",
+					"required": true,
+					"precision": 10
+				},
+				{
+					"name": "codPais",
+					"type": "Relationship",
+					"items": {
+						"type": "Object",
+						"ref": "Pais"
+					},
+					"required": true,
+					"precision": 4
 				}
 			]
 		},
 		{
-			"name": "Color",
-			"description": "Some description",
+			"name": "Clasificacion",
+			"description": "Contiene las clasificaciones de los ciclistas en las competencias",
 			"fields": [
 				{
-					"name": "description",
-					"type": "String",
-					"pk": true,
+					"name": "puesto",
+					"type": "Number",
 					"required": true,
-					"precision": 25
+					"precision": 4
+				},
+				{
+					"name": "idCiclista",
+					"type": "Relationship",
+					"items": {
+						"type": "Object",
+						"ref": "Ciclista"
+					},
+					"required": true,
+					"precision": 15
+				},
+				{
+					"name": "idComp",
+					"type": "Relationship",
+					"items": {
+						"type": "Object",
+						"ref": "Competencia"
+					},
+					"required": true,
+					"precision": 5
 				}
 			]
 		}

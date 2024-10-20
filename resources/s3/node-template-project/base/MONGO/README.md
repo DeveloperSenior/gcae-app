@@ -118,14 +118,14 @@ cd @appname@-api-server
 docker compose down
 ```
 
-6. Open in browser http://localhost:3000/api/v1/version If you answer a `JSON` so:
+6. Open in browser http://localhost:@appPort@@appApiPath@/version If you answer a `JSON` so:
 ```json
 {"version": "1.0"}
 ```
 It means that our server is up.
 
 7. **View Documentation :**
-The API documentation is in the url http://localhost:3000/api/v1/api-docs/
+The API documentation is in the url http://localhost:@appPort@@appApiPath@/api-docs/
 
 8. **Postman collection :**
 In the Postman tool import the file `@appname@-api-server.postman_collection` which is at the root of the project.
