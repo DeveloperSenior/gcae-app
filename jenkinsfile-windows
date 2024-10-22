@@ -1,0 +1,111 @@
+pipeline{
+    agent any
+
+    environment{
+        ENV = 'dllo'
+        AWS_CREDENTIAL = credentials('aws-credential-dllo')
+        AWS_REGION = 'us-east-1'
+        BUCKET_TEMPLATE = 'dllo-gcae-templates'
+        NODE_TEMPLATES = 'node-templates'
+        NODE_TEMPLATE_PROJECT = 'node-template.zip'
+        APP_DEBUG = 'S'
+        AWS_ACCOUNT_ID = '<<YOUR_AWS_ACCOUNT_ID>>'
+        ECS_TASK_VERSION = '1'
+        DEPLOY_BRANCH = 'develop'
+    }
+
+    stages{
+        stage('Continuous Integration') {
+          tools {
+            nodejs 'node_20'
+          }
+          stages {
+            stage('Checkout repository GIT'){
+                steps{
+                    //checkout scm
+                    git credentialsId: 'CredencialesGitHub',
+                    url: 'https://github.com/DeveloperSenior/gcae-app.git',
+                    branch: env.DEPLOY_BRANCH
+                }
+            }
+
+            stage('Install Dependencies NPM'){
+                steps{
+                  bat 'npm install'
+                }
+            }
+
+            stage('Run Test'){
+                steps{
+                    bat 'npm test'
+                }
+                post{
+                    always{
+                        junit '**/build/report/tests/junit.xml'
+                    }
+                }                
+            }
+
+            stage('Build Image DOCKER'){
+                steps{
+                    bat 'docker build -f ./Dockerfile --build-arg ENV=%ENV% --build-arg BUCKET_TEMPLATE=%BUCKET_TEMPLATE% --build-arg NODE_TEMPLATES=%NODE_TEMPLATES% --build-arg NODE_TEMPLATE_PROJECT=%NODE_TEMPLATE_PROJECT% --build-arg AWS_ACCESS_KEY_ID=%AWS_ACCESS_KEY_ID% --build-arg AWS_SECRET_ACCESS_KEY=%AWS_SECRET_ACCESS_KEY% -t gcae-app:latest .'
+                }               
+            }           
+
+          }
+        }
+        stage('Approval') {
+            input {
+                message "Do you want to approve the deployment?"
+                submitter "afescobar" // Jenkins User ID
+                parameters {
+                    string(name: 'Approval', description: 'Please review the deployment', defaultValue: '')
+                }
+            }
+            steps {
+                echo "${Approval}, Approval"
+            }
+        }
+        stage('Continuous Delivery') {
+            
+            
+           /* tools {
+              dockerTool 'docker'
+            }*/
+           stages {
+
+            stage('Login repository AWS') {
+                steps{
+                 bat 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin %AWS_ACCOUNT_ID%.dkr.ecr.us-east-1.amazonaws.com'
+                }
+            }
+
+           stage('Tag Image Version ECR AWS') {
+                steps{
+                    bat 'docker tag gcae-app:latest %AWS_ACCOUNT_ID%.dkr.ecr.us-east-1.amazonaws.com/gcae-apiservices-%ENV%:latest'
+                }               
+            }
+            stage('Push Tag Image ECR AWS') {
+                steps{
+                    bat 'docker push %AWS_ACCOUNT_ID%.dkr.ecr.us-east-1.amazonaws.com/gcae-apiservices-%ENV%:latest'
+                }               
+            }
+            stage('Deploy version') {
+                steps{
+                    bat 'npm run update-s3-templates'
+                    bat 'aws ecs update-service --region us-east-1 --cluster gcae-app-cluster-%ENV% --service cc-gcae-app-service-%ENV% --task-definition gcae-app-task-%ENV%:%ECS_TASK_VERSION% --force-new-deployment --deployment-configuration "deploymentCircuitBreaker={enable=true,rollback=true}"'
+                }               
+            }
+           }
+
+      }
+            
+    }
+    
+    post{
+        always{
+            cleanWs()
+        }
+    }
+
+}

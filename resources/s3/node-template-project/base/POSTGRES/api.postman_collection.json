@@ -1,0 +1,82 @@
+{
+	"info": {
+		"_postman_id": "1fceaacf-3711-47c7-9225-8090be029d66",
+		"name": "@appname@-api-server",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "5751025"
+	},
+	"item": [
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "singin",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"userName\": \"string\",\r\n  \"bio\": \"string\",\r\n  \"avatar\": \"string\",\r\n  \"email\": \"string\",\r\n  \"password\": \"string\",\r\n  \"createdAt\": \"string\",\r\n  \"updatedAt\": \"string\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:@appPort@@appApiPath@/auth/signin",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": @appPort@,
+							"path": [
+								"@appApiPath@",
+								"auth",
+								"signin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"andres@gmail.com\",\r\n    \"password\": \"admin123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:@appPort@@appApiPath@/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "@appPort@",
+							"path": [
+								"@appApiPath@",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+		@endpoints@
+	],
+	"variable": [
+		{
+			"key": "token",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjE1YjlkMDc1NDdlMGZjNTM4NzA3N2MiLCJlbWFpbCI6ImFuZHJlc0BnbWFpbC5jb20iLCJpYXQiOjE3MTI5MzA3MTQsImV4cCI6MTcxMzAxNzExNH0.HVdOf3bJs9vfTeVjvQD_fUohBz4c0vUE1kHDUi-1KMI"
+		}
+	]
+}

@@ -1,0 +1,166 @@
+{
+	"appName": "Ciclas",
+	"appPort": 7001,
+	"appDescription": "Gestion de competencias en ciclismo",
+	"author": "Tecnologico de antioquia",
+	"company": "TdeA S.A",
+	"version": "1.0-BETA",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/tdea/ciclas-app.git"
+	},
+	"auth": {
+		"jwtSecretKey": "VEVTVC1HRU5FUkFUT1I="
+	},
+	"cache": {
+		"ttl": 3600
+	},
+	"dataBase": {
+		"type": "POSTGRES",
+		"serviceName": "postgres",
+		"host": "localhost",
+		"port": 32769,
+		"user": "postgres",
+		"pass": "cG9zdGdyZXNwdw==",
+        "protocol":null
+
+	},
+	"entities": [
+		{
+			"name": "Pais",
+			"description": "Contiene los paises de las competencias",
+			"fields": [
+				{
+					"name": "codigo",
+					"type": "String",
+					"pk": true,
+					"required": true,
+					"precision": 4
+				},
+				{
+					"name": "nombre",
+					"type": "String",
+					"required": true,
+					"precision": 20
+				}
+			]
+		},
+		{
+			"name": "Equipo",
+			"description": "contiene los equipos que compiten",
+			"fields": [
+				{
+					"name": "numero",
+					"type": "Number",
+					"required": true,
+					"pk": true,
+					"precision": 4
+				},
+				{
+					"name": "nombre",
+					"type": "String",
+					"required": true,
+					"precision": 30
+				},
+				{
+					"name": "codPais",
+					"type": "Relationship",
+					"items": {
+						"type": "Object",
+						"ref": "Pais"
+					},
+					"required": true,
+					"precision": 4
+				}
+			]
+		},
+		{
+			"name": "Ciclista",
+			"description": "Contiene los ciclistas",
+			"fields": [
+				{
+					"name": "nombre",
+					"type": "String",
+					"required": true,
+					"precision": 30
+				},
+				{
+					"name": "numEquipo",
+					"type": "Relationship",
+					"items": {
+						"type": "Object",
+						"ref": "Equipo"
+					},
+					"required": true,
+					"precision": 4
+				}
+			]
+		},
+		{
+			"name": "Competencia",
+			"description": "Contiene las competencias de ciclismo",
+			"fields": [
+				{
+					"name": "nombre",
+					"type": "String",
+					"required": true,
+					"precision": 30
+				},
+				{
+					"name": "diasDuracion",
+					"type": "Number",
+					"required": true,
+					"precision": 3
+				},
+				{
+					"name": "fechaInicio",
+					"type": "Date",
+					"required": true,
+					"precision": 10
+				},
+				{
+					"name": "codPais",
+					"type": "Relationship",
+					"items": {
+						"type": "Object",
+						"ref": "Pais"
+					},
+					"required": true,
+					"precision": 4
+				}
+			]
+		},
+		{
+			"name": "Clasificacion",
+			"description": "Contiene las clasificaciones de los ciclistas en las competencias",
+			"fields": [
+				{
+					"name": "puesto",
+					"type": "Number",
+					"required": true,
+					"precision": 4
+				},
+				{
+					"name": "idCiclista",
+					"type": "Relationship",
+					"items": {
+						"type": "Object",
+						"ref": "Ciclista"
+					},
+					"required": true,
+					"precision": 15
+				},
+				{
+					"name": "idComp",
+					"type": "Relationship",
+					"items": {
+						"type": "Object",
+						"ref": "Competencia"
+					},
+					"required": true,
+					"precision": 5
+				}
+			]
+		}
+	]
+}
