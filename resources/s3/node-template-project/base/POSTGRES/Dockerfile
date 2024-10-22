@@ -2,10 +2,13 @@ FROM node:20
 
 RUN mkdir ~/.aws && touch ~/.aws/credentials
 
-ENV VERSION @version@
+ARG ENV=dllo
+ARG VERSION=@version@-BETA
+
+ENV VERSION $VERSION
 ENV PORT @appPort@
 ENV API_PATH @appApiPath@
-ENV ENV dllo
+ENV ENV $ENV
 
 
 # Node cache
