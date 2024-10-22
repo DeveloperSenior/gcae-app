@@ -68,7 +68,7 @@ const GeneratorService = generatorRepository => {
             .withAppName(appName)
             .build();
 
-        const exists = await generatorRepository.getAppByName(app);
+        const exists = await generatorRepository.getAppByName(app, app.user);
 
         if (!exists) {
             const exception = new DefaultException(ERROR_MESSAGE.ENTITY_ISNT_SESSION);
