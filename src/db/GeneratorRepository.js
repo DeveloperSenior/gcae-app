@@ -89,9 +89,9 @@ const GeneratorRepository = DbModel => {
      * @param {App} app 
      * @returns 
      */
-    const getAppByName = async (app) => {
+    const getAppByName = async (app,userId) => {
         try {
-            return await DbModel.findOne({ appName: app.appName, user: app.user }).select("-__v"); // Retrieve without __v
+            return await DbModel.findOne({ appName: app.appName, user: userId }).select("-__v"); // Retrieve without __v
         } catch (e) {
             const excepcion = new DefaultException(e.message);
             throw excepcion;
