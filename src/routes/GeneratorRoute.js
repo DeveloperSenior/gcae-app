@@ -17,9 +17,127 @@ const router = express.Router();
  *     type: object
  *     required:
  *       - appName
+ *       - appDescription
+ *       - repository
+ *       - auth
+ *       - cache
+ *       - dataBase
+ *       - entities
  *     properties:
  *       appName:
  *         type: string
+ *       appPort:
+ *         type: number
+ *         default: 3000
+ *       appApiPath:
+ *         type: string
+ *       appDescription:
+ *         type: string
+ *       author:
+ *         type: string
+ *       company:
+ *         type: string
+ *       version:
+ *         type: string
+ *       repository:
+ *         type: object
+ *         properties:
+ *           type:
+ *             type: string
+ *           url:
+ *             type: string
+ *       auth:
+ *         type: object
+ *         properties:
+ *           jwtSecretKey:
+ *             type: string
+ *             default: base64 encrypt
+ *       cache:
+ *         type: object
+ *         properties:
+ *           ttl:
+ *             type: number
+ *             default: 86400
+ *       dataBase:
+ *         type: object
+ *         properties:
+ *           type:
+ *             enum: 
+ *               - MONGO
+ *               - POSTGRES
+ *             default: MONGO | POSTGRES
+ *           serviceName:
+ *             type: string
+ *           user:
+ *             type: string
+ *           pass:
+ *             type: string
+ *             default: base64 encrypt
+ *           host:
+ *             type: string
+ *           port:
+ *             type: number
+ *             default: null
+ *           protocol:
+ *             type: string
+ *         required:
+ *           - type
+ *       entities:
+ *         type: array
+ *         items: 
+ *           type: object
+ *           properties:
+ *             name:
+ *              type: string
+ *             description:
+ *              type: string
+ *             fields:
+ *              type: array
+ *              items:
+ *                type: object
+ *                properties:
+ *                   name:
+ *                     type: string
+ *                   type:
+ *                     enum: 
+ *                       - String
+ *                       - Object
+ *                       - Array
+ *                       - Number
+ *                       - Date
+ *                       - Relationship
+ *                     default: String | Object | Array | Number | Date | Relationship
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       type:
+ *                        enum: 
+ *                         - String
+ *                         - Object
+ *                         - Array
+ *                         - Number
+ *                         - Date
+ *                         - Relationship
+ *                        default: String | Object | Array | Number | Date | Relationship
+ *                       ref:
+ *                         type: string
+ *                   pk:
+ *                     type: boolean
+ *                     default: false
+ *                   required:
+ *                     type: boolean
+ *                     default: false
+ *                   precision:
+ *                     type: number
+ *                     default: 3                
+ *                required:
+ *                  - name
+ *                  - type  
+ *                  - precision  
+ *           required:
+ *              - name
+ *              - description
+ *              - fields
  */
 /**
  * @swagger

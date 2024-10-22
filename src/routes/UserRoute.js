@@ -31,10 +31,6 @@ const router = express.Router();
  *         type: string
  *       password:
  *         type: string
- *       createdAt:
- *         type: string
- *       updatedAt:
- *         type: string
  *   AuthModel:
  *     type: object
  *     required:

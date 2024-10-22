@@ -45,14 +45,18 @@ const options = {
   swaggerDefinition: {
     openapi: '3.0.1',
     info: {
-      title: 'GCAE REST - Swagger',
+      title: 'GCAE Documentación Técnica',
       version: `${process.env.VERSION || '1.0.0'} - ${process.env.ENV}`,
-      description: `GCAE REST API with Swagger doc: 
-                     <br><br> [Download PDF application user manual](https://github.com/DeveloperSenior/gcae-app/blob/main/MANUAL_USO_GCAE.pdf)
-                     <br><br> [Download JSON from the sample application for MONGO](https://github.com/DeveloperSenior/gcae-app/blob/main/GCAE_MONGO.spec.json)
-                     <br><br> [Download JSON from the sample application for POSTGRES](https://github.com/DeveloperSenior/gcae-app/blob/main/GCAE_POSTGRES.spec.json)`,
+      description: `<html><p>The technical documentation for the developed <b>GCAE</b> APIs has been created using Swagger, a tool that facilitates the visualization and consumption of RESTful services. This documentation provides a detailed description of the available endpoints, the HTTP methods used <b>(GET, POST, PUT, DELETE)</b>, the required and optional parameters, as well as the expected responses in different formats <b>(JSON, XML, Stream)</b></p> 
+        <br><br> [Download PDF application user manual](https://github.com/DeveloperSenior/gcae-app/blob/main/MANUAL_USO_GCAE.pdf)
+        <br><br> [Download JSON from the sample application for MONGO](https://github.com/DeveloperSenior/gcae-app/blob/main/GCAE_MONGO.spec.json)
+        <br><br> [Download JSON from the sample application for POSTGRES](https://github.com/DeveloperSenior/gcae-app/blob/main/GCAE_POSTGRES.spec.json)
+        <br><br> To view the JSON more clearly, use the JSON-Viewer tool [here](https://jsonformatter.org/json-viewer#google_vignette)
+      </html>`,
       contact: {
+        name:'Andres Felipe Escobar Lopez',
         email: 'aescoba7@correo.tdea.edu.co',
+        url: 'https://github.com/DeveloperSenior/gcae-app'
       },
     },
     components: {
@@ -71,12 +75,12 @@ const options = {
     },
     tags: [
       {
-        name: 'GCAE API',
-        description: 'software that automates the process of generating base code with standard architectures within the framework of SOLID principles focused on the Back-end.',
+        name: "GCAE API's",
+        description: "Software for the automation of a company's development process, helps in the generation of base code with standard architectures within the framework of SOLID principles focused on the Back-end.",
       },
     ],
   },
-  apis: ['./src/routes/*.js', './src/routes/config/*.js'],
+  apis: [ './src/routes/config/*.js', './src/routes/*.js',],
 };
 
 const swaggerSpec = swaggerJSDoc(options);

@@ -2,6 +2,7 @@ pipeline{
     agent any
 
     environment{
+        ENV = 'dllo'
         AWS_CREDENTIAL = credentials('aws-credential-dllo')
         AWS_REGION = 'us-east-1'
         BUCKET_TEMPLATE = 'dllo-gcae-templates'
@@ -44,7 +45,7 @@ pipeline{
 
             stage('Build Image DOCKER'){
                 steps{
-                    bat 'docker build -f ./Dockerfile -t gcae-app:latest .'
+                    bat 'docker build -f ./Dockerfile --build-arg ENV=%ENV% --build-arg BUCKET_TEMPLATE=%BUCKET_TEMPLATE% --build-arg NODE_TEMPLATES=%NODE_TEMPLATES% --build-arg NODE_TEMPLATE_PROJECT=%NODE_TEMPLATE_PROJECT% --build-arg AWS_ACCESS_KEY_ID=%AWS_ACCESS_KEY_ID% --build-arg AWS_SECRET_ACCESS_KEY=%AWS_SECRET_ACCESS_KEY% -t gcae-app:latest .'
                 }               
             }           
 
@@ -78,20 +79,18 @@ pipeline{
 
            stage('Tag Image Version ECR AWS') {
                 steps{
-                    bat 'docker tag gcae-app:latest 754802997149.dkr.ecr.us-east-1.amazonaws.com/gcae-apiservices-dllo:latest'
+                    bat 'docker tag gcae-app:latest 754802997149.dkr.ecr.us-east-1.amazonaws.com/gcae-apiservices-%ENV%:latest'
                 }               
             }
             stage('Push Tag Image ECR AWS') {
                 steps{
-                    bat 'docker push 754802997149.dkr.ecr.us-east-1.amazonaws.com/gcae-apiservices-dllo:latest'
+                    bat 'docker push 754802997149.dkr.ecr.us-east-1.amazonaws.com/gcae-apiservices-%ENV%:latest'
                 }               
             }
             stage('Deploy version') {
                 steps{
                     bat 'npm run update-s3-templates'
-                }                 
-                steps{
-                    bat 'aws ecs update-service --region us-east-1 --cluster gcae-app-cluster-dllo --service cc-gcae-app-service-dllo --task-definition gcae-app-task-dllo:1 --force-new-deployment --deployment-configuration "deploymentCircuitBreaker={enable=true,rollback=true}"'
+                    bat 'aws ecs update-service --region us-east-1 --cluster gcae-app-cluster-%ENV% --service cc-gcae-app-service-%ENV% --task-definition gcae-app-task-%ENV%:1 --force-new-deployment --deployment-configuration "deploymentCircuitBreaker={enable=true,rollback=true}"'
                 }               
             }
            }
