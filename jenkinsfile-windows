@@ -25,7 +25,7 @@ pipeline{
                     //checkout scm
                     git credentialsId: 'CredencialesGitHub',
                     url: 'https://github.com/DeveloperSenior/gcae-app.git',
-                    branch: '%DEPLOY_BRANCH%'
+                    branch: env.DEPLOY_BRANCH
                 }
             }
 

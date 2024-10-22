@@ -2,8 +2,12 @@ pipeline{
     agent any
 
     environment{
+        ENV = 'dllo'
         AWS_CREDENTIAL = credentials('aws-credential-dllo')
         AWS_REGION = 'us-east-1'
+        AWS_ACCOUNT_ID = '<<YOUR_AWS_ACCOUNT_ID>>'
+        ECS_TASK_VERSION = '1'
+        DEPLOY_BRANCH = 'develop'
         
     }
 
@@ -18,7 +22,7 @@ pipeline{
                     //checkout scm
                     git credentialsId: 'CredencialesGitHub',
                     url: '@urlRepository@',
-                    branch: 'develop'
+                    branch: env.DEPLOY_BRANCH
                 }
             }
 
@@ -41,7 +45,7 @@ pipeline{
 
             stage('Build Image DOCKER'){
                 steps{
-                    sh 'docker build -f ./Dockerfile -t @appname@-app:latest .'
+                    sh 'docker build -f ./Dockerfile --build-arg ENV=$ENV -t @appname@-app:latest .'
                 }               
             }           
 
@@ -69,23 +73,23 @@ pipeline{
 
             stage('Login repository AWS') {
                 steps{
-                 sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin <<AWS_id_account>>.dkr.ecr.us-east-1.amazonaws.com'
+                 sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com'
                 }
             }
 
            stage('Tag Image Version ECR AWS') {
                 steps{
-                    sh 'docker tag @appname@-app:latest <<AWS_id_account>>.dkr.ecr.us-east-1.amazonaws.com/@appname@-apiservices-dllo:latest'
+                    sh 'docker tag @appname@-app:latest $AWS_ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/@appname@-apiservices-$ENV:latest'
                 }               
             }
             stage('Push Tag Image ECR AWS') {
                 steps{
-                    sh 'docker push <<AWS_id_account>>.dkr.ecr.us-east-1.amazonaws.com/@appname@-apiservices-dllo:latest'
+                    sh 'docker push $AWS_ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/@appname@-apiservices-$ENV:latest'
                 }               
             }
             stage('Deploy version') {
                 steps{
-                    sh 'aws ecs update-service --region us-east-1 --cluster @appname@-app-cluster-dllo --service cc-@appname@-app-service-dllo --task-definition @appname@-app-task-dllo:1 --force-new-deployment --deployment-configuration "deploymentCircuitBreaker={enable=true,rollback=true}"'
+                    sh 'aws ecs update-service --region us-east-1 --cluster @appname@-app-cluster-$ENV --service cc-@appname@-app-service-$ENV --task-definition @appname@-app-task-$ENV:$ECS_TASK_VERSION --force-new-deployment --deployment-configuration "deploymentCircuitBreaker={enable=true,rollback=true}"'
                 }               
             }
            }
