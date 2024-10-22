@@ -1,0 +1,1 @@
+aws ecs update-service --region us-east-1 --cluster ambiente-gcae-api-dllo --service gcae-apidllo-services --task-definition gcae-apiTsk:5 --force-new-deployment --deployment-configuration "deploymentCircuitBreaker={enable=true,rollback=true}"
