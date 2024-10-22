@@ -45,13 +45,14 @@ const options = {
   swaggerDefinition: {
     openapi: '3.0.1',
     info: {
-      title: 'GCAE Documentación Técnica',
+      title: 'GCAE Technical Documentation',
       version: `${process.env.VERSION || '1.0.0'} - ${process.env.ENV}`,
       description: `<html><p>The technical documentation for the developed <b>GCAE</b> APIs has been created using Swagger, a tool that facilitates the visualization and consumption of RESTful services. This documentation provides a detailed description of the available endpoints, the HTTP methods used <b>(GET, POST, PUT, DELETE)</b>, the required and optional parameters, as well as the expected responses in different formats <b>(JSON, XML, Stream)</b></p> 
         <br><br> [Download PDF application user manual](https://github.com/DeveloperSenior/gcae-app/blob/main/MANUAL_USO_GCAE.pdf)
         <br><br> [Download JSON from the sample application for MONGO](https://github.com/DeveloperSenior/gcae-app/blob/main/GCAE_MONGO.spec.json)
         <br><br> [Download JSON from the sample application for POSTGRES](https://github.com/DeveloperSenior/gcae-app/blob/main/GCAE_POSTGRES.spec.json)
         <br><br> To view the JSON more clearly, use the JSON-Viewer tool [here](https://jsonformatter.org/json-viewer#google_vignette)
+        <br><br> Remember to open your generated application from any development IDE, we recommend [Visual Studio Code](https://code.visualstudio.com/download)
       </html>`,
       contact: {
         name:'Andres Felipe Escobar Lopez',
