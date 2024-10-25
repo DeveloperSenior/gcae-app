@@ -7,9 +7,9 @@
         "test": "jest --coverage --verbose --env-file=.env.test --detectOpenHandles test/",
         "runDev-demon": "nodemon -r dotenv/config server.js",
         "runDev": "node --env-file=.env server.js",
-        "star-pdn": "node --env-file=.env.pdn server.js",
-        "star-qa": "node --env-file=.env.qa server.js",
-        "star": "node server.js",
+        "start-pdn": "node --env-file=.env.pdn server.js",
+        "start-qa": "node --env-file=.env.qa server.js",
+        "start": "node server.js",
         "update-s3-templates-dev": "node --env-file=.env update-s3.js",
         "update-s3-templates": "node update-s3.js"
     },
