@@ -68,5 +68,5 @@ COPY . .
 EXPOSE 3000
 
 USER daemon
-CMD ["npm","run","star"]
+CMD ["npm","run","start"]
 
